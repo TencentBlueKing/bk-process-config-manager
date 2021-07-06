@@ -1,10 +1,10 @@
 ![](docs/resource/img/logo_zh.png)
 ---
-[![license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/Tencent/bk-process-config-manager/blob/master/LICENSE)
-[![Release](https://img.shields.io/badge/release-1.0.0-brightgreen.svg)](https://github.com/Tencent/bk-process-config-manager/releases)
+[![license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/TencentBlueKing/bk-process-config-manager/blob/master/LICENSE)
+[![Release](https://img.shields.io/badge/release-1.0.0-brightgreen.svg)](https://github.com/TencentBlueKing/bk-process-config-manager/releases)
 [![travis-ci](https://travis-ci.com/Tencent/bk-process-config-manager.svg?branch=master)](https://travis-ci.com/Tencent/bk-process-config-manager)
 [![Coverage Status](https://codecov.io/gh/Tencent/bk-process-config-manager/branch/master/graph/badge.svg)](https://codecov.io/gh/Tencent/bk-process-config-manager)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/Tencent/bk-process-config-manager/pulls)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/TencentBlueKing/bk-process-config-manager/pulls)
 
 [(English Documents Available)](readme_en.md)
 
@@ -15,7 +15,7 @@
 蓝鲸进程配置管理
 
 ## Features
-了解更多功能，请参考[GSEKIT白皮书](http://docs.bk.tencent.com/product_white_paper/gsekit/)
+了解更多功能，请参考[蓝鲸进程配置管理白皮书](http://docs.bk.tencent.com/product_white_paper/bk-process-config-manager/)
 
 
 ## Getting started
@@ -44,12 +44,18 @@ DATABASES = {
 
 
 ## Support
-- [源码](https://github.com/Tencent/bk-process-config-manager/tree/master)
-- [wiki](https://github.com/Tencent/bk-process-config-manager/wiki)
+- [源码](https://github.com/TencentBlueKing/bk-process-config-manager/tree/master)
+- [wiki](https://github.com/TencentBlueKing/bk-process-config-manager/wiki)
 - [白皮书](http://docs.bk.tencent.com/product_white_paper/bk-process-config-manager/)
 - [蓝鲸论坛](https://bk.tencent.com/s-mart/community)
 - [蓝鲸 DevOps 在线视频教程](https://cloud.tencent.com/developer/edu/major-100008)
-- 联系我们，加入腾讯蓝鲸运维开发交流群：878501914
+- 联系我们，技术交流QQ群：
+
+  社区版QQ交流群：495299374
+  
+  蓝鲸运维开发交流群：878501914
+  
+  <img src="docs/resource/img/QR-Code.png" align=center style="zoom:67%;" />
 
 ## BlueKing Community
 * [BK-CMDB](https://github.com/Tencent/bk-cmdb)：蓝鲸配置平台（蓝鲸 CMDB）是一个面向资产及应用的企业级配置管理平台。
@@ -62,10 +68,10 @@ DATABASES = {
 
 
 ## Contributing
-如果你有好的意见或建议，欢迎给我们提 Issues 或 Pull Requests，为蓝鲸开源社区贡献力量。关于 GSEKIT 分支管理、Issue 以及 PR 规范，
+如果你有好的意见或建议，欢迎给我们提 Issues 或 Pull Requests，为蓝鲸开源社区贡献力量。关于 蓝鲸进程配置管理 分支管理、Issue 以及 PR 规范，
 请阅读 [Contributing Guide](docs/CONTRIBUTING.md)。
 
 [腾讯开源激励计划](https://opensource.tencent.com/contribution) 鼓励开发者的参与和贡献，期待你的加入。
 
 ## License
-GSEKIT 是基于 MIT 协议， 详细请参考 [LICENSE](LICENSE.txt) 。
+蓝鲸进程配置管理 是基于 MIT 协议， 详细请参考 [LICENSE](https://github.com/TencentBlueKing/bk-process-config-manager/blob/master/LICENSE) 

@@ -1,5 +1,5 @@
 # Contributing to bk-gsekit
-我们欢迎 [Report Issues](https://github.com/Tencent/bk-gsekit/issues) 或者 [Pull requests](https://github.com/Tencent/bk-gsekit/pulls)。 在贡献代码之前请阅读以下指引。
+我们欢迎 [Report Issues](https://github.com/TencentBlueKing/bk-process-config-manager/issues) 或者 [Pull requests](https://github.com/Tencent/bk-gsekit/pulls)。 在贡献代码之前请阅读以下指引。
 
 
 ## 问题管理
@@ -16,7 +16,7 @@
 
 ###  Pull Requests
 
-我们欢迎大家贡献代码来使我们的 GSEKIT 更加强大，代码团队会监控所有的 Pull request, 我们会做相应的代码检查和测试，测试通过之后我们就会接纳 PR ，但是不会立即合并到 master 分支。
+我们欢迎大家贡献代码来使我们的 蓝鲸进程配置管理 更加强大，代码团队会监控所有的 Pull request, 我们会做相应的代码检查和测试，测试通过之后我们就会接纳 PR ，但是不会立即合并到 master 分支。
 
 在完成一个 PR 之前请做一下确认:
 
@@ -29,4 +29,4 @@
 
 
 ## 代码协议
-[MIT LICENSE](../LICENSE.txt) 为 GSEKIT 的开源协议，您贡献的代码也会受此协议保护。
+[MIT LICENSE](../LICENSE.txt) 为 蓝鲸进程配置管理 的开源协议，您贡献的代码也会受此协议保护。
