@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>GSEKit(DEV)</title>
+    </head>
+    <body>
+        <div id="app"></div>
+        <script>
+            window.PROJECT_CONFIG = (function () {
+                const CSRF_COOKIE_NAME = 'gsekit_csrftoken'
+                const IS_MOCK = false
+                let SITE_URL = '/dev/site'
+                let BK_STATIC_URL = ''
+                const AJAX_URL_PREFIX = 'http://paas.ee225.bktencent.com/t/bk_gsekit/'
+                const LOGIN_SERVICE_URL = 'http://paas.ee225.bktencent.com/login/'
+                const CMDB_URL = 'https://magicbox.bk.tencent.com/static_api/v3/main/index.html'
+
+                // BK_STATIC_URL 不能以 / 结尾
+                if (BK_STATIC_URL.endsWith('/')) {
+                    BK_STATIC_URL = BK_STATIC_URL.slice(0, -1)
+                }
+
+                // SITE_URL 不能以 / 结尾
+                if (SITE_URL.endsWith('/')) {
+                    SITE_URL = SITE_URL.slice(0, -1)
+                }
+
+                return {
+                    CSRF_COOKIE_NAME: CSRF_COOKIE_NAME,
+                    IS_MOCK: IS_MOCK,
+                    SITE_URL: SITE_URL,
+                    BK_STATIC_URL: BK_STATIC_URL,
+                    AJAX_URL_PREFIX: AJAX_URL_PREFIX,
+                    LOGIN_SERVICE_URL: LOGIN_SERVICE_URL,
+                    CMDB_URL: CMDB_URL
+                }
+            })()
+        </script>
+    </body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>{{ TITLE }}</title>
+    </head>
+    <body>
+        <div id="app"></div>
+        <script>
+            window.PROJECT_CONFIG = (function () {
+                const CSRF_COOKIE_NAME = '{{CSRF_COOKIE_NAME}}' // 401 登录地址
+                const IS_MOCK = '{{IS_MOCK}}' // 401 登录地址
+                let SITE_URL = '{{SITE_URL}}' // URL 路由基本前缀，例如：/saas/gsekit
+                let BK_STATIC_URL = '{{BK_STATIC_URL}}' // 静态文件路径，前端 index.html 所在路径相对于静态资源根路径，如 /gsekit/dist
+                const AJAX_URL_PREFIX = '{{AJAX_URL_PREFIX}}' // ajax 请求路径
+                const LOGIN_SERVICE_URL = '{{LOGIN_SERVICE_URL}}' // 401 登录地址
+                const TAM_AEGIS_KEY = '{{TAM_AEGIS_KEY}}' // TAM监控key
+                const TAM_AEGIS_URL = '{{TAM_AEGIS_URL}}' // TAM监控接入链接
+                const CMDB_URL = '{{CMDB_URL}}' // 配置平台路径
+
+                // BK_STATIC_URL 不能以 / 结尾
+                if (BK_STATIC_URL.endsWith('/')) {
+                    BK_STATIC_URL = BK_STATIC_URL.slice(0, -1)
+                }
+
+                // SITE_URL 不能以 / 结尾
+                if (SITE_URL.endsWith('/')) {
+                    SITE_URL = SITE_URL.slice(0, -1)
+                }
+
+                return {
+                    CSRF_COOKIE_NAME: CSRF_COOKIE_NAME,
+                    IS_MOCK: IS_MOCK,
+                    SITE_URL: SITE_URL,
+                    BK_STATIC_URL: BK_STATIC_URL,
+                    AJAX_URL_PREFIX: AJAX_URL_PREFIX,
+                    LOGIN_SERVICE_URL: LOGIN_SERVICE_URL,
+                    TAM_AEGIS_KEY: TAM_AEGIS_KEY,
+                    TAM_AEGIS_URL: TAM_AEGIS_URL,
+                    CMDB_URL: CMDB_URL
+                }
+            })()
+        </script>
+        {% if TAM_AEGIS_KEY != "" %}
+        <script src="{{TAM_AEGIS_URL}}"></script>
+        {% endif %}
+    </body>
+</html>

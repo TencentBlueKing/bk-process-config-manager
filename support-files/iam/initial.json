@@ -1,0 +1,253 @@
+{
+    "system_id": "bk_gsekit",
+    "operations": [
+        {
+            "operation": "upsert_system",
+            "data": {
+                "id": "bk_gsekit",
+                "name": "GSEKIT",
+                "name_en": "GSEKIT",
+                "description": "GSEKIT",
+                "description_en": "GSEKIT",
+                "clients": "bk_gsekit,gsekit2",
+                "provider_config": {
+                    "host": "",
+                    "auth": "basic"
+                }
+            }
+        },
+        {
+            "operation": "upsert_resource_type",
+            "data": {
+                "id": "config_template",
+                "name": "配置模板",
+                "name_en": "ConfigTemplate",
+                "description": "配置模板",
+                "description_en": "ConfigTemplate",
+                "parents": [
+                    {
+                        "system_id": "bk_cmdb",
+                        "id": "biz"
+                    }
+                ],
+                "provider_config": {
+                    "path": "/api/iam/resource/"
+                },
+                "version": 1
+            }
+        },
+        {
+            "operation": "upsert_instance_selection",
+            "data": {
+                "id": "config_template_list",
+                "name": "配置模板列表",
+                "name_en": "Config Template List",
+                "resource_type_chain": [
+                    {
+                        "system_id": "bk_cmdb",
+                        "id": "biz"
+                    },
+                    {
+                        "system_id": "bk_gsekit",
+                        "id": "config_template"
+                    }
+                ]
+            }
+        },
+        {
+            "operation": "upsert_action",
+            "data": {
+                "id": "view_business",
+                "name": "业务访问",
+                "name_en": "View Business",
+                "type": "view",
+                "version": 1,
+                "related_resource_types": [
+                    {
+                        "id": "biz",
+                        "system_id": "bk_cmdb",
+                        "selection_mode": "instance",
+                        "related_instance_selections": [
+                            {
+                                "system_id": "bk_cmdb",
+                                "id": "business",
+                                "ignore_iam_path": true
+                            }
+                        ],
+                        "ignore_iam_path": true
+                    }
+                ],
+                "related_actions": [],
+                "description": "",
+                "description_en": ""
+            }
+        },
+        {
+            "operation": "upsert_action",
+            "data": {
+                "id": "manage_process",
+                "name": "进程操作",
+                "name_en": "Process Operate",
+                "type": "manage",
+                "version": 1,
+                "related_resource_types": [
+                    {
+                        "id": "biz",
+                        "system_id": "bk_cmdb",
+                        "selection_mode": "instance",
+                        "related_instance_selections": [
+                            {
+                                "system_id": "bk_cmdb",
+                                "id": "business",
+                                "ignore_iam_path": true
+                            }
+                        ],
+                        "ignore_iam_path": true
+                    }
+                ],
+                "related_actions": [
+                    "view_business"
+                ],
+                "description": "",
+                "description_en": ""
+            }
+        },
+        {
+            "operation": "upsert_action",
+            "data": {
+                "id": "create_config_template",
+                "name": "配置模板创建",
+                "name_en": "Config Template Create",
+                "type": "view",
+                "version": 1,
+                "related_resource_types": [
+                    {
+                        "id": "biz",
+                        "system_id": "bk_cmdb",
+                        "selection_mode": "instance",
+                        "related_instance_selections": [
+                            {
+                                "system_id": "bk_cmdb",
+                                "id": "business",
+                                "ignore_iam_path": true
+                            }
+                        ],
+                        "ignore_iam_path": true
+                    }
+                ],
+                "related_actions": [
+                    "view_business"
+                ],
+                "description": "",
+                "description_en": ""
+            }
+        },
+        {
+            "operation": "upsert_action",
+            "data": {
+                "id": "edit_config_template",
+                "name": "配置模板编辑",
+                "name_en": "Config Template Edit",
+                "type": "edit",
+                "version": 1,
+                "related_resource_types": [
+                    {
+                        "id": "config_template",
+                        "system_id": "bk_gsekit",
+                        "selection_mode": "instance",
+                        "related_instance_selections": [
+                            {
+                                "system_id": "bk_gsekit",
+                                "id": "config_template_list",
+                                "ignore_iam_path": true
+                            }
+                        ],
+                        "ignore_iam_path": true
+                    }
+                ],
+                "related_actions": [],
+                "description": "",
+                "description_en": ""
+            }
+        },
+        {
+            "operation": "upsert_action",
+            "data": {
+                "id": "delete_config_template",
+                "name": "配置模板删除",
+                "name_en": "Config Template Delete",
+                "type": "delete",
+                "version": 1,
+                "related_resource_types": [
+                    {
+                        "id": "config_template",
+                        "system_id": "bk_gsekit",
+                        "selection_mode": "instance",
+                        "related_instance_selections": [
+                            {
+                                "system_id": "bk_gsekit",
+                                "id": "config_template_list",
+                                "ignore_iam_path": true
+                            }
+                        ],
+                        "ignore_iam_path": true
+                    }
+                ],
+                "related_actions": [],
+                "description": "",
+                "description_en": ""
+            }
+        },
+        {
+            "operation": "upsert_action",
+            "data": {
+                "id": "operate_config",
+                "name": "配置操作",
+                "name_en": "Config Operate",
+                "type": "manage",
+                "version": 1,
+                "related_resource_types": [
+                    {
+                        "id": "biz",
+                        "system_id": "bk_cmdb",
+                        "selection_mode": "instance",
+                        "related_instance_selections": [
+                            {
+                                "system_id": "bk_cmdb",
+                                "id": "business",
+                                "ignore_iam_path": true
+                            }
+                        ],
+                        "ignore_iam_path": true
+                    }
+                ],
+                "related_actions": [
+                    "view_business"
+                ],
+                "description": "",
+                "description_en": ""
+            }
+        },
+
+        {
+            "operation": "upsert_resource_creator_actions",
+            "data": {
+                "config": [
+                    {
+                        "id": "config_template",
+                        "actions": [
+                            {
+                                "id": "edit_config_template",
+                                "required": true
+                            },
+                            {
+                                "id": "delete_config_template",
+                                "required": true
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}

@@ -1,0 +1,38 @@
+@keyframes zoomIn {
+    from {opacity: 0;transform: scale3d(.3, .3, .3);}
+    50% {opacity: 1;}
+}
+@keyframes zoomOut {
+    from {opacity: 1;}
+    50% {opacity: 0;transform: scale3d(.3, .3, .3);}
+    to {opacity: 0;}
+}
+.zoom-enter-active, .zoom-leave-active {
+    animation-duration: .3s;
+    animation-fill-mode: both;
+}
+.zoom-enter-active {
+    animation-name: zoomIn;
+}
+.zoom-leave-active {
+    animation-name: zoomOut;
+}
+
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+@keyframes fadeOut {
+    from {opacity: 1;}
+    to {opacity: 0;}
+}
+.fade-enter-active, .fade-leave-active {
+    animation-duration: .3s;
+    animation-fill-mode: both;
+}
+.fade-enter-active {
+    animation-name: fadeIn;
+}
+.fade-leave-active {
+    animation-name: fadeOut;
+}
