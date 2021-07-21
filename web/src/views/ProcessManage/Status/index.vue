@@ -421,18 +421,24 @@
                     this.selectLength = 0
                     const { rowId, operateType } = this.dialogInfo
                     this.isBtnLoading = rowId ? '' : operateType
+                    const params = {
+                        op_type: operateType
+                    }
                     if (rowId) {
                         this.selectedScope.bk_process_ids = [rowId]
                     } else {
-                        if (!this.isSelectedAllPages) {
+                        if (this.isSelectedAllPages) {
+                            this.selectedScope.bk_process_ids = []
+                            const query = this.getSearchParams()
+                            Object.assign(params, query)
+                        } else {
                             this.selectedScope.bk_process_ids = this.processIdList
                         }
                     }
                     const res = await this.$store.dispatch('process/ajaxSetOperateProcess', {
-                        data: {
-                            op_type: operateType,
+                        data: Object.assign(params, {
                             [this.isDropdownMode ? 'scope' : 'expression_scope']: this.selectedScope
-                        }
+                        })
                     })
                     this.$store.commit('routeTaskHistoryDetail', res.data.job_id)
                 } catch (error) {
@@ -467,7 +473,7 @@
                 if (this.isDropdownMode) {
                     this.selectedScope.bk_process_ids = this.processIdList
                 } else {
-                    this.selectedScope.bk_process_id = this.processIdList.length ? JSON.stringify(this.processIdList) : '*'
+                    this.selectedScope.bk_process_id = JSON.stringify(this.processIdList)
                 }
                 this.$router.push({
                     path: '/process-manage/release-config',
