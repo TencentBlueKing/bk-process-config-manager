@@ -27,6 +27,16 @@ class GlobalSettings(models.Model):
     class KEYS:
         FOOTER = "FOOTER"  # 页面注脚
         APIGW_PUBLIC_KEY = "APIGW_PUBLIC_KEY"  # APIGW 公钥
+        PIPELINE_POLLING_TIMEOUT = "PIPELINE_POLLING_TIMEOUT"  # pipeline 轮询超时时间
+
+    @classmethod
+    def pipeline_polling_timeout(cls):
+        # 支持全局配置
+        try:
+            return cls.objects.get(key=cls.KEYS.PIPELINE_POLLING_TIMEOUT).v_json
+        except cls.DoesNotExist:
+            # 默认15分钟
+            return 60 * 15
 
     @classmethod
     def footer(cls):
