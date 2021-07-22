@@ -554,6 +554,9 @@
                     this.pagination.count = tableCount
                     this.tableLoading = false
                     this.loading = false
+                    if (this.isTemplateTab) {
+                        this.staticIncomplete = this.getUndoneCount()
+                    }
                 }
             },
             // 加载未完成的数量
@@ -565,6 +568,16 @@
                     count = res.data.count || 0
                 }
                 this.staticIncomplete = count
+            },
+            getUndoneCount () {
+                const undoneHead = this.tableHead.filter(head => head.isExpandable)
+                const undoneKeys = []
+                undoneHead.forEach(item => {
+                    undoneKeys.push(...item.child.map(item => item.prop))
+                })
+                if (!undoneKeys.length) return 0
+                const hasUndoneRows = this.tableData.filter(row => undoneKeys.some(key => row[key] !== 0 && !row[key]))
+                return hasUndoneRows.length
             },
             // 分两张种情况: 正常加载 - load | 缺失统计 - statis | 前端筛选 - front
             getParams (type = 'load') {
