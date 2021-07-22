@@ -18,6 +18,7 @@ from django.utils.translation import ugettext as _
 from apps.exceptions import AppBaseException
 from apps.gsekit.configfile import exceptions as configfile_exceptions
 from apps.gsekit.job import models as job_models, exceptions as job_exceptions
+from apps.gsekit.meta.models import GlobalSettings
 from apps.gsekit.pipeline_plugins.exceptions import PipelineTimeoutException
 from apps.gsekit.process import exceptions as process_exceptions
 from apps.gsekit.utils import solution_maker
@@ -30,8 +31,6 @@ logger = logging.getLogger("celery")
 POLLING_INTERVAL = 3
 JOB_POLLING_INTERVAL = 5
 GSE_POLLING_INTERVAL = 2
-# 轮询超时时间
-POLLING_TIMEOUT = 60 * 5
 
 
 class ActivityType:
@@ -75,7 +74,9 @@ class JobTaskBaseService(Service):
     def run(self, service_func, job_task, **kwargs):
         logger.info(
             "act[{act_name}], job_task[{job_task_id}] {func_name} begin.".format(
-                act_name=self.__class__.__name__, job_task_id=job_task.id, func_name=service_func.__name__,
+                act_name=self.__class__.__name__,
+                job_task_id=job_task.id,
+                func_name=service_func.__name__,
             )
         )
         try:
@@ -184,7 +185,7 @@ class JobTaskBaseService(Service):
 
         # 校验轮询是否超时
         polling_time = data.get_one_of_outputs("polling_time")
-        if polling_time + POLLING_INTERVAL > POLLING_TIMEOUT:
+        if polling_time + POLLING_INTERVAL > GlobalSettings.pipeline_polling_timeout():
             error = PipelineTimeoutException()
             job_task.set_status(
                 job_models.JobStatus.FAILED, extra_data={"failed_reason": error.message, "err_code": error.code}
@@ -257,7 +258,9 @@ class MultiJobTaskBaseService(JobTaskBaseService):
     def run(self, service_func, job_tasks, **kwargs):
         logger.info(
             "act[{act_name}], job_task[{job_tasks}] {func_name} begin.".format(
-                act_name=self.__class__.__name__, job_tasks=job_tasks, func_name=service_func.__name__,
+                act_name=self.__class__.__name__,
+                job_tasks=job_tasks,
+                func_name=service_func.__name__,
             )
         )
         try:
@@ -349,7 +352,7 @@ class MultiJobTaskBaseService(JobTaskBaseService):
 
         # 校验轮询是否超时
         polling_time = data.get_one_of_outputs("polling_time")
-        if polling_time + POLLING_INTERVAL > POLLING_TIMEOUT:
+        if polling_time + POLLING_INTERVAL > GlobalSettings.pipeline_polling_timeout():
             for job_task in job_tasks.filter(status=job_models.JobStatus.RUNNING):
                 error = PipelineTimeoutException()
                 job_task.set_status(

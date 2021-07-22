@@ -27,10 +27,7 @@ def get_env_or_raise(key):
     value = os.environ.get(key)
     if not value:
         raise RuntimeError(
-            (
-                'Environment variable "{}" not found, you must set this variable to run this application.'
-                " See http://docs.open.oa.com/topics/faq_for_developing#36-本地开发时报错-environment-variable-x-not-found-怎么办"
-            ).format(key)
+            ('Environment variable "{}" not found, you must set this variable to run this application.').format(key)
         )
     return value
 
