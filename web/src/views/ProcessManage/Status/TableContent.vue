@@ -120,7 +120,7 @@
                         <span
                             :class="['hosting-status', row.process_status === 1 ? (row.is_auto ? 'hosting' : 'fail') : 'unmanaged']"
                             v-bk-tooltips="{
-                                content: $t('进程处于未托管状态，如遇异常退出，不会被自动拉起。'),
+                                content: $t('进程处于未托管状态如遇异常退出不会被自动拉起'),
                                 disabled: row.process_status !== 1 || !!row.is_auto
                             }">
                             {{ row.is_auto ? $t('托管中') : $t('未托管') }}
