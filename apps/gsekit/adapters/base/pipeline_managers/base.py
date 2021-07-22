@@ -139,12 +139,6 @@ class BasePipelineManager(object):
 
         create_pipeline_params = self.create_pipeline(job_tasks)
 
-        # tree = builder.build_tree(
-        #     create_pipeline_params["pipeline_start"], data=create_pipeline_params.get("global_pipeline_data")
-        # )
-        # # 根据流程描述结构创建流程对象
-        # parser = PipelineParser(pipeline_tree=tree)
-        # pipeline = parser.parse()
         pipeline = builder.build_tree(
             create_pipeline_params["pipeline_start"], data=create_pipeline_params.get("global_pipeline_data")
         )
