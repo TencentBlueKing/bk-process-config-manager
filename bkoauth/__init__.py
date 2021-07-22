@@ -11,8 +11,11 @@ except Exception:
 
 
 def _init_function():
-    from . import signals  # noqa
-    from .client import oauth_client
+    try:
+        from . import signals  # noqa
+        from .client import oauth_client
+    except ImportError:
+        return
 
     global oauth_client
     global get_app_access_token

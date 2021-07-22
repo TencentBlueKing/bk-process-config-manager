@@ -416,14 +416,15 @@ class BulkPushConfigService(MultiJobTaskBaseService):
             return
 
     def _execute(self, data, parent_data):
-        job_task = data.get_one_of_inputs("job_task")
         job_tasks = data.get_one_of_inputs("job_tasks")
         bk_biz_id = data.get_one_of_inputs("bk_biz_id")
         data.outputs.job_instance_id__job_task_ids_map = {}
 
         multi_job_params_map = {}
-        config_template_ids = job_task.get_job_task_config_template_ids()
-        if not config_template_ids:
+        job_tasks_config_template_ids_map = JobTask.get_job_tasks_config_template_ids_map(job_tasks)
+        all_config_template_ids = set(itertools.chain.from_iterable(job_tasks_config_template_ids_map.values()))
+
+        if not all_config_template_ids:
             # 未绑定模板，忽略
             for job_task in job_tasks:
                 job_task.set_status(
@@ -443,11 +444,11 @@ class BulkPushConfigService(MultiJobTaskBaseService):
 
         config_template_id_obj_map = {
             config_template.config_template_id: config_template
-            for config_template in ConfigTemplate.objects.filter(config_template_id__in=config_template_ids)
+            for config_template in ConfigTemplate.objects.filter(config_template_id__in=all_config_template_ids)
         }
         config_instance_id_content_map = {}
         for config_instance in ConfigInstance.objects.filter(
-            config_template_id__in=config_template_ids, bk_process_id__in=bk_process_ids, is_latest=True
+            config_template_id__in=all_config_template_ids, bk_process_id__in=bk_process_ids, is_latest=True
         ):
             inst_job_task = process_inst_map.get(
                 process_inst_map_key_tmpl.format(
