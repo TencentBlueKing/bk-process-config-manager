@@ -9,7 +9,6 @@ an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express o
 See the License for the specific language governing permissions and limitations under the License.
 """
 
-
 # 老版金枪鱼地址
 import os
 from collections import defaultdict
@@ -29,7 +28,7 @@ from apps.gsekit.process.exceptions import DuplicateProcessInstException
 from apps.gsekit.process.handlers.process import ProcessHandler
 from apps.gsekit.process.models import Process, ProcessInst
 from apps.iam import Permission, ResourceEnum
-from apps.utils.batch_request import batch_request
+from apps.utils.batch_request import batch_request, request_multi_thread
 
 DIRECT_OLD_GSEKIT_ROOT = os.getenv("DIRECT_OLD_GSEKIT_ROOT", "http://apps.****.com/ieod-bkapp-gsekit-prod")
 
@@ -75,6 +74,11 @@ class MigrateHandlers(object):
 
     def get_host_no(self, bk_module_id):
         return self.perform_request(uri=f"api/get_host_no/{bk_module_id}")["objects"] or {}
+
+    def get_module_id_host_no_map_list(self, bk_module_id):
+        return [{
+            bk_module_id: self.perform_request(uri=f"api/get_host_no/{bk_module_id}")["objects"] or {}
+        }]
 
     def diff_biz_process(self):
         cmdb_handler = CMDBHandler(bk_biz_id=self.bk_biz_id)
@@ -152,9 +156,9 @@ class MigrateHandlers(object):
                 for gsekit_proc in to_be_created_process_templates:
                     for cmdb_proc in cmdb_process_templates:
                         if (
-                            gsekit_proc["ProcName"] == cmdb_proc["property"]["bk_func_name"]["value"]
-                            and gsekit_proc["FuncID"] == cmdb_proc["property"]["bk_process_name"]["value"]
-                            and gsekit_proc["FuncName"] == cmdb_proc["property"]["bk_start_param_regex"]["value"]
+                                gsekit_proc["ProcName"] == cmdb_proc["property"]["bk_func_name"]["value"]
+                                and gsekit_proc["FuncID"] == cmdb_proc["property"]["bk_process_name"]["value"]
+                                and gsekit_proc["FuncName"] == cmdb_proc["property"]["bk_start_param_regex"]["value"]
                         ):
                             to_be_created_map.append(
                                 GsekitProcessToCCProcessTemplateMap(
@@ -340,8 +344,14 @@ class MigrateHandlers(object):
         process_list = batch_request(CCApi.list_process_related_info, {"bk_biz_id": self.bk_biz_id})
         migrate_data = process_handler.generate_process_inst_migrate_data(process_list)
         cmdb_module_proc_name_map = migrate_data["cmdb_module_proc_name_map"]
+        module_id_host_no_map = {}
+        params_list = [{"bk_module_id": bk_module_id} for bk_module_id in cmdb_module_proc_name_map.keys()]
+        module_id_host_no_map_list = request_multi_thread(self.get_module_id_host_no_map_list, params_list,
+                                                          get_data=lambda x: x)
+        for _module_id_host_no_map in module_id_host_no_map_list:
+            module_id_host_no_map.update(_module_id_host_no_map)
         for bk_module_id, cmdb_process_name_map in cmdb_module_proc_name_map.items():
-            host_no_map = self.get_host_no(bk_module_id=bk_module_id)
+            host_no_map = module_id_host_no_map[bk_module_id]
             for process_name, processes in cmdb_process_name_map.items():
                 max_proc_num = processes["max_proc_num"]
 
