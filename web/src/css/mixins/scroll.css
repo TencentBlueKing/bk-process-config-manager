@@ -1,9 +1,10 @@
 @define-mixin scroller $width: 6px, $borderRadius: 3px, $backgroundColor: #DCDEE5, {
-    &::-webkit-scrollbar {
-        width: $width;
-    }
-    &::-webkit-scrollbar-thumb {
-        border-radius: $borderRadius;
-        background-color: $backgroundColor;
-    }
+  &::-webkit-scrollbar {
+    width: $width;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: $borderRadius;
+    background-color: $backgroundColor;
+  }
 }
