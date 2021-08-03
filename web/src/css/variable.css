@@ -1,11 +1,14 @@
 /* 存放常用变量 */
 
 /********************** 主题色 **********************/
+
 /* 重点表示、强调、链接以及带有明确指示性 */
 $newMainColor: #3a84ff;
 $newMainColor1: #699df4;
+
 /* 描边使用 */
 $newMainColor2: #a3c5fd;
+
 /* 背景色 */
 $newMainColor3: #e1ecff;
 $newMainColor4: #2761dd;
@@ -13,13 +16,16 @@ $newMainColor5: #f0f8ff;
 $newMainColor6: #e1e8f4;
 
 /********************** 辅助色 **********************/
+
 /* 退出、删除、错误、严重警告等否定类标识 */
 $newRedColor: #ea3636;
 $newRedColor1: #ff5656;
+
 /* 描边使用 */
 $newRedColor2: #fd9c9c;
+
 /* 背景色 */
-$newRedColor3: #ffdddd;
+$newRedColor3: #fdd;
 $newRedColor4: #db2626;
 $newRedColor5: #ffeded;
 $newRedColor6: #f6dada;
@@ -27,8 +33,10 @@ $newRedColor6: #f6dada;
 /* 警示灯引起注意类标识 */
 $newOrangeColor: #ff9c01;
 $newOrangeColor1: #ffb848;
+
 /* 描边使用 */
 $newOrangeColor2: #ffd695;
+
 /* 背景色 */
 $newOrangeColor3: #ffe8c3;
 $newOrangeColor4: #eb9000;
@@ -38,8 +46,10 @@ $newOrangeColor6: #ede6db;
 /* 成功、完成、进行等肯定类标识 */
 $newGreenColor: #2dcb56;
 $newGreenColor1: #45e35f;
+
 /* 描边使用 */
 $newGreenColor2: #94f5a4;
+
 /* 背景色 */
 $newGreenColor3: #dcffe2;
 $newGreenColor4: #1ab943;
@@ -47,31 +57,38 @@ $newGreenColor5: #eaffed;
 $newGreenColor6: #cef0d7;
 
 /********************** 中性色 **********************/
+
 /* 重要级文字信息、内容标题信息 */
 $newBlackColor: #000;
+
 /* 次级标题、内容文字 主要文字使用颜色 */
 $newBlackColor1: #313238;
+
 /* 三级文字标题、内容文字 */
 $newBlackColor2: #63656e;
+
 /* 边框内说明文字 */
 $newBlackColor3: #979ba5;
 
 /* 按钮、表单边框颜色、禁用时文本颜色 */
 $newGreyColor: #c4c6cc;
+
 /* 表格线颜色区别表单，大描边颜色、线性色 */
 $newGreyColor1: #dcdee5;
+
 /* 表格头部背景色、禁用底色 */
 $newGreyColor2: #f0f1f5;
+
 /* 大面积背景色 */
 $newGreyColor3: #fafbfd;
 
-$blackThemeColor: #C4C6CC;
-$blackThemeHoverColor: #DCDEE5;
+$blackThemeColor: #c4c6cc;
+$blackThemeHoverColor: #dcdee5;
 
-$blackThemeBorderColor: #63656E;
-$blackThemeHoverBorderColor: #CCC;
+$blackThemeBorderColor: #63656e;
+$blackThemeHoverBorderColor: #ccc;
 
-$blackThemeActiveColor: #DCDEE5;
-$blackThemeActiveBorderColor: #CCC;
+$blackThemeActiveColor: #dcdee5;
+$blackThemeActiveBorderColor: #ccc;
 
 $blackThemeBackgroundColor: #323232;
