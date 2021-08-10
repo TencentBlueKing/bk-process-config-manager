@@ -56,7 +56,7 @@ export BKAPP_IAM_SKIP="True"
 ```
 
 
-2) 在项目根目录下添加本地配置 local_settings.py
+2) 在config目录下添加本地配置 local_settings.py
 
 ```python
 # -*- coding: utf-8 -*-
