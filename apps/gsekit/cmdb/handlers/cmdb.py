@@ -238,7 +238,9 @@ class CMDBHandler(object):
         # TODO 考虑换redis缓存，或者大业务的情况进行压缩缓存
         doc = doc.toxml("utf-8")
         cache.set(
-            self.CACHE_TOPO_ATTR_TEMPLATE.format(bk_biz_id=self.bk_biz_id), doc, gsetkit_const.CacheExpire.HOUR,
+            self.CACHE_TOPO_ATTR_TEMPLATE.format(bk_biz_id=self.bk_biz_id),
+            doc,
+            gsetkit_const.CacheExpire.HOUR,
         )
         return doc
 
@@ -485,7 +487,10 @@ class CMDBHandler(object):
         return modules
 
     def fetch_service_instance_by_module_ids(
-        self, bk_module_ids: List, expression: str = BuildInChar.ASTERISK, with_proc_count: bool = False,
+        self,
+        bk_module_ids: List,
+        expression: str = BuildInChar.ASTERISK,
+        with_proc_count: bool = False,
     ) -> List[Dict]:
         """获取模块列表下所有服务实例列表
         :param bk_module_ids: 模块ID列表，为None时拉取全部
@@ -636,17 +641,16 @@ class CMDBHandler(object):
 
     def check_service_template_difference(self, service_template_id: int, _request=None) -> Dict:
         """检查服务模板是否有变更"""
-        bk_module_ids = [
-            module["bk_module_id"]
-            for module in self.list_module_by_service_template_id(service_template_id, _request=_request)
-        ]
-        if not bk_module_ids:
-            return {service_template_id: False}
         differences = CCApi.list_service_template_difference(
-            {"bk_module_ids": bk_module_ids, "bk_biz_id": self.bk_biz_id, "partial_compare": True, "_request": _request}
+            {
+                "service_template_ids": [service_template_id],
+                "bk_biz_id": self.bk_biz_id,
+                "is_partial": True,
+                "_request": _request,
+            }
         )
-        for diff in differences:
-            if diff["has_difference"]:
+        for diff in differences.get("service_templates") or []:
+            if diff["need_sync"]:
                 return {service_template_id: True}
         return {service_template_id: False}
 

@@ -73,7 +73,7 @@ class MakoNodeVisitor(ast.NodeVisitor):
         BLACK_LIST_METHODS.extend(methods)
     BLACK_LIST_METHODS = set(BLACK_LIST_METHODS)
 
-    WHITE_LIST_MODULES = ["datetime", "re", "random", "json", "math", "test", "path", "enumerate"]
+    WHITE_LIST_MODULES = ["datetime", "re", "random", "json", "math", "test", "path", "enumerate", "name", "time"]
     WHITE_LIST_ATTR = ["get"]
 
     def __init__(self, black_list_methods=None, white_list_modules=None):
@@ -88,43 +88,34 @@ class MakoNodeVisitor(ast.NodeVisitor):
         """
         # re 正则表达式允许使用 compile
         if isinstance(ast_obj, _ast.Attribute):
-
             if ast_obj.attr in self.WHITE_LIST_ATTR:
                 return True
-
             if isinstance(ast_obj.value, _ast.Name):
                 if ast_obj.value.id == "re" and ast_obj.attr in ["compile"]:
                     return True
-
                 if ast_obj.value.id in self.WHITE_LIST_MODULES:
                     return True
-
         if isinstance(ast_obj, _ast.Name):
             if ast_obj.id in self.WHITE_LIST_MODULES:
                 return True
-
         return False
 
     def visit_Attribute(self, node):
         if self.is_white_list_ast_obj(node):
             return
-
-        # if node.attr in self.black_list_methods or node.attr.startswith("_"):
         if node.attr in self.black_list_methods:
-            raise ForbiddenMakoTemplateException("兄弟，干啥呢？{}".format(node.attr))
+            raise ForbiddenMakoTemplateException("发现非法属性使用:[{}]，请修改".format(node.attr))
 
     def visit_Name(self, node):
         if self.is_white_list_ast_obj(node):
             return
-
-        # if node.id in self.black_list_methods or node.id.startswith("_"):
         if node.id in self.black_list_methods:
-            raise ForbiddenMakoTemplateException("别搞了，逃逸不了的~:{}".format(node.id))
+            raise ForbiddenMakoTemplateException("发现非法名称使用:[{}]，请修改".format(node.id))
 
     def visit_Import(self, node):
         for name in node.names:
             if name.name not in self.white_list_modules:
-                raise ForbiddenMakoTemplateException("再搞我报警了！{}".format(name.name))
+                raise ForbiddenMakoTemplateException("发现非法导入:[{}]，请修改".format(name.name))
 
     def visit_ImportFrom(self, node):
         self.visit_Import(node)
