@@ -116,6 +116,7 @@
 
                 isDropdownMode: true, // 筛选表达式模式，true 下拉 false 输入
                 selectedScope: null, // 筛选表达式查询条件
+                selectedChanged: true, // 到第二步时是否要自动 重新生成配置
                 isMultipleTemplates: Boolean(!this.selectedConfig), // 从进程管理页面进来有多个配置模板
                 totalTemplates: [], // 配置模板列表（不包含没有版本的模板）
                 validTemplates: [], // 配置模板列表（过滤掉没查到实例列表的模板）
@@ -279,6 +280,7 @@
 
             // 进程范围筛选值改变，所有表格重新查询配置实例列表（重新渲染）
             handleSelectInstance (isDropdownMode, selectedScope) {
+                this.selectedChanged = true
                 this.isDropdownMode = isDropdownMode
                 this.selectedScope = selectedScope
                 this.initTotalList()
@@ -295,6 +297,7 @@
                 this.isTasking = false
                 this.generateLoading = false
                 this.isAllGeneratedSuccess = result.every(Boolean)
+                this.selectedChanged = false
             },
             // 重试失败项
             async handleGenerateFailure () {
@@ -329,6 +332,9 @@
                 const result = await Promise.all(promiseList)
                 this.isTasking = false
                 this.isAllGeneratedSuccess = result.every(Boolean)
+                if (this.selectedChanged) {
+                    this.handleGenerateAll()
+                }
             },
             // 配置下发
             async handleDistribute () {
