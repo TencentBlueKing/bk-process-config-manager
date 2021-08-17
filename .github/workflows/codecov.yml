@@ -24,6 +24,7 @@ jobs:
       BK_MYSQL_PORT: 3306
       BK_MYSQL_TEST_NAME: "bk_gsekit_test"
       WORKFLOW_DIR: "scripts/workflows"
+      CODECOV_TOKEN: "f36b5663-d697-4020-9e8e-47523082e8ef"
     services:
       # Label used to access the service container
       redis:
