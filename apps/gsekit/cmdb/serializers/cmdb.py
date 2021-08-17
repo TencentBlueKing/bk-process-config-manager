@@ -61,6 +61,11 @@ class ProcessRelatedInfoRequestSerializer(serializers.Serializer):
         swagger_schema_fields = {"example": mock_data.PROCESS_RELATED_INFO_REQUEST_BODY}
 
 
+class ProcessRelatedInfoResponseSerializer(serializers.Serializer):
+    class Meta:
+        swagger_schema_fields = {"example": mock_data.PROCESS_RELATED_INFO_RESPONSE}
+
+
 class ServiceInstanceResponseSerializer(serializers.Serializer):
     class Meta:
         swagger_schema_fields = {"example": mock_data.SERVICE_INSTANCE_RESPONSE}
@@ -112,6 +117,19 @@ class BizSearchObjectAttributeResponseSerializer(serializers.Serializer):
 class CheckServiceTemplateDifferenceRequestSerializer(serializers.Serializer):
     service_template_id = serializers.IntegerField(help_text=_("服务模板ID"))
 
+    class Meta:
+        swagger_schema_fields = {"example": mock_data.CHECK_SERVICE_TMPL_DIFF_REQUEST_BODY}
+
+
+class CheckServiceTemplateDifferenceResponseSerializer(serializers.Serializer):
+    class Meta:
+        swagger_schema_fields = {"example": mock_data.CHECK_SERVICE_TEMPLATE_DIFFERENCE_RESPONSE}
+
 
 class BatchCheckServiceTemplateDifferenceRequestSerializer(serializers.Serializer):
     service_template_ids = serializers.ListField(help_text=_("服务模板ID列表"))
+
+
+class BatchCheckServiceTemplateDifferenceResponseSerializer(serializers.Serializer):
+    class Meta:
+        swagger_schema_fields = {"example": mock_data.BATCH_CHECK_SERVICE_TEMPLATE_DIFFERENCE_RESPONSE}

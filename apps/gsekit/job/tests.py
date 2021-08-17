@@ -18,7 +18,7 @@ from apps.utils.test_utils.tests import patch_get_request
 
 class TestJobHandlers(TestCase):
     """
-    测试进程相关的接口
+    测试任务相关的接口
     """
 
     BK_BIZ_ID = 100605
@@ -33,7 +33,7 @@ class TestJobHandlers(TestCase):
             "bk_process_name": "*",
             "bk_process_id": "*",
         }
-        scope = {}
+        scope = None
         job_object = Job.JobObject.CONFIGFILE
         job_action = Job.JobAction.GENERATE
         created_by = "admin"
