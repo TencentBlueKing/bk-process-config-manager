@@ -1,5 +1,6 @@
 ## Deploy files
 
+local_settings.py
 static/dist
 web/static/dist
 package-lock.json
