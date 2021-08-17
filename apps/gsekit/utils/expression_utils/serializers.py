@@ -12,6 +12,7 @@ See the License for the specific language governing permissions and limitations 
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
+from apps.gsekit import constants
 from apps.gsekit.cmdb.constants import BK_SET_ENV_CHOICES, BkSetEnv
 
 
@@ -48,4 +49,4 @@ class ExpresssionScopeSerializer(serializers.Serializer):
 
 def gen_expression(expression_scope):
     expression_fields = ["bk_set_name", "bk_module_name", "service_instance_name", "bk_process_name", "bk_process_id"]
-    return ".".join([expression_scope[field] for field in expression_fields])
+    return constants.EXPRESSION_SPLITTER.join([expression_scope[field] for field in expression_fields])

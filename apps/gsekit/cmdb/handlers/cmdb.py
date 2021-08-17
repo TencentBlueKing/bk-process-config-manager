@@ -22,6 +22,7 @@ from lxml import etree
 from apps.api import CCApi
 from apps.gsekit import constants as gsetkit_const
 from apps.gsekit.cmdb import constants
+from apps.gsekit.constants import EXPRESSION_SPLITTER
 from apps.gsekit.process.models import Process
 from apps.gsekit.utils.expression_utils import match
 from apps.gsekit.utils.expression_utils.parse import BuildInChar
@@ -514,10 +515,10 @@ class CMDBHandler(object):
             [
                 {
                     "service_instance_id": process["service_instance_id"],
-                    "service_instance_name": ".".join(process["expression"].split(".")[2:-2]),
+                    "service_instance_name": process["expression"].split(EXPRESSION_SPLITTER)[2],
                 }
                 for process in processes
-                if match.match(".".join(process["expression"].split(".")[2:-2]), expression)
+                if match.match(process["expression"].split(EXPRESSION_SPLITTER)[2], expression)
             ]
         )
 
@@ -650,7 +651,7 @@ class CMDBHandler(object):
             }
         )
         for diff in differences.get("service_templates") or []:
-            if diff["need_sync"]:
+            if diff["service_template_id"] == service_template_id and diff["need_sync"]:
                 return {service_template_id: True}
         return {service_template_id: False}
 

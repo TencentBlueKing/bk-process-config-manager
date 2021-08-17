@@ -75,6 +75,7 @@ class CmdbMockClient:
         search_object_attribute_group=None,
         list_proc_template_return=None,
         list_process_instance_return=None,
+        list_service_template_difference_return=None,
     ):
         self.find_module_batch_return = find_module_batch_return
         self.list_proc_template_return = list_proc_template_return
@@ -97,6 +98,7 @@ class CmdbMockClient:
         self.update_process_instance = MagicMock(return_value=update_process_instance_return)
         self.update_proc_template = MagicMock(return_value=update_proc_template_return)
         self.list_process_related_info = MagicMock(return_value=list_process_related_info_return)
+        self.list_service_template_difference = MagicMock(return_value=list_service_template_difference_return)
 
     @staticmethod
     def get_cmdb_mock_client_inst(
@@ -114,6 +116,7 @@ class CmdbMockClient:
         list_proc_template_data=cmdb_mock_data.LIST_PROC_TEMPLATE,
         list_process_instance_data=cmdb_mock_data.LIST_PROCESS_INSTANCE,
         search_object_attribute_group=cmdb_mock_data.SEARCH_OBJECT_ATTRIBUTE_GROUP,
+        list_service_template_difference=cmdb_mock_data.LIST_SERVICE_TEMPLATE_DIFF,
     ):
         return CmdbMockClient(
             search_business_return={"info": search_business_data},
@@ -133,6 +136,7 @@ class CmdbMockClient:
             search_object_attribute_group=search_object_attribute_group,
             list_proc_template_return=list_proc_template_data,
             list_process_instance_return=list_process_instance_data,
+            list_service_template_difference_return=list_service_template_difference,
         )
 
 

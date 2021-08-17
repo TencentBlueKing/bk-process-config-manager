@@ -216,7 +216,7 @@ LIST_PROCESS_RELATED_INFO = [
         "set": {"bk_set_id": 3, "bk_set_env": "3", "bk_set_name": "测试集群-2"},
         "module": {"bk_module_name": "测试模块-3", "bk_module_id": 6},
         "host": {"bk_host_id": 3, "bk_cloud_id": 0, "bk_host_innerip": "127.0.0.3"},
-        "service_instance": {"id": 3, "name": "127.0.0.3.test_service-2"},
+        "service_instance": {"id": 3, "name": "127.0.0.3_test_service-2"},
         "process_template": {"id": 2},
         "process": {
             "bk_biz_id": MyTestCase.bk_biz_id,
@@ -412,6 +412,8 @@ PROCESS_RELATED_INFO_REQUEST_BODY = {
     "page": {"start": 0, "limit": 10, "sort": "user,work_path,pid_file,start_cmd,stop_cmd,priority"},
 }
 
+PROCESS_RELATED_INFO_RESPONSE = {"count": len(LIST_PROCESS_RELATED_INFO), "info": LIST_PROCESS_RELATED_INFO}
+
 SERVICE_INSTANCE_RESPONSE = [
     {
         "bk_biz_id": MyTestCase.bk_biz_id,
@@ -444,7 +446,7 @@ SERVICE_INSTANCE_RESPONSE = [
     {
         "bk_biz_id": MyTestCase.bk_biz_id,
         "bk_module_id": 6,
-        "name": "127.0.0.3.test_service-2",
+        "name": "127.0.0.3_test_service-2",
         "creator": "admin",
         "labels": "None",
         "bk_host_id": 3,
@@ -668,3 +670,12 @@ BIZ_SEARCH_OBJECT_ATTRIBUTE_REQUEST_BODY = {"bk_obj_id": CMDBHandler.BK_PROCESS_
 BIZ_SEARCH_OBJECT_ATTRIBUTE_RESPONSE = SEARCH_OBJECT_ATTRIBUTE_GROUP[
     BIZ_SEARCH_OBJECT_ATTRIBUTE_REQUEST_BODY["bk_obj_id"]
 ]
+CHECK_SERVICE_TMPL_DIFF_REQUEST_BODY = {"service_template_id": 1}
+
+LIST_SERVICE_TEMPLATE_DIFF = {
+    "service_templates": [{"service_template_id": 1, "need_sync": True}, {"service_template_id": 2, "need_sync": False}]
+}
+
+CHECK_SERVICE_TEMPLATE_DIFFERENCE_RESPONSE = True
+
+BATCH_CHECK_SERVICE_TEMPLATE_DIFFERENCE_RESPONSE = [{"1": True}, {"2": False}]

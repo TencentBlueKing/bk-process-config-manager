@@ -8,6 +8,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and limitations under the License.
 """
+from apps.gsekit import constants
 from apps.utils.test_utils.tests import MyTestCase
 from apps.gsekit.utils.expression_utils import parse, range2re, match, exceptions, serializers
 
@@ -176,6 +177,25 @@ class TestMatch(MyTestCase):
             value_eq=True,
         )
 
+    def test_list_match_service_name_contain_process_name(self):
+        expression_a = "set{splitter}*{splitter}127.0.0.1_proc_name{splitter}127{splitter}50".format(
+            splitter=constants.EXPRESSION_SPLITTER
+        )
+        expression_b = "set{splitter}*{splitter}127.0.0.1_proc_name{splitter}12{splitter}50".format(
+            splitter=constants.EXPRESSION_SPLITTER
+        )
+
+        self.assertDataStructure(
+            result_data=match.list_match(
+                names=[expression_a, expression_b],
+                expression="*{splitter}*{splitter}*{splitter}127{splitter}*".format(
+                    splitter=constants.EXPRESSION_SPLITTER
+                ),
+            ),
+            expected_data=[expression_a],
+            value_eq=True,
+        )
+
 
 class TestSerializers(MyTestCase):
     def test_gen_expression(self):
@@ -183,8 +203,14 @@ class TestSerializers(MyTestCase):
             "bk_set_env": "3",
             "bk_set_name": "set",
             "bk_module_name": "*",
-            "service_instance_name": "service",
+            "service_instance_name": "127.0.0.1_proc_name",
             "bk_process_name": "*",
             "bk_process_id": "50",
         }
-        self.assertDataStructure(serializers.gen_expression(expression_scope), "set.*.service.*.50")
+        self.assertDataStructure(
+            serializers.gen_expression(expression_scope),
+            "set{splitter}*{splitter}127.0.0.1_proc_name{splitter}*{splitter}50".format(
+                splitter=constants.EXPRESSION_SPLITTER
+            ),
+            value_eq=True,
+        )

@@ -30,6 +30,9 @@ RE_WHITESPACE = re.compile("[\t\n\x0b\x0c\r ]")
 PIPELINE_BATCH_SIZE = 200
 ORM_BATCH_SIZE = 200
 
+# 表达式分隔符
+EXPRESSION_SPLITTER = "<-GSEKIT->"
+
 
 class BkJobStatus(object):
     """

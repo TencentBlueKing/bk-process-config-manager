@@ -8,7 +8,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and limitations under the License.
 """
-
+from apps.gsekit import constants
 from apps.utils.test_utils.tests import MyTestCase
 from apps.gsekit.cmdb import mock_data as cmdb_mock_data
 from apps.gsekit.process.handlers.process import ProcessHandler
@@ -124,7 +124,8 @@ PROCESS_STATUS_RESPONSE = {
     "list": [
         {
             "bk_biz_id": 1,
-            "expression": "测试集群-1.测试模块-1.127.0.0.1_test_service-1.test_process-1.1",
+            "expression": "测试集群-1{splitter}测试模块-1{splitter}127.0.0.1_test_service-1{splitter}"
+            "test_process-1{splitter}1".format(splitter=constants.EXPRESSION_SPLITTER),
             "bk_host_innerip": "127.0.0.1",
             "bk_cloud_id": 0,
             "bk_set_env": "3",
@@ -139,7 +140,7 @@ PROCESS_STATUS_RESPONSE = {
             "is_auto": False,
             "bk_set_name": "测试集群-1",
             "bk_module_name": "测试模块-1",
-            "bk_service_name": "测试模块-1.127.0.0.1_test_service-1",
+            "bk_service_name": "127.0.0.1_test_service-1",
             "bk_cloud_name": "default area",
             "config_templates": [
                 {"template_name": "测试专用配置模板2", "file_name": "test.conf"},
@@ -152,7 +153,8 @@ PROCESS_STATUS_RESPONSE = {
         },
         {
             "bk_biz_id": 1,
-            "expression": "测试集群-2.测试模块-3.127.0.0.3.test_service-2.test_process-3.3",
+            "expression": "测试集群-2{splitter}测试模块-3{splitter}127.0.0.3_test_service-2{splitter}"
+            "test_process-3{splitter}3".format(splitter=constants.EXPRESSION_SPLITTER),
             "bk_host_innerip": "127.0.0.3",
             "bk_cloud_id": 0,
             "bk_set_env": "3",
@@ -167,7 +169,7 @@ PROCESS_STATUS_RESPONSE = {
             "is_auto": False,
             "bk_set_name": "测试集群-2",
             "bk_module_name": "测试模块-3",
-            "bk_service_name": "测试模块-3.127.0.0.3.test_service-2",
+            "bk_service_name": "127.0.0.3_test_service-2",
             "bk_cloud_name": "default area",
             "config_templates": [],
             "proc_inst_infos": [

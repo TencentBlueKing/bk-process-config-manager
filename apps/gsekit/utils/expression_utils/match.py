@@ -17,7 +17,7 @@ from django.utils.translation import ugettext_lazy as _
 from apps.gsekit.utils.expression_utils.parse import parse_exp2unix_shell_style
 from apps.gsekit.utils.expression_utils.exceptions import ExpressionSliceException
 
-slice_pattern = re.compile(r"\[([-+]?\d+)?\s?:\s?([-+]?\d+)?]")
+SLICE_PATTERN = re.compile(r"\[([-+]?\d+)?\s?:\s?([-+]?\d+)?]")
 
 
 def str2num_or_none(num_str: str) -> int:
@@ -29,7 +29,7 @@ def str2num_or_none(num_str: str) -> int:
 
 
 def execute_slice(names: List, slice_expression: str) -> List[str]:
-    slice_match_list = slice_pattern.findall(slice_expression)
+    slice_match_list = SLICE_PATTERN.findall(slice_expression)
     if len(slice_match_list) != 1:
         return names
 
