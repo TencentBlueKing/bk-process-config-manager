@@ -32,11 +32,11 @@ from apps.gsekit.configfile.models import (
     ConfigTemplateVersion,
 )
 from apps.gsekit.job.models import JobStatus, JobTask
+from apps.gsekit.meta.models import GlobalSettings
 from apps.gsekit.pipeline_plugins.components.collections.base import (
     JobTaskBaseService,
     MultiJobTaskBaseService,
     JOB_POLLING_INTERVAL as POLLING_INTERVAL,
-    POLLING_TIMEOUT,
 )
 from apps.gsekit.pipeline_plugins.exceptions import JobApiException
 from apps.utils.batch_request import request_multi_thread
@@ -103,7 +103,9 @@ class GenerateConfigService(JobTaskBaseService):
         # 设置老的配置实例为非最新
         try:
             ConfigInstance.objects.filter(
-                config_template_id__in=config_template_ids, bk_process_id=job_task.bk_process_id, inst_id=inst_id,
+                config_template_id__in=config_template_ids,
+                bk_process_id=job_task.bk_process_id,
+                inst_id=inst_id,
             ).update(is_latest=False)
         except OperationalError as err:
             logger.info(f"{err}: update {config_template_ids}--{job_task.bk_process_id}--{inst_id} set is_latest=false")
@@ -286,7 +288,8 @@ class BulkGenerateConfigService(MultiJobTaskBaseService):
                 if not latest_config_version:
                     error = NoActiveConfigVersionException(template_name=config_template.template_name)
                     job_task.set_status(
-                        JobStatus.FAILED, extra_data={"failed_reason": error.message, "err_code": error.code},
+                        JobStatus.FAILED,
+                        extra_data={"failed_reason": error.message, "err_code": error.code},
                     )
                     continue
 
@@ -405,7 +408,8 @@ class BulkPushConfigService(MultiJobTaskBaseService):
                 return self.request_single_job_and_create_map(job_func, job_id, job_task_ids, job_params, pipeline_data)
             for job_task in JobTask.objects.filter(id__in=job_task_ids):
                 job_task.set_status(
-                    JobStatus.FAILED, extra_data={"failed_reason": err.message, "err_code": err.code},
+                    JobStatus.FAILED,
+                    extra_data={"failed_reason": err.message, "err_code": err.code},
                 )
         else:
             # 并发请求记录作业平台 instance_id 和 job_task_ids 的映射关系和状态
@@ -620,7 +624,7 @@ class BulkPushConfigService(MultiJobTaskBaseService):
         is_finished = not (
             constants.BkJobStatus.PENDING in all_job_result or constants.BkJobStatus.RUNNING in all_job_result
         )
-        if polling_time + POLLING_INTERVAL > POLLING_TIMEOUT:
+        if polling_time + POLLING_INTERVAL > GlobalSettings.pipeline_polling_timeout():
             # 由于JOB的超时机制可能会失效，因此这里自己需要有超时机制进行兜底
             is_finished = True
             for job_instance_id, job_tasks_status in job_instance_id__job_task_ids_map.items():
