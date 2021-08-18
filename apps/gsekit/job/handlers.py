@@ -85,12 +85,14 @@ class JobHandlers(APIModel):
         if scope is None:
             scope_to_be_used = process_handler.expression_scope_to_scope(expression_scope)
             scope_to_be_used["is_expression"] = True
-            expression = gen_expression(expression_scope)
         else:
             scope_to_be_used = scope
             expression_scope = process_handler.scope_to_expression_scope(scope_to_be_used)
-            expression = gen_expression(expression_scope)
 
+        # 记录expression，使用 . 分割用于前端展示，不使用 <-GSEKIT-> 分割(可读性较差)
+        expression = gen_expression(expression_scope, splitter=".")
+
+        # 记录调用方的app_code，用于运营统计
         bk_app_code = settings.APP_ID
         try:
             request = get_request()
