@@ -2,9 +2,9 @@
 ---
 [![license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/TencentBlueKing/bk-process-config-manager/blob/master/LICENSE)
 [![Release](https://img.shields.io/badge/release-1.0.0-brightgreen.svg)](https://github.com/TencentBlueKing/bk-process-config-manager/releases)
-[![travis-ci](https://travis-ci.com/Tencent/bk-process-config-manager.svg?branch=master)](https://travis-ci.com/Tencent/bk-process-config-manager)
-[![Coverage Status](https://codecov.io/gh/Tencent/bk-process-config-manager/branch/master/graph/badge.svg)](https://codecov.io/gh/Tencent/bk-process-config-manager)
+[![Coverage Status](https://codecov.io/gh/TencentBlueKing/bk-process-config-manager/branch/master/graph/badge.svg)](https://codecov.io/gh/TencentBlueKing/bk-process-config-manager)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/TencentBlueKing/bk-process-config-manager/pulls)
+[![unittest](https://github.com/TencentBlueKing/bk-process-config-manager/actions/workflows/codecov.yml/badge.svg?event=schedule)](https://github.com/TencentBlueKing/bk-process-config-manager/actions/workflows/codecov.yml)
 
 English | [简体中文](readme.md)
 
