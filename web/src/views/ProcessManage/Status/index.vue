@@ -424,21 +424,22 @@
                     const params = {
                         op_type: operateType
                     }
-                    if (rowId) {
-                        this.selectedScope.bk_process_ids = [rowId]
+                    // 只有全选与非全选的区别 - 全选: (scope || expression_scope) + 筛选条件, 非全选: scope + process_id
+                    if (this.isSelectedAllPages) {
+                        params[this.isDropdownMode ? 'scope' : 'expression_scope'] = this.selectedScope
+                        Object.assign(params, this.getSearchParams())
                     } else {
-                        if (this.isSelectedAllPages) {
-                            this.selectedScope.bk_process_ids = []
-                            const query = this.getSearchParams()
-                            Object.assign(params, query)
-                        } else {
-                            this.selectedScope.bk_process_ids = this.processIdList
-                        }
+                        const copySelected = this.$refs.selectInstanceRef.dropdownSelectedData || {}
+                        const scope = {}
+                        Object.keys(copySelected).forEach(key => {
+                            scope[key] = []
+                        })
+                        scope.bk_set_env = this.checkedEnv
+                        scope.bk_process_ids = rowId ? [rowId] : [...this.processIdList]
+                        params.scope = scope
                     }
                     const res = await this.$store.dispatch('process/ajaxSetOperateProcess', {
-                        data: Object.assign(params, {
-                            [this.isDropdownMode ? 'scope' : 'expression_scope']: this.selectedScope
-                        })
+                        data: params
                     })
                     this.$store.commit('routeTaskHistoryDetail', res.data.job_id)
                 } catch (error) {
