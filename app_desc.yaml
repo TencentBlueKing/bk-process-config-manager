@@ -1,0 +1,56 @@
+spec_version: 2
+app_version: "{{APP_VERSION}}"
+app:
+    region: default
+    bk_app_code: "bk-gsekit-k8s"
+    bk_app_name: 进程配置管理容器部署版
+    market:
+        category: 运维工具
+        introduction: 进程配置管理
+        display_options:
+            width: 1300
+            height: 720
+            is_win_maximize: True
+            open_mode: "new_tab"
+modules:
+    default:
+        is_default: True
+        source_dir: src
+        language: Python
+        services:
+            - name: mysql
+            - name: redis
+            - name: rabbitmq
+        processes:
+            web:
+                command: gunicorn --timeout 600 --max-requests 100 --max-requests-jitter 10 wsgi -w 8 -b :5000 --access-logfile - --error-logfile - --access-logformat '[%(h)s] %({request_id}i)s %(u)s %(t)s "%(r)s" %(s)s %(D)s %(b)s "%(f)s" "%(a)s"'
+                plan: 4C2G5R
+                replicas: 5
+            dworker:
+                command: celery -A blueapps.core.celery worker -Q default -n default@%h -c 5 -l info --maxtasksperchild=50
+                plan: 4C2G5R
+                replicas: 5
+            pworker:
+                command: celery -A blueapps.core.celery worker -Q pipeline,pipeline_priority -n pipeline_worker@%h -c 5 -l info --maxtasksperchild=50
+                plan: 4C2G5R
+                replicas: 5
+            sworker:
+                command: celery -A blueapps.core.celery worker -A blueapps.core.celery -Q service_schedule,service_schedule_priority -c 5 -l info -n schedule_worker@%h --maxtasksperchild=50
+                plan: 4C2G5R
+                replicas: 5
+            cworker:
+                command: celery -A blueapps.core.celery worker -Q pipeline_additional_task,pipeline_additional_task_priority -n common_worker@%h -c 5 -l info --maxtasksperchild=50
+                plan: 4C2G5R
+                replicas: 5
+            erworker:
+                command: celery -A blueapps.core.celery worker -Q er_execute,er_schedule -n ri_worker@%h -l info -c 10 -l info --maxtasksperchild=50
+                plan: 4C2G5R
+                replicas: 5
+            beat:
+                command: celery -A blueapps.core.celery beat -l info
+                plan: 4C2G5R
+                replicas: 1
+            pwatch:
+                command: python manage.py watch_process
+                plan: 4C2G5R
+                replicas: 1

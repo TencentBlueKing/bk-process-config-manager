@@ -209,6 +209,14 @@ ADAPTER_TYPE = os.getenv("BKAPP_ADAPTER_TYPE", "base")
 # ==============================================================================
 # IAM
 # ==============================================================================
+
+# 使用权限中心
+USE_IAM = bool(os.getenv("BKAPP_USE_IAM", False))
+
+if not USE_IAM:
+    iam_idx = INSTALLED_APPS.index("apps.iam")
+    INSTALLED_APPS = INSTALLED_APPS[:iam_idx] + INSTALLED_APPS[iam_idx + 1 :]
+
 BK_IAM_SYSTEM_ID = "bk_gsekit"
 BK_IAM_SYSTEM_NAME = "GSEKIT"
 BK_IAM_MIGRATION_APP_NAME = "iam"
@@ -220,8 +228,8 @@ BK_IAM_INNER_HOST = os.getenv("BK_IAM_V3_INNER_HOST", "http://bkiam.service.cons
 BK_IAM_RESOURCE_API_HOST = os.getenv("BKAPP_IAM_RESOURCE_API_HOST", f"{BK_PAAS_INNER_HOST}/o/{APP_CODE}/")
 
 # 权限中心 SaaS host
-BK_IAM_APP_CODE = os.getenv("BK_IAM_V3_APP_CODE", "bk_iam")
-BK_IAM_SAAS_HOST = os.environ.get("BK_IAM_V3_SAAS_HOST", f"{BK_PAAS_HOST}/o/{BK_IAM_APP_CODE}/")
+BK_IAM_APP_CODE = os.getenv("BKAPP_IAM_V3_APP_CODE", "bk_iam")
+BK_IAM_SAAS_HOST = os.environ.get("BKAPP_IAM_V3_SAAS_HOST", f"{BK_PAAS_HOST}/o/{BK_IAM_APP_CODE}/")
 
 # TAM
 TAM_AEGIS_KEY = os.getenv("BKAPP_TAM_AEGIS_KEY")
