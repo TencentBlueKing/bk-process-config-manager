@@ -8,6 +8,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and limitations under the License.
 """
+from typing import Dict
 
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
@@ -47,6 +48,9 @@ class ExpresssionScopeSerializer(serializers.Serializer):
         return attrs
 
 
-def gen_expression(expression_scope):
+def gen_expression(expression_scope: Dict, splitter: str = constants.EXPRESSION_SPLITTER) -> str:
+    """
+    根据表达式范围生成表达式字符串
+    """
     expression_fields = ["bk_set_name", "bk_module_name", "service_instance_name", "bk_process_name", "bk_process_id"]
-    return constants.EXPRESSION_SPLITTER.join([expression_scope[field] for field in expression_fields])
+    return splitter.join([expression_scope[field] for field in expression_fields])

@@ -18,7 +18,7 @@ from apps.gsekit.process.handlers.process import ProcessHandler
 from common.log import logger
 
 
-@task(queue="default", ignore_result=True)
+@task(ignore_result=True)
 def sync_biz_process_task(bk_biz_id):
     ProcessHandler(bk_biz_id=bk_biz_id).sync_biz_process()
 
