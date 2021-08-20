@@ -140,7 +140,7 @@ export default {
     return {
       checkeStatus: 'loading', // loading, normal, error, unknow, completed
       localEnv: '', // localStorage 存储的选中环境
-      checkedEnv: '', // 当前环境
+      checkedEnv: '', // 当前环境 - 非实时, 仅用于检查; 其它操作取 selectedScope.bk_set_env
       checkedEnvList: [], // 待检查的环境
       hasCheckedAsync: false, // 初始检查是否做个同步操作
       hasCheckedModelList: false, // 是否检查过topo(this.checkStepInstance)
@@ -261,16 +261,16 @@ export default {
   },
   created() {
     /**
-     * 检查流程： 遍历环境,检查是否有进程状态
-     * 1、第一次检查，如果不存在进程，则检查module_list（只检查一次），反之结束；
-     * 2、module_list检查结束，若有TOPO，则继续做下一个环境的检查，反之结束；
-     * 3、若每个环境都没有进程，则做一次同步操作（只操作一次），然后再次遍历环境
-     * 4、若遍历之后还是没有进程，则调整状态为 completed 结束
-     *
-     *  与之前检查流程不同的是
-     * 1、无数据的情况下需要把三个环境都检查完
-     * 2、每个环境都无进程 则不会调用 getTemplateList 方法
-     */
+             * 检查流程： 遍历环境,检查是否有进程状态
+             * 1、第一次检查，如果不存在进程，则检查module_list（只检查一次），反之结束；
+             * 2、module_list检查结束，若有TOPO，则继续做下一个环境的检查，反之结束；
+             * 3、若每个环境都没有进程，则做一次同步操作（只操作一次），然后再次遍历环境
+             * 4、若遍历之后还是没有进程，则调整状态为 completed 结束
+             *
+             *  与之前检查流程不同的是
+             * 1、无数据的情况下需要把三个环境都检查完
+             * 2、每个环境都无进程 则不会调用 getTemplateList 方法
+             */
 
     this.resetEnvList();
     this.checkProcessCount();
@@ -426,11 +426,12 @@ export default {
           Object.assign(params, this.getSearchParams());
         } else {
           const copySelected = this.$refs.selectInstanceRef.dropdownSelectedData || {};
-          const scope = {};
+          const scope = {
+            bk_set_env: this.selectedScope.bk_set_env,
+          };
           Object.keys(copySelected).forEach((key) => {
             scope[key] = [];
           });
-          scope.bk_set_env = this.checkedEnv;
           scope.bk_process_ids = rowId ? [rowId] : [...this.processIdList];
           params.scope = scope;
         }
