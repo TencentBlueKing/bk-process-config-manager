@@ -4,7 +4,7 @@
 [![Release](https://img.shields.io/badge/release-1.0.0-brightgreen.svg)](https://github.com/TencentBlueKing/bk-process-config-manager/releases)
 [![Coverage Status](https://codecov.io/gh/TencentBlueKing/bk-process-config-manager/branch/master/graph/badge.svg)](https://codecov.io/gh/TencentBlueKing/bk-process-config-manager)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/TencentBlueKing/bk-process-config-manager/pulls)
-[![unittest](https://github.com/TencentBlueKing/bk-process-config-manager/actions/workflows/codecov.yml/badge.svg?event=schedule)](https://github.com/TencentBlueKing/bk-process-config-manager/actions/workflows/codecov.yml)
+[![unittest](https://github.com/TencentBlueKing/bk-process-config-manager/actions/workflows/codecov.yml/badge.svg)](https://github.com/TencentBlueKing/bk-process-config-manager/actions/workflows/codecov.yml)
 
 [English](readme_en.md) | 简体中文
 
@@ -47,6 +47,7 @@
 - [BK-BCS-SaaS](https://github.com/Tencent/bk-bcs-saas): 蓝鲸容器管理平台 SaaS 基于原生 Kubernetes 和 Mesos 自研的两种模式，提供给用户高度可扩展、灵活易用的容器产品服务。
 - [BK-PaaS](https://github.com/Tencent/bk-PaaS): 蓝鲸 PaaS 平台是一个开放式的开发平台，让开发者可以方便快捷地创建、开发、部署和管理 SaaS 应用。
 - [BK-SOPS](https://github.com/Tencent/bk-sops): 标准运维（SOPS）是通过可视化的图形界面进行任务流程编排和执行的系统，是蓝鲸体系中一款轻量级的调度编排类 SaaS 产品。
+- [BK-JOB](https://github.com/Tencent/bk-job): 蓝鲸作业平台(Job)是一套运维脚本管理系统，具备海量任务并发处理能力。
 - [BK-BASE](https://github.com/Tencent/bk-base): 蓝鲸基础计算平台(BK-BASE)是一个专注于运维领域的的基础平台，打造一站式、低门槛的基础服务。通过简化运维数据的收集、获取，提升数据开发效率，辅助运维人员实时运维决策，助力企业运营体系数字化、智能化转型。
 
 
