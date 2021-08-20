@@ -30,7 +30,7 @@ cryptography==2.7
 bk-iam==1.1.19
 
 # pipeline
-bamboo-pipeline==3.3.0
+bamboo-pipeline==3.5.4
 bamboo-engine==1.2.1
 
 # for sentry
