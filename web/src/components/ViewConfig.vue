@@ -9,7 +9,7 @@
       <template slot="content">
         <div class="side-slider">
           <bk-tab
-            v-show="instancesConfig.length"
+            v-show="instancesConfig && instancesConfig.length"
             :active.sync="active"
             type="unborder-card"
             @tab-change="handleTabChange">
