@@ -146,7 +146,8 @@ export default {
      * @param {Boolean} options.silent - no emit event when set value
      */
     setValue(scope, { silent }) {
-      this.selectedData = scope;
+      const value = JSON.parse(JSON.stringify(scope));
+      this.selectedData = value;
       if (!silent) {
         this.$emit('selected', 'custom', null, this.selectedData);
       } else {

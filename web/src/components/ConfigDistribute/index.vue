@@ -192,7 +192,7 @@ export default {
           this.$refs.selectInstanceRef.setExpressionValue(this.selectedScope, options);
         }
         try {
-          const res = await this.$store.dispatch('configTemplate/ajaxGetConfigTemplateList');
+          const res = await this.$store.dispatch('configTemplate/ajaxGetConfigTemplateList', { pagesize: 1000 });
           this.totalTemplates = res.data.list.filter(item => item.has_version);
           await this.initTotalList();
         } catch (e) {
