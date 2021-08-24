@@ -9,7 +9,12 @@
       <!-- 进程范围 -->
       <div class="form-container" v-show="curStep === 1">
         <span class="star-title">{{ $t('进程范围') }}</span>
-        <SelectInstance ref="selectInstanceRef" @init="initSelectData" @valueChange="handleSelectInstance" />
+        <SelectInstance
+          ref="selectInstanceRef"
+          :dropdown-mode="isDropdownMode"
+          :default-selected="selectedScope || {}"
+          @init="initSelectData"
+          @valueChange="handleSelectInstance" />
       </div>
       <!-- 配置模板，从进程管理进来才需要选择配置模板 -->
       <div class="form-container" v-if="curStep === 1 && isMultipleTemplates">
@@ -164,6 +169,12 @@ export default {
       }
     },
   },
+  created() {
+    if (!this.selectedConfig) {
+      this.isDropdownMode = this.scopeData.isDropdownMode;
+      this.selectedScope = this.scopeData.selectedScope;
+    }
+  },
   mounted() {
     // second init
     this.initPage();
@@ -182,13 +193,9 @@ export default {
         await this.initTotalList();
       } else {
         // 进程管理入口，多个配置
-        this.isDropdownMode = this.scopeData.isDropdownMode;
-        this.selectedScope = this.scopeData.selectedScope;
         // 回填数据
         const options = { silent: true };
-        if (this.isDropdownMode) {
-          this.$refs.selectInstanceRef.setScopeValue(this.selectedScope, options);
-        } else {
+        if (!this.isDropdownMode) {
           this.$refs.selectInstanceRef.setExpressionValue(this.selectedScope, options);
         }
         try {
