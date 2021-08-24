@@ -267,9 +267,7 @@ class BulkGenerateConfigService(MultiJobTaskBaseService):
             job_task_id_obj_map[job_task.id] = job_task
             inst_id = job_task.extra_data["inst_id"]
 
-            config_template_ids = job_task.extra_data.get("config_template_ids")
-            if not config_template_ids:
-                config_template_ids = job_tasks_config_template_ids_map.get(job_task.id, [])
+            config_template_ids = job_tasks_config_template_ids_map.get(job_task.id, [])
 
             context = ConfigVersionHandler.get_process_context(
                 job_task.extra_data["process_info"],
