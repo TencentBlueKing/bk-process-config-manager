@@ -5,20 +5,18 @@ export default {
   state: {},
   mutations: {},
   actions: {
-    // 获取配置模板列表
-    ajaxGetConfigTemplateList({ rootState }, { page, pagesize, search, ordering } = {}) {
-      let url = `api/${rootState.bizId}/config_template/?`;
-      if (page) {
-        url += `&page=${page}`;
-      }
-      if (pagesize) {
-        url += `&pagesize=${pagesize}`;
-      }
-      if (search) {
-        url += `&search=${search}`;
-      }
-      if (ordering) {
-        url += `&ordering=${ordering}`;
+    // 获取配置模板列表 page, pagesize, search, ordering
+    ajaxGetConfigTemplateList({ rootState }, query = {}) {
+      let url = `api/${rootState.bizId}/config_template/`;
+      const queryArr = [];
+      Object.keys(query).reduce((arr, key) => {
+        if (query[key]) {
+          arr.push(`${key}=${query[key]}`);
+        }
+        return arr;
+      }, queryArr);
+      if (queryArr.length) {
+        url += `?${queryArr.join('&')}`;
       }
       return http.get(url);
     },

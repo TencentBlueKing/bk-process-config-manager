@@ -18,6 +18,7 @@
     <DropdownSelector
       v-show="isDropdownMode"
       ref="dropdownSelectorRef"
+      :fields-info="fieldsInfo"
       :origin-data="dropdownSelectorData"
       @selected="handleDropdownChange" />
     <!-- 表达式 -->
@@ -65,16 +66,33 @@ export default {
       type: Boolean,
       default: false,
     },
+    dropdownMode: {
+      type: Boolean,
+      default: true,
+    },
+    defaultSelected: {
+      type: Object,
+      default: () => ({}),
+    },
   },
   data() {
     return {
+      inited: false,
       basicLoading: false, // 获取下拉列表数据时候给按钮加载状态
-      isDropdownMode: true, // 筛选下拉模式，反之表达式模式
+      isDropdownMode: this.dropdownMode, // 筛选下拉模式，反之表达式模式
       setEnv: '', // 集群环境，默认为正式
       envTips: {
         content: this.$t('环境类型，对应配置平台中的集群属性。进程筛选范围受限于此属性'),
         delay: 3000,
       },
+      fieldsInfo: [ // 列表渲染信息
+        { type: 'set', value: 'bk_set_ids', list: 'bk_set_list', name: this.$t('集群'), hasGap: true },
+        { type: 'module', value: 'bk_module_ids', list: 'bk_module_list', name: this.$t('模块'), hasGap: true },
+        { type: 'service', value: 'bk_service_ids', list: 'bk_service_list', name: this.$t('服务实例'), hasGap: true },
+        { type: 'processName', value: 'bk_process_names', list: 'bk_process_name_list', name: this.$t('进程别名'), hasGap: true },
+        { type: 'processId', value: 'bk_process_ids', list: 'bk_process_id_list', name: 'process_id', hasGap: false },
+      ],
+      sourceDropdownSelected: {},
       dropdownSelectorData: { // 筛选可选项
         bk_set_list: [],
         bk_module_list: [],
@@ -112,26 +130,36 @@ export default {
     this.bizId = this.$store.state.bizId;
     this.bizEnvMap = JSON.parse(window.localStorage.getItem('BK_SET_ENV_MAP') || '{}');
     this.setEnv = this.bizEnvMap[this.bizId] || '3';
+    if (this.isDropdownMode) {
+      this.setSelectedData();
+    } else if (Object.keys(this.defaultSelected).length) {
+      this.expressionSelectedData = { ...this.defaultSelected };
+    }
     setTimeout(() => {
       // 初始化时就通过父组件设置值时，保证只初始化一次列表
       if (!this.inited) {
-        this.initSelectList();
+        const { bk_set_ids: sets, bk_module_ids: modules, bk_service_ids: services } = this.dropdownSelectedData;
+        this.initSelectList(sets, modules, services);
       }
     });
-    this.$emit('init', this.isDropdownMode, {
+    this.$emit('init', this.isDropdownMode, Object.assign({
       bk_set_env: this.setEnv,
-      ...this.dropdownSelectedData,
-    });
+    }, this.isDropdownMode ? { ...this.dropdownSelectedData } : { ...this.expressionSelectedData }));
+  },
+  mounted() {
+    if (this.isDropdownMode) {
+      this.$refs.dropdownSelectorRef.setValue(this.sourceDropdownSelected, { silent: true });
+    }
   },
   methods: {
     // 初始化、环境改变时获取所有下拉列表
-    async initSelectList() {
+    async initSelectList(bkSetIds, bkModuleIds, bkServiceIds) {
       this.basicLoading = true;
       await Promise.all([
         this.fetchSetList(),
-        this.fetchModuleList(),
-        this.fetchServiceList(),
-        this.fetchProcessList(),
+        this.fetchModuleList(bkSetIds),
+        this.fetchServiceList(bkModuleIds),
+        this.fetchProcessList(bkServiceIds),
       ]);
       this.basicLoading = false;
     },
@@ -370,13 +398,70 @@ export default {
         this.inited = true;
       }
       delete value.bk_set_env;
-      this.$refs.dropdownSelectorRef.setValue(value, options);
+      this.setSelectedData(scope);
+      this.$refs.dropdownSelectorRef.setValue(this.sourceDropdownSelected, options);
     },
     /**
      * 设置setEnv (遍历环境检查进程之后需要同步当前环境)
      */
     handleSetEnv(value) {
       this.setEnv = value;
+    },
+    // 设置实际生效的选项值
+    setSelectedData(selected) {
+      const { fieldsInfo, defaultSelected } = this;
+      const selectedData = selected || defaultSelected;
+      const defaultValMap = {};
+      fieldsInfo.forEach(({ value }) => {
+        if (selectedData[value] && selectedData[value].length) {
+          const selected = [];
+          selectedData[value].reduce((arr, item) => {
+            if (typeof item === 'string' && item.indexOf(',') > -1) {
+              arr.splice(0, arr.length, ...item.split(',').map(id => parseInt(id, 10)));
+            } else {
+              arr.push(item);
+            }
+            return arr;
+          }, selected);
+          defaultValMap[value] = selected;
+        } else {
+          defaultValMap[value] = [];
+        }
+        // 同时设置正确的返回值
+        this.sourceDropdownSelected[value] = selectedData[value] || [];
+      });
+      this.dropdownSelectedData = defaultValMap;
+    },
+    /**
+     * 返回准确的选中值的类型。部分选项 [1,2,3,4,5,6] => [1, 2,'3,4,5,6']
+     */
+    getFormatScope() {
+      if (this.isDropdownMode) {
+        const scope = { bk_set_env: this.setEnv };
+        const { dropdownSelectedData, fieldsInfo, dropdownSelectorData = [] } = this;
+        fieldsInfo.forEach(({ value, list }) => {
+          scope[value] = this.getSelectorDefaultValue(dropdownSelectorData[list], dropdownSelectedData[value]);
+        });
+        return scope;
+      }
+      return { ...this.expressionSelectedData, bk_set_env: this.setEnv };
+    },
+    /**
+     * 找出id未拼接类型的选项
+     */
+    getSelectorDefaultValue(list, values) {
+      const checked = [];
+      list.forEach(({ id }) => {
+        if (typeof id === 'string' && id.indexOf(',') > -1) {
+          const ids = id.split(',').map(id => parseInt(id, 10));
+          if (ids.every(id => values.includes(id))) {
+            checked.push(id);
+          }
+        } else if (values.includes(id)) {
+          checked.push(id);
+        }
+      });
+      return checked;
     },
   },
 };

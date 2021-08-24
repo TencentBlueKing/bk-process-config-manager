@@ -7,7 +7,7 @@
         :value="selectedData[item.value]"
         :list="originData[item.list]"
         :name="item.name"
-        @change="handleChange(item.type, $event)" />
+        @selected="handleSelected(item.type, $event)" />
     </template>
   </div>
 </template>
@@ -20,6 +20,10 @@ export default {
     PowerSelect,
   },
   props: {
+    fieldsInfo: {
+      type: Array,
+      default: () => [],
+    },
     originData: {
       type: Object,
       default() {
@@ -35,13 +39,6 @@ export default {
   },
   data() {
     return {
-      fieldsInfo: [ // 列表渲染信息
-        { type: 'set', value: 'bk_set_ids', list: 'bk_set_list', name: this.$t('集群'), hasGap: true },
-        { type: 'module', value: 'bk_module_ids', list: 'bk_module_list', name: this.$t('模块'), hasGap: true },
-        { type: 'service', value: 'bk_service_ids', list: 'bk_service_list', name: this.$t('服务实例'), hasGap: true },
-        { type: 'processName', value: 'bk_process_names', list: 'bk_process_name_list', name: this.$t('进程别名'), hasGap: true },
-        { type: 'processId', value: 'bk_process_ids', list: 'bk_process_id_list', name: 'process_id', hasGap: false },
-      ],
       selectedData: {
         bk_set_ids: [],
         bk_module_ids: [],
@@ -53,11 +50,11 @@ export default {
   },
   methods: {
     /**
-             * 下拉列表选择
-             * @param {String} type - 哪个下拉列表改变了
-             * @param {Array} ids - 下拉选择的值 id 列表
-             */
-    handleChange(type, ids) {
+     * 下拉列表选择
+     * @param {String} type - 哪个下拉列表改变了
+     * @param {Array} ids - 下拉选择的值 id 列表
+     */
+    handleSelected(type, ids) {
       // 选择集群后，需要重新拉取模块列表，因此清除已选择的模块，以此类推
       switch (type) {
         case 'set': // 选择集群
@@ -145,14 +142,9 @@ export default {
      * @param {Object} options
      * @param {Boolean} options.silent - no emit event when set value
      */
-    setValue(scope, { silent }) {
+    setValue(scope) {
       const value = JSON.parse(JSON.stringify(scope));
       this.selectedData = value;
-      if (!silent) {
-        this.$emit('selected', 'custom', null, this.selectedData);
-      } else {
-        this.$emit('selected', null, null, this.selectedData);
-      }
     },
   },
 };
