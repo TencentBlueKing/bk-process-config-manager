@@ -426,15 +426,6 @@ class BulkPushConfigService(MultiJobTaskBaseService):
         job_tasks_config_template_ids_map = JobTask.get_job_tasks_config_template_ids_map(job_tasks)
         all_config_template_ids = set(itertools.chain.from_iterable(job_tasks_config_template_ids_map.values()))
 
-        if not all_config_template_ids:
-            # 未绑定模板，忽略
-            for job_task in job_tasks:
-                job_task.set_status(
-                    JobStatus.IGNORED, extra_data={"failed_reason": str(ProcessDoseNotBindTemplate().message)}
-                )
-            self.finish_schedule()
-            return self.return_data(result=True)
-
         bk_process_ids = set()
         process_inst_map = {}
         process_inst_map_key_tmpl = "{bk_process_id}-{inst_id}"
@@ -443,6 +434,13 @@ class BulkPushConfigService(MultiJobTaskBaseService):
             inst_id = job_task.extra_data["inst_id"]
             bk_process_ids.add(bk_process_id)
             process_inst_map[process_inst_map_key_tmpl.format(bk_process_id=bk_process_id, inst_id=inst_id)] = job_task
+
+            # 任务进程没有绑定任何配置模板，忽略
+            config_template_ids = job_tasks_config_template_ids_map.get(job_task.id, [])
+            if not config_template_ids:
+                job_task.set_status(
+                    JobStatus.IGNORED, extra_data={"failed_reason": str(ProcessDoseNotBindTemplate().message)}
+                )
 
         config_template_id_obj_map = {
             config_template.config_template_id: config_template
@@ -516,7 +514,8 @@ class BulkPushConfigService(MultiJobTaskBaseService):
                         },
                         "pipeline_data": data,
                     }
-        request_multi_thread(self.request_single_job_and_create_map, multi_job_params_map.values())
+        if multi_job_params_map:
+            request_multi_thread(self.request_single_job_and_create_map, multi_job_params_map.values())
         return self.return_data(result=True)
 
     def request_get_job_instance_status(self, pipeline_data, job_instance_id, job_task_ids):
@@ -603,6 +602,10 @@ class BulkPushConfigService(MultiJobTaskBaseService):
     def _schedule(self, data, parent_data, callback_data=None):
         polling_time = data.get_one_of_outputs("polling_time") or 0
         job_instance_id__job_task_ids_map = data.get_one_of_outputs("job_instance_id__job_task_ids_map") or {}
+
+        # 没有任务，直接完成
+        if not job_instance_id__job_task_ids_map:
+            return self.return_data(result=True, is_finished=True)
 
         to_be_check_job = []
         for job_instance_id, job_tasks_status in job_instance_id__job_task_ids_map.items():
