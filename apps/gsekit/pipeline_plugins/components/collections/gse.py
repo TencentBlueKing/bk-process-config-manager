@@ -10,6 +10,7 @@ See the License for the specific language governing permissions and limitations 
 """
 import json
 import logging
+from typing import Dict
 
 from django.db.models import F
 from django.utils.translation import ugettext as _
@@ -442,14 +443,21 @@ class BulkGseOperateProcessService(MultiJobTaskBaseService):
         return True
 
     @classmethod
-    def gse_result_meta_key(cls, job_task, local_inst_id):
+    def get_job_task_gse_result(cls, gse_api_result: Dict[str, Dict], job_task: JobTask) -> Dict:
+        """GSE接口偶尔会出现IP进程不返回的情况，针对这种情况默认填充 GseDataErrorCode.RUNNING 状态"""
         host_info = job_task.extra_data["process_info"]["host"]
         process_info = job_task.extra_data["process_info"]["process"]
+        local_inst_id = job_task.extra_data["local_inst_id"]
         namespace = NAMESPACE.format(bk_biz_id=process_info["bk_biz_id"])
-        return (
+        uniq_key = (
             f"{host_info['bk_cloud_id']}:{host_info['bk_host_innerip']}:"
             f"{namespace}:{process_info['bk_process_name']}_{local_inst_id}"
         )
+        return gse_api_result.get(uniq_key) or {
+            "content": "",
+            "error_code": GseDataErrorCode.RUNNING,
+            "error_msg": "handling",
+        }
 
     @classmethod
     def increment_inst_status_count(cls, job_task: JobTask, status: int, is_auto: bool):
@@ -585,7 +593,7 @@ class BulkGseOperateProcessService(MultiJobTaskBaseService):
 
         for job_task in job_tasks:
             local_inst_id = job_task.extra_data["local_inst_id"]
-            task_result = gse_api_result[self.gse_result_meta_key(job_task, local_inst_id=local_inst_id)]
+            task_result = self.get_job_task_gse_result(gse_api_result, job_task)
             error_code = task_result.get("error_code")
 
             # 已处理过的任务
@@ -673,7 +681,7 @@ class BulkGseCheckProcessService(BulkGseOperateProcessService):
 
         for job_task in job_tasks:
             local_inst_id = job_task.extra_data["local_inst_id"]
-            task_result = gse_api_result[self.gse_result_meta_key(job_task, local_inst_id=local_inst_id)]
+            task_result = self.get_job_task_gse_result(gse_api_result, job_task)
             error_code = task_result.get("error_code")
 
             if error_code == GseDataErrorCode.SUCCESS:
