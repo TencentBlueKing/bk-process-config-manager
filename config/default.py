@@ -217,7 +217,7 @@ if not USE_IAM:
     iam_idx = INSTALLED_APPS.index("apps.iam")
     INSTALLED_APPS = INSTALLED_APPS[:iam_idx] + INSTALLED_APPS[iam_idx + 1 :]
 
-BK_IAM_SYSTEM_ID = "bk_gsekit"
+BK_IAM_SYSTEM_ID = os.getenv("BKAPP_IAM_SYSTEM_ID", "bk_gsekit")
 BK_IAM_SYSTEM_NAME = "GSEKIT"
 BK_IAM_MIGRATION_APP_NAME = "iam"
 BK_IAM_SKIP = False
