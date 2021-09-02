@@ -19,7 +19,7 @@ from apps.iam.handlers.actions import ActionMeta, get_action_by_id, _all_actions
 from apps.iam.handlers.resources import get_resource_by_id, _all_resources, ResourceEnum
 from apps.utils.local import get_request
 from common.log import logger
-from iam import IAM, Request, Subject, Resource, make_expression, ObjectSet, MultiActionRequest
+from iam import IAM, Request, Subject, Resource, make_expression, ObjectSet, MultiActionRequest, DummyIAM
 from iam.apply.models import (
     ActionWithoutResources,
     Application,
@@ -55,6 +55,9 @@ class Permission(object):
 
     @classmethod
     def get_iam_client(cls):
+        if settings.BK_IAM_SKIP:
+            return DummyIAM(settings.APP_ID, settings.APP_TOKEN,
+                            settings.BK_IAM_INNER_HOST, settings.BK_PAAS_INNER_HOST)
         return IAM(settings.APP_ID, settings.APP_TOKEN, settings.BK_IAM_INNER_HOST, settings.BK_PAAS_INNER_HOST)
 
     def make_request(self, action: Union[ActionMeta, str], resources: List[Resource] = None) -> Request:
@@ -247,6 +250,10 @@ class Permission(object):
         """
         根据动作过滤用户有权限的业务列表
         """
+
+        # 跳过权限中心
+        if settings.BK_IAM_SKIP:
+            return business_list
 
         # 拉取策略
         request = self.make_request(action=action)
