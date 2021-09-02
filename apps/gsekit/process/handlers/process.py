@@ -506,6 +506,10 @@ class ProcessHandler(APIModel):
         """计算准备好变更实例所需的数据"""
 
         local_inst_id_uniq_key_map = {}
+        change_uniq_info_process_ids = set()
+        # 本地缓存进程ID - 需保持一组进程实例唯一性信息 映射
+        # 背景：模板进程修改需保存唯一性的信息（例如进程别名），存量的进程实例没有删除
+        local_process_id_uniq_info_map: Dict[int, Dict[str, Union[str, int]]] = {}
         host_num_key_map: Dict[Union[int, ProcessInst]] = defaultdict(
             lambda: {"max_proc_num": ProcessInst.DEFAULT_PROC_NUM, "process": None}
         )
@@ -517,8 +521,22 @@ class ProcessHandler(APIModel):
         local_bk_process_ids = set()
         # 把进程按不同规则做映射，方便后续进行判断处理
         for local_process in ProcessInst.objects.filter(bk_biz_id=self.bk_biz_id):
-            bk_process_name = local_process.bk_process_name
+
             bk_module_id = local_process.bk_module_id
+            bk_process_id = local_process.bk_process_id
+            bk_process_name = local_process.bk_process_name
+
+            # 构造缓存进程实例唯一性信息
+            local_process_uniq_info = {"bk_process_name": bk_process_name}
+            if bk_process_id not in local_process_id_uniq_info_map:
+                local_process_id_uniq_info_map[bk_process_id] = local_process_uniq_info
+            else:
+                # 同ID进程唯一性信息不一致，说明缓存有脏数据，记录进程ID后续重建全部实例
+                if local_process_id_uniq_info_map[bk_process_id] != local_process_uniq_info:
+                    change_uniq_info_process_ids.add(bk_process_id)
+                # 进程实例需要重建，无需对脏数据执行下列计算，create_process_inst 在无记录下会对实例进行重建
+                continue
+
             local_inst_id_uniq_key_map[local_process.local_inst_id_uniq_key] = local_process
             host_num_key_map[local_process.bk_host_num_key] = {
                 "max_proc_num": max(
@@ -534,18 +552,20 @@ class ProcessHandler(APIModel):
                     local_module_proc_name_map[bk_module_id][bk_process_name]["max_host_num"], local_process.bk_host_num
                 ),
             }
-            local_bk_process_ids.add(local_process.bk_process_id)
+            local_bk_process_ids.add(bk_process_id)
 
         # 根据进程名分组获取进程名在模块下对应的进程数量的最大值
         cmdb_module_proc_name_map: Dict[Dict[Dict[Union[int, List]]]] = defaultdict(
             lambda: defaultdict(lambda: {"max_proc_num": ProcessInst.DEFAULT_PROC_NUM, "processes": []})
         )
 
+        # CMDB实时业务进程ID列表
+        cmdb_bk_process_ids = set()
         # 找到每个进程中最大的进程启动数量
-        bk_process_ids_updated = set()
         for cmdb_process in process_list:
-            bk_process_name = cmdb_process["process"]["bk_process_name"]
             bk_module_id = cmdb_process["module"]["bk_module_id"]
+            bk_process_id = cmdb_process["process"]["bk_process_id"]
+            bk_process_name = cmdb_process["process"]["bk_process_name"]
             # 若CMDB进程未配置启动数量，则默认取 ProcessInst.DEFAULT_PROC_NUM
             cmdb_process["process"]["proc_num"] = cmdb_process["process"]["proc_num"] or ProcessInst.DEFAULT_PROC_NUM
             max_proc_num = max(
@@ -554,11 +574,17 @@ class ProcessHandler(APIModel):
             )
             cmdb_module_proc_name_map[bk_module_id][bk_process_name]["max_proc_num"] = max_proc_num
             cmdb_module_proc_name_map[bk_module_id][bk_process_name]["processes"].append(cmdb_process)
-            bk_process_ids_updated.add(cmdb_process["process"]["bk_process_id"])
+            cmdb_bk_process_ids.add(cmdb_process["process"]["bk_process_id"])
+
+            # 校验进程模板唯一性信息是否修改，如果修改需要重建该bk_process_id下的进程实例
+            local_process_uniq_info = local_process_id_uniq_info_map.get(bk_process_id)
+            if local_process_uniq_info != {"bk_process_name": bk_process_name}:
+                change_uniq_info_process_ids.add(bk_process_id)
 
         to_be_deleted_inst_condition = []
         # 计算无效进程ID并删除关联的进程实例
-        invalid_bk_process_ids = local_bk_process_ids - bk_process_ids_updated
+        # 无效进程ID：1. 存在于本地缓存但不存在于CMDB的进程ID 2. 唯一性字段变更（bk_process_name）
+        invalid_bk_process_ids = (local_bk_process_ids - cmdb_bk_process_ids) | change_uniq_info_process_ids
         if invalid_bk_process_ids:
             to_be_deleted_inst_condition.append(Q(bk_process_id__in=invalid_bk_process_ids))
 
