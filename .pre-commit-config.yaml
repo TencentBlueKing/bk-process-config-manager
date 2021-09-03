@@ -22,6 +22,10 @@ repos:
         types: [python]
       - id: check-commit-message
         name: Check commit message
-        entry: python scripts/check_commit_message.py
+        entry: python scripts/workflows/pre-commit/check_commit_message.py
         language: system
         stages: [commit-msg]
+      - id: check-sensitive-info
+        name: Check Sensitive Info
+        entry: sh scripts/workflows/pre-commit/check_sensitive_info.sh
+        language: system
