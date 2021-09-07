@@ -148,6 +148,9 @@ class ConfigInstanceHandler(APIModel):
         latest_gen_cfg_inst_map = {}
         for latest_gen_cfg_inst in latest_generated_config_instance_list:
             key = latest_gen_cfg_inst.identity_key
+            # 进程启动数量调整后，config_instance.identity_key 不一定能匹配到相应的进程实例，执行key存在性校验，避免KeyError
+            if key not in process_config_template_mapping:
+                continue
             latest_gen_cfg_inst_map[key] = latest_gen_cfg_inst
             process_config_template_mapping[key].update({"status": ConfigInstance.Status.GENERATED})
 
@@ -194,7 +197,7 @@ class ConfigInstanceHandler(APIModel):
                     "config_instance_id": config_instance.id,
                 }
             )
-            if latest_gen_cfg_inst.config_version_id != latest_config_version.config_version_id:
+            if generated_config_version_id != latest_config_version.config_version_id:
                 process_config_template_mapping[key].update({"status": ConfigInstance.Status.NOT_LATEST})
 
         # 过滤掉指定的配置版本的配置实例
