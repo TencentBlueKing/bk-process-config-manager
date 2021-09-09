@@ -1,15 +1,15 @@
 {
-    "system_id": "bk_gsekit",
+    "system_id": "bk-gsekit-k8s",
     "operations": [
         {
             "operation": "upsert_system",
             "data": {
-                "id": "bk_gsekit",
+                "id": "bk-gsekit-k8s",
                 "name": "GSEKIT",
                 "name_en": "GSEKIT",
                 "description": "GSEKIT",
                 "description_en": "GSEKIT",
-                "clients": "bk_gsekit,gsekit2",
+                "clients": "bk-gsekit-k8s,gsekit2",
                 "provider_config": {
                     "host": "",
                     "auth": "basic"
@@ -48,7 +48,7 @@
                         "id": "biz"
                     },
                     {
-                        "system_id": "bk_gsekit",
+                        "system_id": "bk-gsekit-k8s",
                         "id": "config_template"
                     }
                 ]
@@ -153,11 +153,11 @@
                 "related_resource_types": [
                     {
                         "id": "config_template",
-                        "system_id": "bk_gsekit",
+                        "system_id": "bk-gsekit-k8s",
                         "selection_mode": "instance",
                         "related_instance_selections": [
                             {
-                                "system_id": "bk_gsekit",
+                                "system_id": "bk-gsekit-k8s",
                                 "id": "config_template_list",
                                 "ignore_iam_path": true
                             }
@@ -181,11 +181,11 @@
                 "related_resource_types": [
                     {
                         "id": "config_template",
-                        "system_id": "bk_gsekit",
+                        "system_id": "bk-gsekit-k8s",
                         "selection_mode": "instance",
                         "related_instance_selections": [
                             {
-                                "system_id": "bk_gsekit",
+                                "system_id": "bk-gsekit-k8s",
                                 "id": "config_template_list",
                                 "ignore_iam_path": true
                             }
