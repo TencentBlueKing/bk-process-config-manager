@@ -62,6 +62,7 @@
           <VariableComponent v-show="showVariablePanel" @close="showVariablePanel = false" />
           <PreviewComponent
             v-show="showPreviewPanel"
+            :template-id="templateId"
             :show-preview-panel="showPreviewPanel"
             :preview-language="codeLanguage"
             :preview-content="currentEditorContent"
@@ -213,6 +214,9 @@ export default {
     },
     versionId() {
       return this.$route.params.versionId;
+    },
+    templateId() {
+      return this.$route.params.templateId;
     },
     usableVersion() { // 有可用的版本才可 DIFF
       return this.versionList.find(item => item.is_active);
@@ -372,7 +376,7 @@ export default {
       try {
         this.saveLoading = true;
         const res = await this.$store.dispatch('configTemplate/ajaxCreateNewConfigVersion', {
-          templateId: this.$route.params.templateId,
+          templateId: this.templateId,
           data: {
             description,
             content: this.currentEditorContent,
@@ -433,7 +437,7 @@ export default {
       try {
         this.saveDraftLoading = true;
         const res = await this.$store.dispatch('configTemplate/ajaxCreateNewConfigVersion', {
-          templateId: this.$route.params.templateId,
+          templateId: this.templateId,
           data: {
             description: this.selectedVersion.description,
             content: this.currentEditorContent,
@@ -443,7 +447,7 @@ export default {
         this.$emit('createNewVersion', res.data);
         this.messageSuccess(this.$t('保存成功'));
         this.$store.commit('routeConfigTemplateVersionDetail', {
-          templateId: this.$route.params.templateId,
+          templateId: this.templateId,
           versionId: res.data.config_version_id,
         });
       } catch (e) {
@@ -490,7 +494,7 @@ export default {
     // 返回版本列表
     backToVersionList() {
       this.$store.commit('routeConfigTemplateVersionList', {
-        templateId: this.$route.params.templateId,
+        templateId: this.templateId,
       });
     },
 

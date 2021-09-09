@@ -84,7 +84,7 @@ export default {
   批量对比: 'Batch comparison',
   模板名称: 'Template Name',
   文件名: 'Filename',
-  文件绝对路径: 'File Absolute Path',
+  文件所处路径: 'File path',
   更新人: 'Update People',
   更新时间: 'Updated Time',
   新建配置文件模板: 'Create configuration file template',

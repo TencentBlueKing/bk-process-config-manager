@@ -5,12 +5,19 @@
         <span class="bk-icon icon-expand-line"></span>
       </div>
       <div class="title">{{ $t('预览') }}</div>
-      <div class="vertical-line"></div>
-      <div class="process-instance">
-        {{ $t('进程实例') }}
-        <span class="star">*</span>
+      <div class="head-select">
+        <!-- <div class="vertical-line"></div> -->
+        <div class="process-instance">
+          {{ $t('进程实例') }}
+          <span class="star">*</span>
+        </div>
+        <TreeSelect
+          ref="treeSelectRef"
+          placement="bottom-end"
+          :popover-min-width="398"
+          :tree-data="topoData"
+          @selected="handleSelected" />
       </div>
-      <TreeSelect ref="treeSelectRef" :tree-data="topoData" @selected="handleSelected" />
     </div>
     <div class="right-panel-main">
       <CodeEditor :content="codeContent" :language="codeLanguage" />
@@ -29,7 +36,16 @@ export default {
     TreeSelect,
     CodeEditor,
   },
+  provide() {
+    return {
+      linkedProcess: () => this.linkedProcess,
+    };
+  },
   props: {
+    templateId: {
+      type: String,
+      default: '',
+    },
     showPreviewPanel: {
       type: Boolean,
       default: false,
@@ -54,6 +70,7 @@ export default {
       basicLoading: false,
       topoData: [],
       selectedProcess: null,
+      linkedProcess: [],
     };
   },
   watch: {
@@ -64,6 +81,7 @@ export default {
             this.handleRefresh();
           } else { // 第一次打开
             this.getProcessList();
+            this.getTemplateBindRelationship();
           }
         }
       },
@@ -78,12 +96,23 @@ export default {
         const res = await this.$store.dispatch('cmdb/ajaxGetBizTopo');
         const topoData = res.data.length ? res.data[0].child : [];
         this.filterTopoData(topoData);
-        this.topoData = topoData;
+        this.topoData = this.getHasProcessTopo(topoData);
         this.$nextTick(this.openSelect);
       } catch (e) {
         console.warn(e);
       } finally {
         this.basicLoading = false;
+      }
+    },
+    async getTemplateBindRelationship() {
+      try {
+        const { data = [] } = await this.$store.dispatch('configTemplate/ajaxGetTemplateBindRelationship', { templateId: this.templateId });
+        this.linkedProcess = data.map(item => ({
+          id: item.process_object_id,
+          type: item.process_object_type,
+        }));
+      } catch (e) {
+        console.warn(e);
       }
     },
     // 打开下拉列表
@@ -110,6 +139,15 @@ export default {
           this.filterTopoData(item.child, topoLevel, item);
         }
       });
+    },
+    getHasProcessTopo(data) {
+      const topo =  data.filter(item => !['set', 'module'].includes(item.topoType) || item.topoProcessCount);
+      topo.forEach((item) => {
+        if (item.child && item.child.length) {
+          item.child = this.getHasProcessTopo(item.child);
+        }
+      });
+      return topo;
     },
 
     // 树选择事件
@@ -154,12 +192,22 @@ export default {
     height: 100%;
 
     .right-panel-header {
+      justify-content: space-between;
+
       .vertical-line {
         flex-shrink: 0;
         width: 1px;
         height: 16px;
         margin: 0 20px 0 14px;
         background-color: #63656e;
+      }
+
+      .head-select {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        margin-left: 10px;
       }
 
       .process-instance {

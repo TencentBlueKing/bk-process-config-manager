@@ -5,7 +5,7 @@
         <TemplateField :selected-config="selectedConfig" field="template_name" :field-text="$t('模板名称') + $t('：')" />
       </div>
       <div class="couple">
-        <TemplateField :selected-config="selectedConfig" field="abs_path" :field-text="$t('文件绝对路径') + $t('：')" />
+        <TemplateField :selected-config="selectedConfig" field="abs_path" :field-text="$t('文件所处路径') + $t('：')" />
       </div>
       <div class="couple">
         <TemplateField :selected-config="selectedConfig" field="owner" :field-text="$t('文件拥有者') + $t('：')" />
