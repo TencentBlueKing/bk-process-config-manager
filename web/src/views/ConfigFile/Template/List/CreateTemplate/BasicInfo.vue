@@ -8,7 +8,7 @@
       <bk-form-item :label="$t('文件名称')" required property="file_name" error-display-type="normal">
         <bk-input v-model="formData.file_name" :clearable="true" :placeholder="$t('模板渲染生成的文件名称')"></bk-input>
       </bk-form-item>
-      <bk-form-item :label="$t('文件绝对路径')" required property="abs_path" error-display-type="normal">
+      <bk-form-item :label="$t('文件所处路径')" required property="abs_path" error-display-type="normal">
         <bk-input v-model="formData.abs_path" :clearable="true" :placeholder="$t('文件分发到服务器的路径')"></bk-input>
       </bk-form-item>
       <bk-form-item :label="$t('文件拥有者')" required property="owner" error-display-type="normal">

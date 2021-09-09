@@ -14,7 +14,7 @@
         <span v-bk-overflow-tips>{{ configFileDetail.file_name || '--' }}</span>
       </li>
       <li class="couple">
-        <label>{{ $t('文件绝对路径') }}</label>
+        <label>{{ $t('文件所处路径') }}</label>
         <span v-bk-overflow-tips>{{ configFileDetail.abs_path || '--' }}</span>
       </li>
       <li class="couple">

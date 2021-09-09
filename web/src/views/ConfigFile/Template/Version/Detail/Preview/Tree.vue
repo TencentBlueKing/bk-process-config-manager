@@ -20,7 +20,10 @@
           <div v-bk-overflow-tips class="text-content">
             {{ topoNode.topoName }}
           </div>
-          <div v-if="topoNode.topoProcessCount !== undefined" class="process-count">
+          <div v-if="topoNode.topoType === 'instanceProcess' && topoNode.unmanaged" class="node-tag process-unmanaged">
+            {{ $t('未关联') }}
+          </div>
+          <div v-if="topoNode.topoProcessCount !== undefined" class="node-tag process-count">
             {{ topoNode.topoProcessCount }}
           </div>
         </div>
@@ -38,6 +41,7 @@
 <script>
 export default {
   name: 'Tree',
+  inject: ['linkedProcess'],
   props: {
     nodeList: {
       type: Array,
@@ -48,6 +52,11 @@ export default {
     return {
       nodeTypeMap: [this.$t('集'), this.$t('模'), this.$t('实'), this.$t('进')],
     };
+  },
+  computed: {
+    linkedList() {
+      return this.linkedProcess();
+    },
   },
   methods: {
     async handleClickNode(topoNode) {
@@ -94,6 +103,7 @@ export default {
                 item.topoProcess = true;
                 item.topoType = 'instanceProcess';
                 item.topoChecked = false;
+                item.unmanaged = !this.linkedList.find(({ type, id }) => (type === 'TEMPLATE' ? id === item.process_template_id : id === item.bk_process_id));
               });
               topoNode.child = res.data;
             }
@@ -164,7 +174,7 @@ export default {
           width: 18px;
           height: 18px;
           line-height: 18px;
-          margin-right: 8px;
+          margin-right: 6px;
           text-align: center;
           border-radius: 9px;
           overflow: hidden;
@@ -184,16 +194,22 @@ export default {
           white-space: nowrap;
         }
 
-        .process-count {
+        .node-tag {
           flex-shrink: 0;
           padding: 0 2px;
           min-width: 16px;
           line-height: 16px;
           text-align: center;
           font-size: 12px;
+          border-radius: 2px;
           color: $newBlackColor3;
           background: #474747;
-          border-radius: 2px;
+        }
+
+        .process-unmanaged {
+          padding: 0 6px;
+          color: #ad4d3e;
+          background: #412525;
         }
 
         &:hover {

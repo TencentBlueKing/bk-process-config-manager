@@ -4,8 +4,8 @@
       ref="popover"
       theme="light custom-tree-select"
       trigger="click"
-      placement="bottom-start"
       animation="slide-toggle"
+      :placement="placement"
       :offset="0"
       :distance="12"
       :on-show="handleDropdownShow"
@@ -23,7 +23,7 @@
         </span>
         <span class="bk-icon icon-angle-down"></span>
       </div>
-      <div slot="content" ref="contentRef" class="custom-tree-select-content">
+      <div slot="content" ref="contentRef" class="custom-tree-select-content" :style="contentStyle">
         <div class="input-container">
           <span class="bk-icon icon-search"></span>
           <input
@@ -57,6 +57,14 @@ export default {
         return [];
       },
     },
+    placement: {
+      type: String,
+      default: 'bottom-start',
+    },
+    popoverMinWidth: {
+      type: Number,
+      default: 0,
+    },
   },
   data() {
     return {
@@ -70,6 +78,11 @@ export default {
       searchLoading: false,
       searchTimer: null,
     };
+  },
+  computed: {
+    contentStyle() {
+      return this.popoverMinWidth ? { minWidth: `${this.popoverMinWidth}px` } : {};
+    },
   },
   methods: {
     handleDropdownShow() {
@@ -240,7 +253,7 @@ export default {
     }
 
     .tree-container {
-      min-height: 100px;
+      min-height: 42px;
       max-height: 294px;
       padding-bottom: 6px;
       overflow: auto;

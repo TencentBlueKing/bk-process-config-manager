@@ -43,8 +43,8 @@
       <div class="scroll-container" v-bkloading="{ isLoading }">
         <TopoTree
           v-show="showTopo"
-          :template-process="templateProcess"
-          :instance-process="instanceProcess"
+          :template-process.sync="templateProcess"
+          :instance-process.sync="instanceProcess"
           :node-list="topoData"
           @checked="handleCheckNode" />
         <div v-if="isEmptyService" v-show="showTemp" class="empty-service-container">
@@ -60,8 +60,8 @@
           v-else
           v-show="showTemp"
           :node-list="templateList"
-          :template-process="templateProcess"
-          :instance-process="instanceProcess"
+          :template-process.sync="templateProcess"
+          :instance-process.sync="instanceProcess"
           @checked="handleCheckNode" />
       </div>
     </div>
