@@ -138,7 +138,7 @@ export default {
                   item.topoChecked = true;
                   const copyProcess = [...this.instanceProcess];
                   copyProcess.splice(findIndex, 1, item);
-                  this.$set('this', 'instanceProcess', copyProcess);
+                  this.$emit('update:instanceProcess', copyProcess);
                 }
               });
               topoNode.child = res.data;
@@ -174,7 +174,7 @@ export default {
                   item.topoChecked = true;
                   const copyProcess = [...this.templateProcess];
                   copyProcess.splice(findIndex, 1, item);
-                  this.$set('this', 'templateProcess', copyProcess);
+                  this.$emit('update:templateProcess', copyProcess);
                 }
               });
               topoNode.child = res.data;
