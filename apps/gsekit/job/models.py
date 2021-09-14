@@ -233,22 +233,38 @@ class JobTask(models.Model):
         )
 
     @classmethod
-    def get_job_tasks_config_template_ids_map(cls, job_tasks: QuerySet) -> Dict:
+    def get_job_tasks_config_template_ids_map(cls, job_tasks: QuerySet) -> Dict[int, List[int]]:
+        """
+        获取任务对应配置模板列表的映射
+        :return: {
+            1: [1, 2, 3],
+            ${job_task_id}: ${config_template_ids}
+        }
+        """
         bk_process_ids = []
         process_template_ids = []
+
+        # 查询配置模板和进程的绑定关系，用于匹配
         for job_task in job_tasks:
             process_template_id = job_task.extra_data["process_info"]["process_template"].get("id")
             if process_template_id:
                 process_template_ids.append(process_template_id)
             else:
                 bk_process_ids.append(job_task.extra_data["process_info"]["process"]["bk_process_id"])
-
         relations = ConfigTemplateBindingRelationship.objects.filter(
             Q(process_object_type=Process.ProcessObjectType.INSTANCE, process_object_id__in=bk_process_ids)
             | Q(process_object_type=Process.ProcessObjectType.TEMPLATE, process_object_id__in=process_template_ids)
         )
+
+        # 匹配任务中的进程和配置模板
         job_task_config_template_ids_map = defaultdict(list)
         for job_task in job_tasks:
+            # 指定了配置模板的情况，直接返回即可
+            if job_task.extra_data.get("config_template_ids"):
+                job_task_config_template_ids_map[job_task.id] = job_task.extra_data["config_template_ids"]
+                continue
+
+            # 未指定配置模板的，需进一步匹配
             for relation in relations:
                 process_template_id = job_task.extra_data["process_info"]["process_template"].get("id")
                 bk_process_id = job_task.extra_data["process_info"]["process"]["bk_process_id"]

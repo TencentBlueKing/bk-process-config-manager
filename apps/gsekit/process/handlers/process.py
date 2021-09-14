@@ -12,33 +12,33 @@ import copy
 import json
 import operator
 import time
+from collections import defaultdict
 from functools import reduce
 from itertools import groupby
-from collections import defaultdict
 from typing import List, Dict, Union
 
 from django.db import transaction
 from django.db.models import Q, QuerySet
 
-from apps.gsekit import constants
-from apps.utils import APIModel
-from apps.utils.batch_request import batch_request, request_multi_thread
-from apps.utils.mako_utils.render import mako_render
-from common.log import logger
 from apps.api import CCApi, GseApi
+from apps.gsekit import constants
 from apps.gsekit.cmdb.handlers.cmdb import CMDBHandler
 from apps.gsekit.configfile.models import ConfigTemplateBindingRelationship, ConfigTemplate
 from apps.gsekit.pipeline_plugins.components.collections.gse import NAMESPACE, GseAutoType, GseDataErrorCode, GseOpType
 from apps.gsekit.process import exceptions
-from apps.gsekit.process.models import Process, ProcessInst
 from apps.gsekit.process.exceptions import (
     ProcessDoseNotExistException,
     DuplicateProcessInstException,
     ProcessNotMatchException,
 )
+from apps.gsekit.process.models import Process, ProcessInst
 from apps.gsekit.utils.expression_utils import match
-from apps.gsekit.utils.expression_utils.serializers import gen_expression
 from apps.gsekit.utils.expression_utils.parse import parse_list2expr, BuildInChar
+from apps.gsekit.utils.expression_utils.serializers import gen_expression
+from apps.utils import APIModel
+from apps.utils.batch_request import batch_request, request_multi_thread
+from apps.utils.mako_utils.render import mako_render
+from common.log import logger
 
 
 class ProcessHandler(APIModel):
@@ -63,12 +63,12 @@ class ProcessHandler(APIModel):
     def process_expression_to_name(expression: str) -> Dict:
         """进程表达式转为名称"""
 
-        expression_split_list = expression.split(".")
+        expression_split_list = expression.split(constants.EXPRESSION_SPLITTER)
         return {
             "bk_set_name": expression_split_list[0],
             "bk_module_name": expression_split_list[1],
-            "bk_service_name": ".".join(expression_split_list[2:-2]),
-            "bk_process_name": expression_split_list[-2],
+            "bk_service_name": expression_split_list[2],
+            "bk_process_name": expression_split_list[3],
         }
 
     @classmethod
@@ -117,8 +117,14 @@ class ProcessHandler(APIModel):
 
         # 查询相应的进程配置绑定关系
         conf_tmpl_relations = ConfigTemplateBindingRelationship.objects.filter(
-            Q(process_object_id__in=process_from_template_ids, process_object_type=Process.ProcessObjectType.TEMPLATE,)
-            | Q(process_object_id__in=process_normal_ids, process_object_type=Process.ProcessObjectType.INSTANCE,)
+            Q(
+                process_object_id__in=process_from_template_ids,
+                process_object_type=Process.ProcessObjectType.TEMPLATE,
+            )
+            | Q(
+                process_object_id__in=process_normal_ids,
+                process_object_type=Process.ProcessObjectType.INSTANCE,
+            )
         ).values("config_template_id", "process_object_id", "process_object_type")
 
         # 按进程类别及id归类配置模板ID
@@ -250,11 +256,12 @@ class ProcessHandler(APIModel):
         candidate_processes = Process.objects.filter(
             bk_biz_id=self.bk_biz_id, bk_set_env=expression_scope["bk_set_env"]
         ).values("bk_process_id", "expression")
+
         expr_proc_id_map = {proc["expression"]: proc["bk_process_id"] for proc in candidate_processes}
 
         # 切片语法单独处理
         slice_expression = BuildInChar.ASTERISK
-        if match.slice_pattern.match(expression_scope["bk_process_id"]):
+        if match.SLICE_PATTERN.match(expression_scope["bk_process_id"]):
             slice_expression = expression_scope["bk_process_id"]
             expression_scope["bk_process_id"] = BuildInChar.ASTERISK
 
@@ -454,13 +461,14 @@ class ProcessHandler(APIModel):
                 bk_cloud_id=process["host"]["bk_cloud_id"],
                 process_template_id=process["process_template"]["id"],
                 bk_process_name=process["process"]["bk_process_name"],
-                expression="{bk_set_name}.{bk_module_name}."
-                "{service_instance_name}.{bk_process_name}.{bk_process_id}".format(
+                expression="{bk_set_name}{splitter}{bk_module_name}{splitter}"
+                "{service_instance_name}{splitter}{bk_process_name}{splitter}{bk_process_id}".format(
                     bk_set_name=process["set"]["bk_set_name"],
                     bk_module_name=process["module"]["bk_module_name"],
                     service_instance_name=process["service_instance"]["name"],
                     bk_process_name=process["process"]["bk_process_name"],
                     bk_process_id=bk_process_id,
+                    splitter=constants.EXPRESSION_SPLITTER,
                 ),
             )
 
@@ -498,6 +506,10 @@ class ProcessHandler(APIModel):
         """计算准备好变更实例所需的数据"""
 
         local_inst_id_uniq_key_map = {}
+        change_uniq_info_process_ids = set()
+        # 本地缓存进程ID - 需保持一组进程实例唯一性信息 映射
+        # 背景：模板进程修改需保存唯一性的信息（例如进程别名），存量的进程实例没有删除
+        local_process_id_uniq_info_map: Dict[int, Dict[str, Union[str, int]]] = {}
         host_num_key_map: Dict[Union[int, ProcessInst]] = defaultdict(
             lambda: {"max_proc_num": ProcessInst.DEFAULT_PROC_NUM, "process": None}
         )
@@ -509,8 +521,22 @@ class ProcessHandler(APIModel):
         local_bk_process_ids = set()
         # 把进程按不同规则做映射，方便后续进行判断处理
         for local_process in ProcessInst.objects.filter(bk_biz_id=self.bk_biz_id):
-            bk_process_name = local_process.bk_process_name
+
             bk_module_id = local_process.bk_module_id
+            bk_process_id = local_process.bk_process_id
+            bk_process_name = local_process.bk_process_name
+
+            # 构造缓存进程实例唯一性信息
+            local_process_uniq_info = {"bk_process_name": bk_process_name}
+            if bk_process_id not in local_process_id_uniq_info_map:
+                local_process_id_uniq_info_map[bk_process_id] = local_process_uniq_info
+            else:
+                # 同ID进程唯一性信息不一致，说明缓存有脏数据，记录进程ID后续重建全部实例
+                if local_process_id_uniq_info_map[bk_process_id] != local_process_uniq_info:
+                    change_uniq_info_process_ids.add(bk_process_id)
+                # 进程实例需要重建，无需对脏数据执行下列计算，create_process_inst 在无记录下会对实例进行重建
+                continue
+
             local_inst_id_uniq_key_map[local_process.local_inst_id_uniq_key] = local_process
             host_num_key_map[local_process.bk_host_num_key] = {
                 "max_proc_num": max(
@@ -526,18 +552,20 @@ class ProcessHandler(APIModel):
                     local_module_proc_name_map[bk_module_id][bk_process_name]["max_host_num"], local_process.bk_host_num
                 ),
             }
-            local_bk_process_ids.add(local_process.bk_process_id)
+            local_bk_process_ids.add(bk_process_id)
 
         # 根据进程名分组获取进程名在模块下对应的进程数量的最大值
         cmdb_module_proc_name_map: Dict[Dict[Dict[Union[int, List]]]] = defaultdict(
             lambda: defaultdict(lambda: {"max_proc_num": ProcessInst.DEFAULT_PROC_NUM, "processes": []})
         )
 
+        # CMDB实时业务进程ID列表
+        cmdb_bk_process_ids = set()
         # 找到每个进程中最大的进程启动数量
-        bk_process_ids_updated = set()
         for cmdb_process in process_list:
-            bk_process_name = cmdb_process["process"]["bk_process_name"]
             bk_module_id = cmdb_process["module"]["bk_module_id"]
+            bk_process_id = cmdb_process["process"]["bk_process_id"]
+            bk_process_name = cmdb_process["process"]["bk_process_name"]
             # 若CMDB进程未配置启动数量，则默认取 ProcessInst.DEFAULT_PROC_NUM
             cmdb_process["process"]["proc_num"] = cmdb_process["process"]["proc_num"] or ProcessInst.DEFAULT_PROC_NUM
             max_proc_num = max(
@@ -546,11 +574,17 @@ class ProcessHandler(APIModel):
             )
             cmdb_module_proc_name_map[bk_module_id][bk_process_name]["max_proc_num"] = max_proc_num
             cmdb_module_proc_name_map[bk_module_id][bk_process_name]["processes"].append(cmdb_process)
-            bk_process_ids_updated.add(cmdb_process["process"]["bk_process_id"])
+            cmdb_bk_process_ids.add(cmdb_process["process"]["bk_process_id"])
+
+            # 校验进程模板唯一性信息是否修改，如果修改需要重建该bk_process_id下的进程实例
+            local_process_uniq_info = local_process_id_uniq_info_map.get(bk_process_id)
+            if local_process_uniq_info != {"bk_process_name": bk_process_name}:
+                change_uniq_info_process_ids.add(bk_process_id)
 
         to_be_deleted_inst_condition = []
         # 计算无效进程ID并删除关联的进程实例
-        invalid_bk_process_ids = local_bk_process_ids - bk_process_ids_updated
+        # 无效进程ID：1. 存在于本地缓存但不存在于CMDB的进程ID 2. 唯一性字段变更（bk_process_name）
+        invalid_bk_process_ids = (local_bk_process_ids - cmdb_bk_process_ids) | change_uniq_info_process_ids
         if invalid_bk_process_ids:
             to_be_deleted_inst_condition.append(Q(bk_process_id__in=invalid_bk_process_ids))
 

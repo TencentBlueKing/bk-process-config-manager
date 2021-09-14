@@ -80,38 +80,82 @@ class MyTestClient(Client):
         return self.assert_response(response)
 
     def post(
-        self, path, data=None, content_type=JSON_CONTENT, follow=False, secure=True, **extra,
+        self,
+        path,
+        data=None,
+        content_type=JSON_CONTENT,
+        follow=False,
+        secure=True,
+        **extra,
     ):
         data = self.transform_data(data, content_type)
         response = super(MyTestClient, self).post(
-            path, data=data, content_type=JSON_CONTENT, follow=follow, secure=secure, **extra,
+            path,
+            data=data,
+            content_type=JSON_CONTENT,
+            follow=follow,
+            secure=secure,
+            **extra,
         )
         return self.assert_response(response)
 
     def patch(
-        self, path, data=None, content_type=JSON_CONTENT, follow=False, secure=True, **extra,
+        self,
+        path,
+        data=None,
+        content_type=JSON_CONTENT,
+        follow=False,
+        secure=True,
+        **extra,
     ):
         data = self.transform_data(data, content_type)
         response = super(MyTestClient, self).patch(
-            path, data=data, content_type=JSON_CONTENT, follow=follow, secure=secure, **extra,
+            path,
+            data=data,
+            content_type=JSON_CONTENT,
+            follow=follow,
+            secure=secure,
+            **extra,
         )
         return self.assert_response(response)
 
     def put(
-        self, path, data=None, content_type=JSON_CONTENT, follow=False, secure=True, **extra,
+        self,
+        path,
+        data=None,
+        content_type=JSON_CONTENT,
+        follow=False,
+        secure=True,
+        **extra,
     ):
         data = self.transform_data(data, content_type)
         response = super(MyTestClient, self).put(
-            path, data=data, content_type=JSON_CONTENT, follow=follow, secure=secure, **extra,
+            path,
+            data=data,
+            content_type=JSON_CONTENT,
+            follow=follow,
+            secure=secure,
+            **extra,
         )
         return self.assert_response(response)
 
     def delete(
-        self, path, data=None, content_type=JSON_CONTENT, follow=False, secure=True, **extra,
+        self,
+        path,
+        data=None,
+        content_type=JSON_CONTENT,
+        follow=False,
+        secure=True,
+        **extra,
     ):
         data = self.transform_data(data, content_type)
         response = super(MyTestClient, self).delete(
-            path, data=data, content_type=JSON_CONTENT, follow=follow, secure=secure, **extra,
+            path,
+            data=data,
+            content_type=JSON_CONTENT,
+            follow=follow,
+            secure=secure,
+            **extra,
         )
         return self.assert_response(response)
 
@@ -150,10 +194,10 @@ class MyTestCase(TestCase, metaclass=SwaggerViewSetTestMetaClass):
                 self.remove_keys(child_data, keys)
         return
 
-    def assertExemptDataStructure(self, result_data, expected_data, value_eq=False, list_exempt=False):
+    def assertExemptDataStructure(self, result_data, expected_data, value_eq=False, list_exempt=False, is_sort=True):
         self.remove_keys(result_data, self.fields_exempt)
         self.remove_keys(expected_data, self.fields_exempt)
-        return self.assertDataStructure(result_data, expected_data, value_eq, list_exempt, is_sort=False)
+        return self.assertDataStructure(result_data, expected_data, value_eq, list_exempt=list_exempt, is_sort=is_sort)
 
     def assertDataStructure(self, result_data, expected_data, value_eq=False, list_exempt=False, is_sort=True):
         """
@@ -175,7 +219,8 @@ class MyTestCase(TestCase, metaclass=SwaggerViewSetTestMetaClass):
             for expected_key, expected_value in list(expected_data.items()):
                 # 判断键是否存在
                 self.assertTrue(
-                    expected_key in list(result_data.keys()), msg="key:[%s] is expected" % expected_key,
+                    expected_key in list(result_data.keys()),
+                    msg="key:[%s] is expected" % expected_key,
                 )
 
                 result_value = result_data[expected_key]
@@ -227,9 +272,8 @@ class MyTestCase(TestCase, metaclass=SwaggerViewSetTestMetaClass):
 
     def assertListEqual(self, list1, list2, msg=None, is_sort=False):
         if is_sort:
-            # TODO 没有考虑Dict类型的排序
-            list1.sort()
-            list2.sort()
+            list1 = sorted([json.dumps(item, sort_keys=True) for item in list1])
+            list2 = sorted([json.dumps(item, sort_keys=True) for item in list2])
         super(MyTestCase, self).assertListEqual(list1, list2, msg=msg)
 
     def setUp(self) -> None:

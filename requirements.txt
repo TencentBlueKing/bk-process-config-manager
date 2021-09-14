@@ -27,11 +27,11 @@ PyJWT==1.7.1
 cryptography==2.7
 
 # iam
-bk-iam==1.1.13
+bk-iam==1.1.19
 
 # pipeline
-bamboo-pipeline==3.3.0
-bamboo-engine==1.1.5
+bamboo-pipeline==3.5.4
+bamboo-engine==1.2.1
 
 # for sentry
 raven==6.1.0

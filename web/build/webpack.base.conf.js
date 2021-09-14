@@ -5,7 +5,6 @@
 
 import webpack from 'webpack'
 import { VueLoaderPlugin } from 'vue-loader'
-import friendlyFormatter from 'eslint-friendly-formatter'
 import MonacoWebpackPlugin from 'monaco-editor-webpack-plugin'
 
 import { resolve, assetsPath } from './util'
@@ -37,16 +36,16 @@ export default {
             /\/node_modules\/echarts\/dist\/echarts\.min\.js$/
         ],
         rules: [
-            {
-                test: /\.(js|vue)$/,
-                loader: 'eslint-loader',
-                enforce: 'pre',
-                include: [resolve('src'), resolve('test'), resolve('static')],
-                exclude: /node_modules/,
-                options: {
-                    formatter: friendlyFormatter
-                }
-            },
+            // {
+            //     test: /\.(js|vue)$/,
+            //     loader: 'eslint-loader',
+            //     enforce: 'pre',
+            //     include: [resolve('src'), resolve('test'), resolve('static')],
+            //     exclude: /node_modules/,
+            //     options: {
+            //         formatter: friendlyFormatter
+            //     }
+            // },
             {
                 test: /\.vue$/,
                 use: {

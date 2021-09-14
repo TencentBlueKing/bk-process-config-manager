@@ -1,4 +1,4 @@
-const div = document.createElement('div')
+const div = document.createElement('div');
 /*
  <svg class="svg-icon" aria-hidden="true">
  <use xlink:href="#gsekit-icon-loading"></use>
@@ -33,5 +33,5 @@ div.innerHTML = `
             </path>
         </symbol>
     </svg>
-`
-document.body.insertBefore(div, document.getElementById('app'))
+`;
+document.body.insertBefore(div, document.getElementById('app'));

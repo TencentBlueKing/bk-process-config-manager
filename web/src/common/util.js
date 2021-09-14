@@ -14,13 +14,11 @@
  *
  * @return {Function} 柯里化后的函数
  */
-export function curry (fn) {
-    const judge = (...args) => {
-        return args.length === fn.length
-            ? fn(...args)
-            : arg => judge(...args, arg)
-    }
-    return judge
+export function curry(fn) {
+  const judge = (...args) => (args.length === fn.length
+    ? fn(...args)
+    : arg => judge(...args, arg));
+  return judge;
 }
 
 /**
@@ -30,8 +28,8 @@ export function curry (fn) {
  *
  * @return {boolean} 判断结果
  */
-export function isObject (obj) {
-    return obj !== null && typeof obj === 'object'
+export function isObject(obj) {
+  return obj !== null && typeof obj === 'object';
 }
 
 /**
@@ -41,16 +39,16 @@ export function isObject (obj) {
  * @param {Number} max
  * @returns {Number}
  */
-export function clamp (value, min, max) {
-    if (value < min) {
-        return min
-    }
+export function clamp(value, min, max) {
+  if (value < min) {
+    return min;
+  }
 
-    if (value > max) {
-        return max
-    }
+  if (value > max) {
+    return max;
+  }
 
-    return value
+  return value;
 }
 
 /**
@@ -62,20 +60,20 @@ export function clamp (value, min, max) {
  *
  * @return {Object} 规范化后的参数
  */
-export function unifyObjectStyle (type, payload, options) {
-    if (isObject(type) && type.type) {
-        options = payload
-        payload = type
-        type = type.type
-    }
+export function unifyObjectStyle(type, payload, options) {
+  if (isObject(type) && type.type) {
+    options = payload;
+    payload = type;
+    type = type.type;
+  }
 
-    if (NODE_ENV !== 'production') {
-        if (typeof type !== 'string') {
-            console.warn(`expects string as the type, but found ${typeof type}.`)
-        }
+  if (NODE_ENV !== 'production') {
+    if (typeof type !== 'string') {
+      console.warn(`expects string as the type, but found ${typeof type}.`);
     }
+  }
 
-    return { type, payload, options }
+  return { type, payload, options };
 }
 
 /**
@@ -86,21 +84,21 @@ export function unifyObjectStyle (type, payload, options) {
  *
  * @return {Array} 颜色数组
  */
-export function randomColor (baseColor, count) {
-    const segments = baseColor.match(/[\da-z]{2}/g)
-    // 转换成 rgb 数字
-    for (let i = 0; i < segments.length; i++) {
-        segments[i] = parseInt(segments[i], 16)
-    }
-    const ret = []
-    // 生成 count 组颜色，色差 20 * Math.random
-    for (let i = 0; i < count; i++) {
-        ret[i] = '#'
-            + Math.floor(segments[0] + (Math.random() < 0.5 ? -1 : 1) * Math.random() * 20).toString(16)
-            + Math.floor(segments[1] + (Math.random() < 0.5 ? -1 : 1) * Math.random() * 20).toString(16)
-            + Math.floor(segments[2] + (Math.random() < 0.5 ? -1 : 1) * Math.random() * 20).toString(16)
-    }
-    return ret
+export function randomColor(baseColor, count) {
+  const segments = baseColor.match(/[\da-z]{2}/g);
+  // 转换成 rgb 数字
+  for (let i = 0; i < segments.length; i++) {
+    segments[i] = parseInt(segments[i], 16);
+  }
+  const ret = [];
+  // 生成 count 组颜色，色差 20 * Math.random
+  for (let i = 0; i < count; i++) {
+    ret[i] = `#${
+      Math.floor(segments[0] + (Math.random() < 0.5 ? -1 : 1) * Math.random() * 20).toString(16)
+    }${Math.floor(segments[1] + (Math.random() < 0.5 ? -1 : 1) * Math.random() * 20).toString(16)
+    }${Math.floor(segments[2] + (Math.random() < 0.5 ? -1 : 1) * Math.random() * 20).toString(16)}`;
+  }
+  return ret;
 }
 
 /**
@@ -111,8 +109,8 @@ export function randomColor (baseColor, count) {
  *
  * @return {number} 随机数
  */
-export function randomInt (min, max) {
-    return Math.floor(Math.random() * (max - min + 1) + min)
+export function randomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
 /**
@@ -121,33 +119,33 @@ export function randomInt (min, max) {
  * @param {Object} err 错误对象
  * @param {Object} ctx 上下文对象，这里主要指当前的 Vue 组件
  */
-export function catchErrorHandler (err, ctx) {
-    const data = err.data
-    if (data) {
-        if (!data.code || data.code === 404) {
-            ctx.exceptionCode = {
-                code: '404',
-                msg: '当前访问的页面不存在'
-            }
-        } else if (data.code === 403) {
-            ctx.exceptionCode = {
-                code: '403',
-                msg: 'Sorry，您的权限不足!'
-            }
-        } else {
-            console.error(err)
-            ctx.bkMessageInstance = ctx.$bkMessage({
-                theme: 'error',
-                message: err.message || err.data.msg || err.statusText
-            })
-        }
+export function catchErrorHandler(err, ctx) {
+  const { data } = err;
+  if (data) {
+    if (!data.code || data.code === 404) {
+      ctx.exceptionCode = {
+        code: '404',
+        msg: '当前访问的页面不存在',
+      };
+    } else if (data.code === 403) {
+      ctx.exceptionCode = {
+        code: '403',
+        msg: 'Sorry，您的权限不足!',
+      };
     } else {
-        console.error(err)
-        ctx.bkMessageInstance = ctx.$bkMessage({
-            theme: 'error',
-            message: err.message || err.data.msg || err.statusText
-        })
+      console.error(err);
+      ctx.bkMessageInstance = ctx.$bkMessage({
+        theme: 'error',
+        message: err.message || err.data.msg || err.statusText,
+      });
     }
+  } else {
+    console.error(err);
+    ctx.bkMessageInstance = ctx.$bkMessage({
+      theme: 'error',
+      message: err.message || err.data.msg || err.statusText,
+    });
+  }
 }
 
 /**
@@ -157,16 +155,16 @@ export function catchErrorHandler (err, ctx) {
  *
  * @return {number} 结果
  */
-export function getStringLen (str) {
-    let len = 0
-    for (let i = 0; i < str.length; i++) {
-        if (str.charCodeAt(i) > 127 || str.charCodeAt(i) === 94) {
-            len += 2
-        } else {
-            len++
-        }
+export function getStringLen(str) {
+  let len = 0;
+  for (let i = 0; i < str.length; i++) {
+    if (str.charCodeAt(i) > 127 || str.charCodeAt(i) === 94) {
+      len += 2;
+    } else {
+      len += 1;
     }
-    return len
+  }
+  return len;
 }
 
 /**
@@ -177,26 +175,26 @@ export function getStringLen (str) {
  *
  * @return {string} url query 字符串
  */
-export function json2Query (param, key) {
-    const mappingOperator = '='
-    const separator = '&'
-    let paramStr = ''
+export function json2Query(param, key) {
+  const mappingOperator = '=';
+  const separator = '&';
+  let paramStr = '';
 
-    if (param instanceof String || typeof param === 'string'
+  if (param instanceof String || typeof param === 'string'
             || param instanceof Number || typeof param === 'number'
             || param instanceof Boolean || typeof param === 'boolean'
-    ) {
-        paramStr += separator + key + mappingOperator + encodeURIComponent(param)
-    } else {
-        Object.keys(param).forEach(p => {
-            const value = param[p]
-            const k = (key === null || key === '' || key === undefined)
-                ? p
-                : key + (param instanceof Array ? '[' + p + ']' : '.' + p)
-            paramStr += separator + json2Query(value, k)
-        })
-    }
-    return paramStr.substr(1)
+  ) {
+    paramStr += separator + key + mappingOperator + encodeURIComponent(param);
+  } else {
+    Object.keys(param).forEach((p) => {
+      const value = param[p];
+      const k = (key === null || key === '' || key === undefined)
+        ? p
+        : key + (param instanceof Array ? `[${p}]` : `.${p}`);
+      paramStr += separator + json2Query(value, k);
+    });
+  }
+  return paramStr.substr(1);
 }
 
 /**
@@ -206,8 +204,8 @@ export function json2Query (param, key) {
  *
  * @return {string} 转换后字符串
  */
-export function camelize (str) {
-    return str.replace(/-(\w)/g, (strMatch, p1) => p1.toUpperCase())
+export function camelize(str) {
+  return str.replace(/-(\w)/g, (strMatch, p1) => p1.toUpperCase());
 }
 
 /**
@@ -218,24 +216,24 @@ export function camelize (str) {
  *
  * @return {string} 样式值
  */
-export function getStyle (elem, prop) {
-    if (!elem || !prop) {
-        return false
+export function getStyle(elem, prop) {
+  if (!elem || !prop) {
+    return false;
+  }
+
+  // 先获取是否有内联样式
+  let value = elem.style[camelize(prop)];
+
+  if (!value) {
+    // 获取的所有计算样式
+    let css = '';
+    if (document.defaultView && document.defaultView.getComputedStyle) {
+      css = document.defaultView.getComputedStyle(elem, null);
+      value = css ? css.getPropertyValue(prop) : null;
     }
+  }
 
-    // 先获取是否有内联样式
-    let value = elem.style[camelize(prop)]
-
-    if (!value) {
-        // 获取的所有计算样式
-        let css = ''
-        if (document.defaultView && document.defaultView.getComputedStyle) {
-            css = document.defaultView.getComputedStyle(elem, null)
-            value = css ? css.getPropertyValue(prop) : null
-        }
-    }
-
-    return String(value)
+  return String(value);
 }
 
 /**
@@ -243,16 +241,16 @@ export function getStyle (elem, prop) {
  *
  *  @param {Object} node 指定的 DOM 元素
  */
-export function getActualTop (node) {
-    let actualTop = node.offsetTop
-    let current = node.offsetParent
+export function getActualTop(node) {
+  let actualTop = node.offsetTop;
+  let current = node.offsetParent;
 
-    while (current !== null) {
-        actualTop += current.offsetTop
-        current = current.offsetParent
-    }
+  while (current !== null) {
+    actualTop += current.offsetTop;
+    current = current.offsetParent;
+  }
 
-    return actualTop
+  return actualTop;
 }
 
 /**
@@ -260,16 +258,16 @@ export function getActualTop (node) {
  *
  *  @param {Object} node 指定的 DOM 元素
  */
-export function getActualLeft (node) {
-    let actualLeft = node.offsetLeft
-    let current = node.offsetParent
+export function getActualLeft(node) {
+  let actualLeft = node.offsetLeft;
+  let current = node.offsetParent;
 
-    while (current !== null) {
-        actualLeft += current.offsetLeft
-        current = current.offsetParent
-    }
+  while (current !== null) {
+    actualLeft += current.offsetLeft;
+    current = current.offsetParent;
+  }
 
-    return actualLeft
+  return actualLeft;
 }
 
 /**
@@ -277,22 +275,22 @@ export function getActualLeft (node) {
  *
  * @return {number} 总高度
  */
-export function getScrollHeight () {
-    let scrollHeight = 0
-    let bodyScrollHeight = 0
-    let documentScrollHeight = 0
+export function getScrollHeight() {
+  let scrollHeight = 0;
+  let bodyScrollHeight = 0;
+  let documentScrollHeight = 0;
 
-    if (document.body) {
-        bodyScrollHeight = document.body.scrollHeight
-    }
+  if (document.body) {
+    bodyScrollHeight = document.body.scrollHeight;
+  }
 
-    if (document.documentElement) {
-        documentScrollHeight = document.documentElement.scrollHeight
-    }
+  if (document.documentElement) {
+    documentScrollHeight = document.documentElement.scrollHeight;
+  }
 
-    scrollHeight = (bodyScrollHeight - documentScrollHeight > 0) ? bodyScrollHeight : documentScrollHeight
+  scrollHeight = (bodyScrollHeight - documentScrollHeight > 0) ? bodyScrollHeight : documentScrollHeight;
 
-    return scrollHeight
+  return scrollHeight;
 }
 
 /**
@@ -300,22 +298,22 @@ export function getScrollHeight () {
  *
  * @return {number} y 轴上的滚动距离
  */
-export function getScrollTop () {
-    let scrollTop = 0
-    let bodyScrollTop = 0
-    let documentScrollTop = 0
+export function getScrollTop() {
+  let scrollTop = 0;
+  let bodyScrollTop = 0;
+  let documentScrollTop = 0;
 
-    if (document.body) {
-        bodyScrollTop = document.body.scrollTop
-    }
+  if (document.body) {
+    bodyScrollTop = document.body.scrollTop;
+  }
 
-    if (document.documentElement) {
-        documentScrollTop = document.documentElement.scrollTop
-    }
+  if (document.documentElement) {
+    documentScrollTop = document.documentElement.scrollTop;
+  }
 
-    scrollTop = (bodyScrollTop - documentScrollTop > 0) ? bodyScrollTop : documentScrollTop
+  scrollTop = (bodyScrollTop - documentScrollTop > 0) ? bodyScrollTop : documentScrollTop;
 
-    return scrollTop
+  return scrollTop;
 }
 
 /**
@@ -323,12 +321,12 @@ export function getScrollTop () {
  *
  * @return {number} 浏览器视口的高度
  */
-export function getWindowHeight () {
-    const windowHeight = document.compatMode === 'CSS1Compat'
-        ? document.documentElement.clientHeight
-        : document.body.clientHeight
+export function getWindowHeight() {
+  const windowHeight = document.compatMode === 'CSS1Compat'
+    ? document.documentElement.clientHeight
+    : document.body.clientHeight;
 
-    return windowHeight
+  return windowHeight;
 }
 
 /**
@@ -337,118 +335,116 @@ export function getWindowHeight () {
  * @param {string} url js 地址
  * @param {Function} callback 回调函数
  */
-export function loadScript (url, callback) {
-    const script = document.createElement('script')
-    script.async = true
-    script.src = url
+export function loadScript(url, callback) {
+  const script = document.createElement('script');
+  script.async = true;
+  script.src = url;
 
-    script.onerror = () => {
-        callback(new Error('Failed to load: ' + url))
-    }
+  script.onerror = () => {
+    callback(new Error(`Failed to load: ${url}`));
+  };
 
-    script.onload = () => {
-        callback()
-    }
+  script.onload = () => {
+    callback();
+  };
 
-    document.getElementsByTagName('head')[0].appendChild(script)
+  document.getElementsByTagName('head')[0].appendChild(script);
 }
 
 /**
  * 服务模板名称排序，中文按拼音排，其它按编码顺序排
  * @param {String} prop 排序的数组对象属性
  */
-export function sortByCustom (prop) {
-    const reg = /^[\u4E00-\u9FA5]+$/
-    return function (obj1, obj2) {
-        try {
-            const value1 = obj1[prop].toUpperCase()
-            const value2 = obj2[prop].toUpperCase()
-            if (reg.test(value1[0]) && reg.test(value2[0])) {
-                return value1.localeCompare(value2, 'zh-CN')
-            }
-            if (value1 < value2) {
-                return -1
-            } else if (value1 > value2) {
-                return 1
-            } else {
-                return 0
-            }
-        } catch (error) {
-            console.warn(error)
-            return 0
-        }
+export function sortByCustom(prop) {
+  const reg = /^[\u4E00-\u9FA5]+$/;
+  return function (obj1, obj2) {
+    try {
+      const value1 = obj1[prop].toUpperCase();
+      const value2 = obj2[prop].toUpperCase();
+      if (reg.test(value1[0]) && reg.test(value2[0])) {
+        return value1.localeCompare(value2, 'zh-CN');
+      }
+      if (value1 < value2) {
+        return -1;
+      } if (value1 > value2) {
+        return 1;
+      }
+      return 0;
+    } catch (error) {
+      console.warn(error);
+      return 0;
     }
+  };
 }
 
 /**
  * 表格按ASCII字符顺序排序
  * @param {String} property 排序的表格行属性
  */
-export function sortByASCII (property) {
-    return function (a, b) {
-        try {
-            const x = a[property].toUpperCase()
-            const y = b[property].toUpperCase()
-            if (x < y) {
-                return -1
-            } else if (x > y) {
-                return 1
-            } else {
-                return 0
-            }
-        } catch (e) {
-            console.warn(e)
-            return 0
-        }
+export function sortByASCII(property) {
+  return function (a, b) {
+    try {
+      const x = a[property].toUpperCase();
+      const y = b[property].toUpperCase();
+      if (x < y) {
+        return -1;
+      } if (x > y) {
+        return 1;
+      }
+      return 0;
+    } catch (e) {
+      console.warn(e);
+      return 0;
     }
+  };
 }
 /**
  * 表格按时间顺序排序
  * @param {String} property 排序的表格行属性
  */
-export function sortByDate (property) {
-    return function (a, b) {
-        try {
-            const x = Date.parse(a[property])
-            const y = Date.parse(b[property])
-            return x - y
-        } catch (e) {
-            console.warn(e)
-            return 0
-        }
+export function sortByDate(property) {
+  return function (a, b) {
+    try {
+      const x = Date.parse(a[property]);
+      const y = Date.parse(b[property]);
+      return x - y;
+    } catch (e) {
+      console.warn(e);
+      return 0;
     }
+  };
 }
 /**
  * 表格按数字大小排序
  * @param {String} property 排序的表格行属性
  */
-export function sortByNumber (property) {
-    return function (a, b) {
-        try {
-            const x = Number(a[property])
-            const y = Number(b[property])
-            return x - y
-        } catch (e) {
-            console.warn(e)
-            return 0
-        }
+export function sortByNumber(property) {
+  return function (a, b) {
+    try {
+      const x = Number(a[property]);
+      const y = Number(b[property]);
+      return x - y;
+    } catch (e) {
+      console.warn(e);
+      return 0;
     }
+  };
 }
 /**
  * 表格按数字大小排序
  * @param {String} property 排序的表格行属性
  */
-export function sortByPercent (property) {
-    return function (a, b) {
-        try {
-            const x = Number(a[property].slice(0, -1))
-            const y = Number(b[property].slice(0, -1))
-            return x - y
-        } catch (e) {
-            console.warn(e)
-            return 0
-        }
+export function sortByPercent(property) {
+  return function (a, b) {
+    try {
+      const x = Number(a[property].slice(0, -1));
+      const y = Number(b[property].slice(0, -1));
+      return x - y;
+    } catch (e) {
+      console.warn(e);
+      return 0;
     }
+  };
 }
 /**
  * 表格筛选
@@ -457,9 +453,9 @@ export function sortByPercent (property) {
  * @param {Object} column 表格行数据
  * @param {String} column.property 表格行过滤属性
  */
-export function commonFilterMethod (value, row, column) {
-    const property = column.property
-    return row[property] === value
+export function commonFilterMethod(value, row, column) {
+  const { property } = column;
+  return row[property] === value;
 }
 
 /**
@@ -468,21 +464,21 @@ export function commonFilterMethod (value, row, column) {
  * @param {Number} endTime 结束时间
  * @return {String}
  */
-export function performTime (startTime, endTime) {
-    const startTimeStamp = Date.parse(new Date(startTime))
-    const endTimeStamp = Date.parse(new Date(endTime))
-    if (!startTimeStamp || !endTimeStamp) return
-    let timeout = endTimeStamp - startTimeStamp
-    timeout = timeout / 1000
-    let perormTime
-    if (timeout >= 3600) {
-        perormTime = Math.floor(timeout / 3600) + 'h'
-    } else if (timeout >= 60) {
-        perormTime = Math.floor(timeout / 60) + 'min'
-    } else {
-        perormTime = timeout + 's'
-    }
-    return perormTime
+export function performTime(startTime, endTime) {
+  const startTimeStamp = Date.parse(new Date(startTime));
+  const endTimeStamp = Date.parse(new Date(endTime));
+  if (!startTimeStamp || !endTimeStamp) return;
+  let timeout = endTimeStamp - startTimeStamp;
+  timeout = timeout / 1000;
+  let perormTime;
+  if (timeout >= 3600) {
+    perormTime = `${Math.floor(timeout / 3600)}h`;
+  } else if (timeout >= 60) {
+    perormTime = `${Math.floor(timeout / 60)}min`;
+  } else {
+    perormTime = `${timeout}s`;
+  }
+  return perormTime;
 }
 
 /**
@@ -490,31 +486,31 @@ export function performTime (startTime, endTime) {
  * @param {Number | String} val
  * @return {String}
  */
-export function formatDate (val, fmt = 'YYYY-mm-dd HH:MM:SS') {
-    const date = new Date(val)
+export function formatDate(val, fmt = 'YYYY-mm-dd HH:MM:SS') {
+  const date = new Date(val);
 
-    if (isNaN(date.getTime())) {
-        console.warn('无效的时间')
-        return ''
+  if (isNaN(date.getTime())) {
+    console.warn('无效的时间');
+    return '';
+  }
+  const fmtArr = ['Y+', 'm+', 'd+', 'H+', 'M+', 'S+'];
+  const opt = {
+    'Y+': date.getFullYear().toString(),
+    'm+': (date.getMonth() + 1).toString(),
+    'd+': date.getDate().toString(),
+    'H+': date.getHours().toString(),
+    'M+': date.getMinutes().toString(),
+    'S+': date.getSeconds().toString(),
+  };
+  let res;
+  let time = fmt;
+  fmtArr.forEach((key) => {
+    res = new RegExp(`(${key})`).exec(fmt);
+    if (res) {
+      time = time.replace(res[1], (res[1].length === 1) ? (opt[key]) : (opt[key].padStart(res[1].length, '0')));
     }
-    const fmtArr = ['Y+', 'm+', 'd+', 'H+', 'M+', 'S+']
-    const opt = {
-        'Y+': date.getFullYear().toString(),
-        'm+': (date.getMonth() + 1).toString(),
-        'd+': date.getDate().toString(),
-        'H+': date.getHours().toString(),
-        'M+': date.getMinutes().toString(),
-        'S+': date.getSeconds().toString()
-    }
-    let res
-    let time = fmt
-    fmtArr.forEach((key) => {
-        res = new RegExp(`(${key})`).exec(fmt)
-        if (res) {
-            time = time.replace(res[1], (res[1].length === 1) ? (opt[key]) : (opt[key].padStart(res[1].length, '0')))
-        }
-    })
-    return time
+  });
+  return time;
 }
 
 /**
@@ -522,12 +518,11 @@ export function formatDate (val, fmt = 'YYYY-mm-dd HH:MM:SS') {
  * @param val
  * @return {String}
  */
-export function modifyFormatDate (val) {
-    if (!val) {
-        return ''
-    } else {
-        return formatDate(val)
-    }
+export function modifyFormatDate(val) {
+  if (!val) {
+    return '';
+  }
+  return formatDate(val);
 }
 
 /**
@@ -535,22 +530,22 @@ export function modifyFormatDate (val) {
  * @param {String} text
  */
 export const copyText = (text) => {
-    const textarea = document.createElement('textarea')
-    textarea.setAttribute('readonly', '')
-    textarea.style.position = 'absolute'
-    textarea.style.left = '-9999px'
-  
-    document.body.appendChild(textarea)
-    textarea.value = text
-  
-    textarea.select()
-    let result = false
-    try {
-        result = document.execCommand('copy')
-    } catch (error) {
-        console.warn(error)
-    }
-    textarea.blur()
-    document.body.removeChild(textarea)
-    return result
-}
+  const textarea = document.createElement('textarea');
+  textarea.setAttribute('readonly', '');
+  textarea.style.position = 'absolute';
+  textarea.style.left = '-9999px';
+
+  document.body.appendChild(textarea);
+  textarea.value = text;
+
+  textarea.select();
+  let result = false;
+  try {
+    result = document.execCommand('copy');
+  } catch (error) {
+    console.warn(error);
+  }
+  textarea.blur();
+  document.body.removeChild(textarea);
+  return result;
+};

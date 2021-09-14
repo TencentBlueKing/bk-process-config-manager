@@ -2,9 +2,9 @@
 ---
 [![license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/TencentBlueKing/bk-process-config-manager/blob/master/LICENSE)
 [![Release](https://img.shields.io/badge/release-1.0.0-brightgreen.svg)](https://github.com/TencentBlueKing/bk-process-config-manager/releases)
-[![travis-ci](https://travis-ci.com/Tencent/bk-process-config-manager.svg?branch=master)](https://travis-ci.com/Tencent/bk-process-config-manager)
-[![Coverage Status](https://codecov.io/gh/Tencent/bk-process-config-manager/branch/master/graph/badge.svg)](https://codecov.io/gh/Tencent/bk-process-config-manager)
+[![Coverage Status](https://codecov.io/gh/TencentBlueKing/bk-process-config-manager/branch/master/graph/badge.svg)](https://codecov.io/gh/TencentBlueKing/bk-process-config-manager)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/TencentBlueKing/bk-process-config-manager/pulls)
+[![unittest](https://github.com/TencentBlueKing/bk-process-config-manager/actions/workflows/codecov.yml/badge.svg)](https://github.com/TencentBlueKing/bk-process-config-manager/actions/workflows/codecov.yml)
 
 English | [简体中文](readme.md)
 
@@ -46,6 +46,7 @@ For more features, please refer to [BlueKing NodeMan White Paper](http://docs.bk
 - [BK-CMDB](https://github.com/Tencent/bk-cmdb): BlueKing Configuration Management DataBase (BlueKing CMDB) is an enterprise level configuration management platform for assets and applications.
 - [BK-PaaS](https://github.com/Tencent/bk-PaaS): BlueKing PaaS is an open development platform that allows developers to create, develop, deploy and manage SaaS applications quickly and easily.
 - [BK-SOPS](https://github.com/Tencent/bk-sops): BlueKing Standard OPS (SOPS) is a light-weighted SaaS product in the Tencent BlueKing product system designed for the orchestration and execution of tasks through a graphical interface.
+- [BK-JOB](https://github.com/Tencent/bk-job): BlueKing JOB is a set of operation and maintenance script management platform with the ability to handle a large number of tasks concurrently.
 - [BK-BASE](https://github.com/Tencent/bk-base): BK-BASE is a basic platform focusing on the field of operation and maintenance, creating a one-stop, low-threshold basic service.
 
 

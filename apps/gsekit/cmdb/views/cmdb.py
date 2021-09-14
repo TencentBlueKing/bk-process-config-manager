@@ -63,7 +63,9 @@ class CMDBViews(APIViewSet):
         responses={status.HTTP_200_OK: cmdb_serializer.ServiceInstanceResponseSerializer()},
     )
     @action(
-        detail=False, methods=["POST"], serializer_class=cmdb_serializer.ServiceInstanceRequestSerializer,
+        detail=False,
+        methods=["POST"],
+        serializer_class=cmdb_serializer.ServiceInstanceRequestSerializer,
     )
     def service_instance(self, request, bk_biz_id, *args, **kwargs):
         return Response(
@@ -78,6 +80,7 @@ class CMDBViews(APIViewSet):
         operation_summary="查询进程实例的相关信息",
         tags=CMDBViewTags,
         request_body=cmdb_serializer.ProcessRelatedInfoRequestSerializer,
+        responses={status.HTTP_200_OK: cmdb_serializer.ProcessRelatedInfoResponseSerializer()},
     )
     @action(detail=False, methods=["POST"])
     def list_process_related_info(self, request, bk_biz_id, *args, **kwargs):
@@ -92,7 +95,9 @@ class CMDBViews(APIViewSet):
         responses={status.HTTP_200_OK: cmdb_serializer.ListSetResponseSerializer()},
     )
     @action(
-        detail=False, methods=["GET"], serializer_class=cmdb_serializer.ListSetRequestSerializer,
+        detail=False,
+        methods=["GET"],
+        serializer_class=cmdb_serializer.ListSetRequestSerializer,
     )
     def set_list(self, request, bk_biz_id, *args, **kwargs):
         bk_set_env = self.validated_data["bk_set_env"]
@@ -106,7 +111,9 @@ class CMDBViews(APIViewSet):
         responses={status.HTTP_200_OK: cmdb_serializer.ListModuleResponseSerializer()},
     )
     @action(
-        detail=False, methods=["POST"], serializer_class=cmdb_serializer.ListModuleRequestSerializer,
+        detail=False,
+        methods=["POST"],
+        serializer_class=cmdb_serializer.ListModuleRequestSerializer,
     )
     def module_list(self, request, bk_biz_id, *args, **kwargs):
         bk_set_ids = self.validated_data.get("bk_set_ids")
@@ -138,6 +145,7 @@ class CMDBViews(APIViewSet):
         operation_summary="查询服务模板是否需要同步",
         tags=CMDBViewTags,
         query_serializer=cmdb_serializer.CheckServiceTemplateDifferenceRequestSerializer(),
+        responses={status.HTTP_200_OK: cmdb_serializer.CheckServiceTemplateDifferenceResponseSerializer()},
     )
     @action(
         detail=False, methods=["GET"], serializer_class=cmdb_serializer.CheckServiceTemplateDifferenceRequestSerializer
@@ -152,7 +160,9 @@ class CMDBViews(APIViewSet):
         return Response(has_difference)
 
     @swagger_auto_schema(
-        operation_summary="批量查询服务模板是否需要同步", tags=CMDBViewTags,
+        operation_summary="批量查询服务模板是否需要同步",
+        tags=CMDBViewTags,
+        responses={status.HTTP_200_OK: cmdb_serializer.BatchCheckServiceTemplateDifferenceResponseSerializer()},
     )
     @action(detail=False, methods=["GET"])
     def batch_check_service_template_difference(self, request, bk_biz_id, *args, **kwargs):

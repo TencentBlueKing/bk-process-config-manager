@@ -8,6 +8,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and limitations under the License.
 """
+import datetime
 import base64
 import hashlib
 import itertools
@@ -39,6 +40,7 @@ from apps.gsekit.pipeline_plugins.components.collections.base import (
     JOB_POLLING_INTERVAL as POLLING_INTERVAL,
 )
 from apps.gsekit.pipeline_plugins.exceptions import JobApiException
+from apps.gsekit.constants import JOB_TASK_OS_TYPE
 from apps.utils.batch_request import request_multi_thread
 from apps.utils.mako_utils.render import mako_render
 from pipeline.component_framework.component import Component
@@ -267,9 +269,7 @@ class BulkGenerateConfigService(MultiJobTaskBaseService):
             job_task_id_obj_map[job_task.id] = job_task
             inst_id = job_task.extra_data["inst_id"]
 
-            config_template_ids = job_task.extra_data.get("config_template_ids")
-            if not config_template_ids:
-                config_template_ids = job_tasks_config_template_ids_map.get(job_task.id, [])
+            config_template_ids = job_tasks_config_template_ids_map.get(job_task.id, [])
 
             context = ConfigVersionHandler.get_process_context(
                 job_task.extra_data["process_info"],
@@ -374,9 +374,10 @@ class BulkGenerateConfigComponent(Component):
     bound_service = BulkGenerateConfigService
 
 
-class BulkPushConfigService(MultiJobTaskBaseService):
+class BulkExecuteJobPlatformService(MultiJobTaskBaseService):
     """
-    下发配置
+    批量执行与作业平台相关的动作
+    eg: 文件下发，脚本执行
     """
 
     __need_schedule__ = True
@@ -389,7 +390,7 @@ class BulkPushConfigService(MultiJobTaskBaseService):
         job_params.update(
             {
                 "bk_biz_id": job_params["bk_biz_id"],
-                "script_language": 1,  # TODO 兼容Windows
+                "script_language": job_params["os_type"],  # TODO 兼容Windows
                 "script_content": base64.b64encode(job_params.get("script_content", "").encode()).decode(),
                 "script_param": base64.b64encode(job_params.get("script_param", "").encode()).decode(),
                 "task_name": f"GSEKIT_{job_id}_{self.__class__.__name__}",
@@ -428,15 +429,6 @@ class BulkPushConfigService(MultiJobTaskBaseService):
         job_tasks_config_template_ids_map = JobTask.get_job_tasks_config_template_ids_map(job_tasks)
         all_config_template_ids = set(itertools.chain.from_iterable(job_tasks_config_template_ids_map.values()))
 
-        if not all_config_template_ids:
-            # 未绑定模板，忽略
-            for job_task in job_tasks:
-                job_task.set_status(
-                    JobStatus.IGNORED, extra_data={"failed_reason": str(ProcessDoseNotBindTemplate().message)}
-                )
-            self.finish_schedule()
-            return self.return_data(result=True)
-
         bk_process_ids = set()
         process_inst_map = {}
         process_inst_map_key_tmpl = "{bk_process_id}-{inst_id}"
@@ -445,6 +437,13 @@ class BulkPushConfigService(MultiJobTaskBaseService):
             inst_id = job_task.extra_data["inst_id"]
             bk_process_ids.add(bk_process_id)
             process_inst_map[process_inst_map_key_tmpl.format(bk_process_id=bk_process_id, inst_id=inst_id)] = job_task
+
+            # 任务进程没有绑定任何配置模板，忽略
+            config_template_ids = job_tasks_config_template_ids_map.get(job_task.id, [])
+            if not config_template_ids:
+                job_task.set_status(
+                    JobStatus.IGNORED, extra_data={"failed_reason": str(ProcessDoseNotBindTemplate().message)}
+                )
 
         config_template_id_obj_map = {
             config_template.config_template_id: config_template
@@ -478,6 +477,9 @@ class BulkPushConfigService(MultiJobTaskBaseService):
                         "file_name": config_template.file_name,
                         "inst_id": config_instance.inst_id,
                         "path": config_instance.path,
+                        "os_type": JOB_TASK_OS_TYPE["linux"]
+                        if config_template.line_separator == ConfigTemplate.LineSeparator.LF
+                        else JOB_TASK_OS_TYPE["win"],
                     }
                 )
             config_instance_id_content_map[config_instance.id] = config_instance
@@ -494,6 +496,7 @@ class BulkPushConfigService(MultiJobTaskBaseService):
                 file_content = config_instance_id_content_map[config_inst["id"]].content
                 file_sha256 = config_instance_id_content_map[config_inst["id"]].sha256
                 key = f"{file_target_path}-{file_name}-{file_sha256}-{user}"
+                os_type = config_inst["os_type"]
                 # 路径、文件名、文件内容一致，则认为是同一个文件，合并到一个作业中，提高执行效率
                 if key in multi_job_params_map:
                     multi_job_params_map[key]["job_task_ids"].append(inst_job_task.id)
@@ -502,10 +505,11 @@ class BulkPushConfigService(MultiJobTaskBaseService):
                     )
                 else:
                     multi_job_params_map[key] = {
-                        "job_func": JobApi.push_config_file,
+                        "job_func": data.get_one_of_inputs("job_func"),
                         "job_id": inst_job_task.job_id,
                         "job_task_ids": [inst_job_task.id],
                         "job_params": {
+                            "os_type": os_type,
                             "bk_biz_id": bk_biz_id,
                             "account_alias": user,
                             "target_server": {
@@ -513,12 +517,24 @@ class BulkPushConfigService(MultiJobTaskBaseService):
                                     {"bk_cloud_id": host_info["bk_cloud_id"], "ip": host_info["bk_host_innerip"]}
                                 ]
                             },
-                            "file_target_path": file_target_path,
-                            "file_list": [{"file_name": file_name, "content": base64.b64encode(file_content).decode()}],
                         },
                         "pipeline_data": data,
                     }
-        request_multi_thread(self.request_single_job_and_create_map, multi_job_params_map.values())
+                    # 添加额外的job_params字段参数
+                    job_params = data.get_one_of_inputs("job_params")
+                    for job_params_key in job_params:
+                        job_params_field = job_params[job_params_key]
+                        # 这里不能用列表推导式，会造成作用域更改
+                        args = []
+                        for arg in job_params_field["args"]:
+                            args.append(locals().get(str(arg)) or arg)
+                        multi_job_params_map[key]["job_params"].update(
+                            {job_params_key: job_params_field["func"](*args)}
+                        )
+
+        data.inputs.job_params = ""  # 由于pickle不能序列化lambda，所以需要清空
+        if multi_job_params_map:
+            request_multi_thread(self.request_single_job_and_create_map, multi_job_params_map.values())
         return self.return_data(result=True)
 
     def request_get_job_instance_status(self, pipeline_data, job_instance_id, job_task_ids):
@@ -606,6 +622,10 @@ class BulkPushConfigService(MultiJobTaskBaseService):
         polling_time = data.get_one_of_outputs("polling_time") or 0
         job_instance_id__job_task_ids_map = data.get_one_of_outputs("job_instance_id__job_task_ids_map") or {}
 
+        # 没有任务，直接完成
+        if not job_instance_id__job_task_ids_map:
+            return self.return_data(result=True, is_finished=True)
+
         to_be_check_job = []
         for job_instance_id, job_tasks_status in job_instance_id__job_task_ids_map.items():
             if job_tasks_status["status"] in [constants.BkJobStatus.PENDING, constants.BkJobStatus.RUNNING]:
@@ -657,6 +677,27 @@ class BulkPushConfigService(MultiJobTaskBaseService):
         ]
 
 
+class BulkPushConfigService(BulkExecuteJobPlatformService):
+    """
+    下发配置
+    """
+
+    def _execute(self, data, parent_data):
+        job_params = {
+            "file_target_path": {"args": ["file_target_path"], "func": lambda file_target_path: file_target_path},
+            "file_list": {
+                "args": ["file_name", "file_content"],
+                "func": lambda file_name, file_content: [
+                    {"file_name": file_name, "content": base64.b64encode(file_content).decode()}
+                ],
+            },
+        }
+        data.inputs.job_params = job_params
+        data.inputs.job_func = JobApi.push_config_file
+
+        return super()._execute(data, parent_data)
+
+
 class BulkPushConfigComponent(Component):
     name = "BulkPushConfigComponent"
     code = "bulk_push_config"
@@ -682,3 +723,33 @@ class BulkExecuteJobComponent(Component):
     name = "BulkExecuteJobComponent"
     code = "bulk_execute_job"
     bound_service = BulkExecuteJobService
+
+
+class BulkBackupConfigService(BulkExecuteJobPlatformService):
+    """
+    配置文件备份
+    """
+
+    def _execute(self, data, parent_data):
+        with open("apps/gsekit/scripts/backup_cfg.bat") as bat, open("apps/gsekit/scripts/backup_cfg.sh") as sh:
+            script_content = {JOB_TASK_OS_TYPE["win"]: bat.read(), JOB_TASK_OS_TYPE["linux"]: sh.read()}
+        job_params = {
+            "script_content": {
+                "args": ["file_target_path", "file_name", "os_type", script_content],
+                "func": lambda file_target_path, file_name, os_type, script_details: script_details[os_type].format(
+                    file_target_path=file_target_path,
+                    file_name=file_name,
+                    now_time=str(datetime.datetime.now()).replace(" ", ".").replace(":", "."),
+                ),
+            }
+        }
+        data.inputs.job_params = job_params
+        data.inputs.job_func = JobApi.fast_execute_script
+
+        return super()._execute(data, parent_data)
+
+
+class BulkBackupConfigComponent(Component):
+    name = "BulkBackupConfigComponent"
+    code = "bulk_backup_job"
+    bound_service = BulkBackupConfigService
