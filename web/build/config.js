@@ -11,7 +11,7 @@ export default {
     build: {
         // env 会通过 webpack.DefinePlugin 注入到前端代码里
         env: prodEnv,
-        assetsRoot: path.resolve(__dirname, '../dist'),
+        assetsRoot: path.resolve(__dirname, '../../static/dist'),
         assetsSubDirectory: 'static',
         assetsPublicPath: '{{BK_STATIC_URL}}',
         productionSourceMap: true,
