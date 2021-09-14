@@ -692,6 +692,7 @@ class BulkPushConfigService(BulkExecuteJobPlatformService):
                 ],
             },
         }
+
         data.inputs.job_params = job_params
         data.inputs.job_func = JobApi.push_config_file
 
@@ -739,10 +740,11 @@ class BulkBackupConfigService(BulkExecuteJobPlatformService):
                 "func": lambda file_target_path, file_name, os_type, script_details: script_details[os_type].format(
                     file_target_path=file_target_path,
                     file_name=file_name,
-                    now_time=str(datetime.datetime.now()).replace(" ", ".").replace(":", "."),
+                    now_time=datetime.datetime.now().strftime("%Y%m%d_%H%M%S"),
                 ),
             }
         }
+
         data.inputs.job_params = job_params
         data.inputs.job_func = JobApi.fast_execute_script
 
