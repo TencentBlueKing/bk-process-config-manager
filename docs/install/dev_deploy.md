@@ -98,9 +98,11 @@ python manage.py createcachetable django_cache
 
 ## 打包并收集前端静态资源
 
-1）在工程目录下执行，会自动打包前端静态资源
+1）在工程目录下执行，打包前端静态资源
 ```bash
-./scripts/build_front_dist.sh 
+cd web
+npm install
+npm run build
 ```
 
 
