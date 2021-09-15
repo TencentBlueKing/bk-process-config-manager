@@ -18,6 +18,7 @@
       v-if="showDialog"
       should-backfill
       ref="processSelect"
+      v-test.form="'confirm'"
       :template-id="templateItem.config_template_id" />
     <div slot="footer" class="footer-wrapper">
       <bk-button theme="primary" :loading="saveLoading" @click="handleSave">

@@ -1,8 +1,8 @@
 <template>
-  <div class="config-file-template-list-container">
+  <div class="config-file-template-list-container" v-test="'configFile'">
     <div class="title">{{ $t('配置文件模板') }}</div>
     <div class="option-group">
-      <AuthTag action="create_config_template" :authorized="authMap.create_config_template">
+      <AuthTag v-test="'addTemp'" action="create_config_template" :authorized="authMap.create_config_template">
         <template slot-scope="{ disabled }">
           <bk-button class="king-button" theme="primary" :disabled="disabled" @click="showCreate = true">
             {{ $t('新建') }}
@@ -10,6 +10,7 @@
         </template>
       </AuthTag>
       <bk-input
+        v-test="'searchTemp'"
         v-model.trim="searchWord"
         :placeholder="$t('请输入文件名或模板名')"
         class="king-input"
@@ -34,6 +35,7 @@
         <div class="template-name-column" slot-scope="{ row }">
           <AuthTag
             v-bk-overflow-tips
+            v-test="'viewTemp'"
             class="button-text"
             action="edit_config_template"
             :id="row.config_template_id"
@@ -60,7 +62,9 @@
       <bk-table-column :label="$t('关联进程数')">
         <template slot-scope="{ row }">
           <bk-popover v-if="row.is_bound" placement="right">
-            <div class="button-text" style="min-width: 20px;line-height: 28px;" @click="operateBind(row)">
+            <div
+              class="button-text" style="min-width: 20px;line-height: 28px;"
+              v-test="'numConnect'" @click="operateBind(row)">
               {{ row.relation_count.TEMPLATE + row.relation_count.INSTANCE }}
             </div>
             <div slot="content">
@@ -69,7 +73,7 @@
             </div>
           </bk-popover>
           <div v-else v-bk-tooltips="$t('未关联进程，无法进行配置下发，点击关联')"
-               class="not-bound-column" @click="operateBind(row)">
+               class="not-bound-column" v-test="'numConnect'" @click="operateBind(row)">
             <span>{{ $t('未关联') }}</span>
             <span class="gsekit-icon gsekit-icon-alert"></span>
           </div>
@@ -96,12 +100,15 @@
             }">
               <bk-button
                 text theme="primary" :disabled="disabled || !row.has_version || !row.is_bound"
+                v-test="'release'"
                 @click="operateDistribute(row)">
                 {{ $t('配置下发') }}
               </bk-button>
             </div>
           </AuthTag>
-          <bk-button theme="primary" text @click="operateBind(row)">{{ $t('关联进程') }}</bk-button>
+          <bk-button v-test="'connectProcess'" theme="primary" text @click="operateBind(row)">
+            {{ $t('关联进程') }}
+          </bk-button>
           <bk-popover
             placement="bottom-start"
             theme="dot-menu light"
@@ -110,12 +117,13 @@
             offset="15"
             :distance="0">
             <div class="dot-menu-trigger">
-              <span class="bk-icon icon-more"></span>
+              <span class="bk-icon icon-more" v-test.common="'more'"></span>
             </div>
             <ul class="dot-menu-list" slot="content">
               <AuthTag
                 tag="li"
                 class="dot-menu-item"
+                v-test.common="'moreItem'"
                 action="operate_config"
                 :authorized="authMap.operate_config"
                 @click="operateGenerate(row)">
@@ -124,6 +132,7 @@
               <AuthTag
                 tag="li"
                 class="dot-menu-item"
+                v-test.common="'moreItem'"
                 action="delete_config_template"
                 :id="row.config_template_id"
                 :authorized="row.delete_config_template"

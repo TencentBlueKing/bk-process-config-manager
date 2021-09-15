@@ -1,5 +1,6 @@
 <template>
-  <div class="process-status" v-bkloading="{ isLoading: checkeStatus === 'loading' && isDataLoading }">
+  <div class="process-status"
+       v-test="'processStatus'" v-bkloading="{ isLoading: checkeStatus === 'loading' && isDataLoading }">
     <EmptyProcess v-if="showEmptyProcess" :completed="checkeStatus === 'completed'"></EmptyProcess>
     <section v-else-if="showNormalProcess">
       <div class="process-status-title">{{ $t('进程管理') }}</div>
@@ -27,6 +28,7 @@
         <div class="search-select-input-container">
           <bk-search-select
             ref="searchSelect"
+            v-test.common="'searchSelect'"
             :placeholder="$t('内网IP、云区域')"
             :show-condition="false"
             :data="searchSelectData"

@@ -1,5 +1,6 @@
 <template>
-  <div class="config-file-template-distribute-container" v-bkloading="{ isLoading: fakeLoading }">
+  <div class="config-file-template-distribute-container"
+       v-test.release="'release'" v-bkloading="{ isLoading: fakeLoading }">
     <div class="distribute-above">
       <!-- 步骤显示 -->
       <div class="steps-container">
@@ -21,6 +22,7 @@
         <span class="star-title">{{ $t('配置模板') }}</span>
         <bk-select
           class="king-select"
+          v-test.release="'tempSelect'"
           searchable
           multiple
           display-tag
@@ -40,12 +42,14 @@
       <div class="buttons-above" v-show="curStep === 2">
         <bk-button
           style="margin-right: 10px;"
+          v-test.release="'generateAll'"
           :loading="generateLoading"
           :disabled="isTasking"
           @click="handleGenerateAll">
           {{ $t('全部重新生成') }}
         </bk-button>
         <bk-button
+          v-test.release="'generateFailAll'"
           :loading="generateFailureLoading"
           :disabled="isTasking || isAllGeneratedSuccess"
           @click="handleGenerateFailure">
@@ -76,6 +80,7 @@
       <div class="buttons-below" v-show="!basicLoading">
         <bk-button
           v-show="curStep === 1"
+          v-test.common="'stepNext'"
           theme="primary"
           style="min-width: 120px;margin-right: 10px;"
           :disabled="!canNextStep"
@@ -86,6 +91,7 @@
           <bk-button
             theme="primary"
             style="min-width: 120px;margin-right: 10px;"
+            v-test.form="'submit'"
             :loading="distributeLoading"
             :disabled="isTasking || !isAllGeneratedSuccess"
             @click="handleDistribute">
@@ -94,6 +100,7 @@
         </div>
         <bk-button
           v-show="curStep === 2"
+          v-test.common="'stepPrev'"
           style="min-width: 86px;margin-right: 10px;"
           :disabled="isTasking"
           @click="handlePrevious">

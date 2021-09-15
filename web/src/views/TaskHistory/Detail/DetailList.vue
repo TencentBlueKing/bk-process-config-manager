@@ -17,6 +17,7 @@
         <label class="couple-label">{{ $t('操作范围') + $t('：') }}</label>
         <div
           class="button-text"
+          v-test="'expressionFilter'"
           v-bk-overflow-tips
           @click="goProcessStatusPage(taskDetail.expression_scope)">
           {{ taskDetail.expression || '--' }}

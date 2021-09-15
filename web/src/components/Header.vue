@@ -6,7 +6,7 @@
         <span class="title">GSEKit</span>
       </div>
     </div>
-    <div class="header-nav">
+    <div class="header-nav" v-test.common="'headNav'">
       <!--<router-link class="nav-item" to="/home">{{ $t('首页') }}</router-link>-->
       <router-link class="nav-item" to="/process-manage">{{ $t('进程管理') }}</router-link>
       <router-link class="nav-item" to="/process-attr">{{ $t('进程属性') }}</router-link>
@@ -19,6 +19,7 @@
         class="king-select"
         id="bk_biz_id"
         name="bk_biz_name"
+        v-test.common="'headBiz'"
         searchable
         :option-list="bizList"
         :clearable="false"

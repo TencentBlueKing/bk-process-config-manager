@@ -3,6 +3,7 @@
     <template v-for="item in fieldsInfo">
       <PowerSelect
         class="king-select"
+        v-test.range="'kingSelect'"
         :key="item.type"
         :value="selectedData[item.value]"
         :list="originData[item.list]"

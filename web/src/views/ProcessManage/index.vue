@@ -1,5 +1,5 @@
 <template>
-  <div class="process-manage-container">
+  <div class="process-manage-container" v-test="'processManage'">
     <div class="navigation-content">
       <router-view v-if="isProcessStatusPage"></router-view>
     </div>

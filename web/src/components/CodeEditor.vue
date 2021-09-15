@@ -1,5 +1,5 @@
 <template>
-  <div ref="codeEditorRef" class="code-editor"></div>
+  <div ref="codeEditorRef" class="code-editor" v-test.common="'ide'"></div>
 </template>
 
 <script>

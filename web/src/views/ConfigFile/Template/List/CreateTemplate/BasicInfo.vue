@@ -1,31 +1,33 @@
 <template>
   <div class="create-template-step2">
     <div class="title">{{ $t('基本信息') }}</div>
-    <bk-form class="king-form" ref="form" :label-width="350" :model="formData" :rules="rules">
-      <bk-form-item :label="$t('模板名称')" required property="template_name" error-display-type="normal">
-        <bk-input v-model="formData.template_name" :clearable="true" :placeholder="$t('模板唯一标识')"></bk-input>
-      </bk-form-item>
-      <bk-form-item :label="$t('文件名称')" required property="file_name" error-display-type="normal">
-        <bk-input v-model="formData.file_name" :clearable="true" :placeholder="$t('模板渲染生成的文件名称')"></bk-input>
-      </bk-form-item>
-      <bk-form-item :label="$t('文件所处路径')" required property="abs_path" error-display-type="normal">
-        <bk-input v-model="formData.abs_path" :clearable="true" :placeholder="$t('文件分发到服务器的路径')"></bk-input>
-      </bk-form-item>
-      <bk-form-item :label="$t('文件拥有者')" required property="owner" error-display-type="normal">
-        <bk-input v-model="formData.owner" :clearable="true" :placeholder="$t('拥有者名称，操作系统必须存在此用户')"></bk-input>
-      </bk-form-item>
-      <bk-form-item :label="$t('文件用户组')" required property="group" error-display-type="normal">
-        <bk-input v-model="formData.group" :clearable="true" :placeholder="$t('用户组名称，操作系统必须存在此用户组')"></bk-input>
-      </bk-form-item>
-      <bk-form-item :label="$t('文件权限')" required property="filemode" error-display-type="normal">
-        <bk-input v-model="formData.filemode" :clearable="true" :placeholder="$t('文件的权限设置，如0775')"></bk-input>
-      </bk-form-item>
-      <bk-form-item :label="$t('输出格式')" required property="line_separator" error-display-type="normal">
-        <bk-select v-model="formData.line_separator" :clearable="true" :placeholder="$t('请选择文件输出格式')">
-          <bk-option id="CRLF" name="CRLF - Windows（\r\n）"></bk-option>
-          <bk-option id="LF" name="LF - Unix and macOS（\n）"></bk-option>
-        </bk-select>
-      </bk-form-item>
+    <bk-form class="king-form" v-test="'tempForm'" ref="form" :label-width="350" :model="formData" :rules="rules">
+      <template v-for="item in formItems">
+        <bk-form-item
+          error-display-type="normal"
+          :key="item.prop"
+          :label="item.label"
+          :required="item.required"
+          :property="item.prop">
+          <bk-select
+            v-if="item.type === 'select'"
+            v-test="'tempSelect'"
+            :test-key="item.prop"
+            v-model="formData[item.prop]"
+            :clearable="true"
+            :placeholder="item.placeholder">
+            <bk-option v-for="option in item.options" :key="option.id" :id="option.id" :name="option.name" />
+          </bk-select>
+          <bk-input
+            v-else
+            v-test="'tempInput'"
+            :test-key="item.prop"
+            :clearable="item.clearable"
+            v-model="formData[item.prop]"
+            :placeholder="item.placeholder">
+          </bk-input>
+        </bk-form-item>
+      </template>
     </bk-form>
   </div>
 </template>
@@ -50,6 +52,26 @@ export default {
         filemode: '0775',
         line_separator: 'LF',
       },
+      formItems: [
+        { label: this.$t('模板名称'), required: true, prop: 'template_name', clearable: true, placeholder: this.$t('模板唯一标识') },
+        { label: this.$t('文件名称'), required: true, prop: 'file_name', clearable: true, placeholder: this.$t('模板渲染生成的文件名称') },
+        { label: this.$t('文件所处路径'), required: true, prop: 'abs_path', clearable: true, placeholder: this.$t('文件分发到服务器的路径') },
+        { label: this.$t('文件拥有者'), required: true, prop: 'owner', clearable: true, placeholder: this.$t('拥有者名称，操作系统必须存在此用户') },
+        { label: this.$t('文件用户组'), required: true, prop: 'group', clearable: true, placeholder: this.$t('用户组名称，操作系统必须存在此用户组') },
+        { label: this.$t('文件权限'), required: true, prop: 'filemode', clearable: true, placeholder: this.$t('文件的权限设置，如0775') },
+        {
+          label: this.$t('输出格式'),
+          required: true,
+          prop: 'line_separator',
+          clearable: true,
+          placeholder: this.$t('请选择文件输出格式'),
+          type: 'select',
+          options: [
+            { id: 'CRLF', name: 'CRLF - Windows（\\r\\n）' },
+            { id: 'LF', name: 'LF - Unix and macOS（\\n）' },
+          ],
+        },
+      ],
       rules: {
         template_name: [required],
         file_name: [required],

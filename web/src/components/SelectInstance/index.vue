@@ -1,8 +1,9 @@
 <template>
-  <div class="select-instance-container">
+  <div class="select-instance-container" v-test.range="'wrapper'">
     <!-- 环境选择 -->
     <div v-bk-tooltips="envTips" class="env-container">
       <bk-select
+        v-test.range="'env'"
         v-model="setEnv"
         class="king-select-env"
         prefix-icon="gsekit-icon gsekit-icon-environment-2"
@@ -25,6 +26,7 @@
     <ExpressionInput v-show="!isDropdownMode" ref="expressionSelectorRef" @selected="handleExpressionChange" />
     <!-- 选择按钮 -->
     <bk-button
+      v-test.form="'submit'"
       v-if="showButton"
       class="king-button"
       theme="primary"
@@ -33,11 +35,11 @@
       {{ $t('选择') }}
     </bk-button>
     <!-- 切换表达式和筛选 -->
-    <div class="button-text" style="margin-right: 16px;" @click="toggleSelect">
+    <div class="button-text" style="margin-right: 16px;" v-test.range="'mode'" @click="toggleSelect">
       <span class="gsekit-icon gsekit-icon-switch-line"></span>
       {{ isDropdownMode ? $t('表达式') : $t('筛选') }}
     </div>
-    <div class="button-text" :class="{ 'is-hidden': isClearDisabled }" @click="clearSelect">
+    <div class="button-text" :class="{ 'is-hidden': isClearDisabled }" v-test.range="'clear'" @click="clearSelect">
       <span class="bk-icon icon-delete"></span>
       {{ $t('清空') }}
     </div>
