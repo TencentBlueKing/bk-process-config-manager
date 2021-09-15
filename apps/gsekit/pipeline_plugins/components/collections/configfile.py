@@ -537,6 +537,24 @@ class BulkExecuteJobPlatformService(MultiJobTaskBaseService):
             request_multi_thread(self.request_single_job_and_create_map, multi_job_params_map.values())
         return self.return_data(result=True)
 
+    def handle_succeeded_conf_inst_ids(self, succeeded_config_inst_ids: List[int]):
+        """处理成功的配置实例"""
+        pass
+
+    @staticmethod
+    def check_result(is_finished: bool, all_job_result: List[int]) -> bool:
+        # 没完成时result为True，继续下次查询
+        result = True
+        if is_finished:
+            # 完成时，需确定所有任务都是成功的
+            result = set(all_job_result) == {constants.BkJobStatus.SUCCEEDED}
+        return result
+
+    @staticmethod
+    def set_succeeded_job_task_status(job_task: JobTask):
+        """设置任务状态"""
+        pass
+
     def request_get_job_instance_status(self, pipeline_data, job_instance_id, job_task_ids):
         """查询作业平台执行状态"""
         bk_biz_id = pipeline_data.get_one_of_inputs("bk_biz_id")
@@ -565,8 +583,8 @@ class BulkExecuteJobPlatformService(MultiJobTaskBaseService):
             for job_task in JobTask.objects.filter(id__in=job_task_ids):
                 for config_inst in job_task.extra_data.get("config_instances", []):
                     succeeded_config_inst_ids.append(config_inst["id"])
-                job_task.set_status(JobStatus.SUCCEEDED)
-            ConfigInstance.objects.filter(id__in=succeeded_config_inst_ids).update(is_released=True)
+                self.set_succeeded_job_task_status(job_task)
+            self.handle_succeeded_conf_inst_ids(succeeded_config_inst_ids)
             return [job_status]
 
         # 其它都认为存在失败的情况，需要具体查作业平台的接口查IP详情
@@ -612,10 +630,10 @@ class BulkExecuteJobPlatformService(MultiJobTaskBaseService):
                     },
                 )
             else:
-                job_task.set_status(JobStatus.SUCCEEDED)
+                self.set_succeeded_job_task_status(job_task)
                 for config_inst in job_task.extra_data.get("config_instances", []):
                     succeeded_config_inst_ids.append(config_inst["id"])
-        ConfigInstance.objects.filter(id__in=succeeded_config_inst_ids).update(is_released=True)
+        self.handle_succeeded_conf_inst_ids(succeeded_config_inst_ids)
         return [job_status]
 
     def _schedule(self, data, parent_data, callback_data=None):
@@ -652,11 +670,7 @@ class BulkExecuteJobPlatformService(MultiJobTaskBaseService):
                 if status in [constants.BkJobStatus.PENDING, constants.BkJobStatus.RUNNING]:
                     job_instance_id__job_task_ids_map[job_instance_id]["status"] = constants.BkJobStatus.FAILED
 
-        # 没完成时result为True，继续下次查询
-        result = True
-        if is_finished:
-            # 完成时，需确定所有任务都是成功的
-            result = set(all_job_result) == {constants.BkJobStatus.SUCCEEDED}
+        result = self.check_result(is_finished, all_job_result)
 
         data.outputs.polling_time = polling_time + POLLING_INTERVAL
         data.outputs.job_instance_id__job_task_ids_map = job_instance_id__job_task_ids_map
@@ -681,6 +695,15 @@ class BulkPushConfigService(BulkExecuteJobPlatformService):
     """
     下发配置
     """
+
+    def handle_succeeded_conf_inst_ids(self, succeeded_config_inst_ids: List[int]):
+        """处理成功的配置实例"""
+        ConfigInstance.objects.filter(id__in=succeeded_config_inst_ids).update(is_released=True)
+
+    @staticmethod
+    def set_succeeded_job_task_status(job_task: JobTask):
+        # 下发配置成功则设置状态为成功
+        job_task.set_status(JobStatus.SUCCEEDED)
 
     def _execute(self, data, parent_data):
         job_params = {
@@ -729,6 +752,11 @@ class BulkBackupConfigService(BulkExecuteJobPlatformService):
     """
     配置文件备份
     """
+
+    @staticmethod
+    def check_result(is_finished: bool, all_job_result: List[int]) -> bool:
+        """备份文件无需关注是否成功"""
+        return True
 
     def _execute(self, data, parent_data):
         with open("apps/gsekit/scripts/backup_cfg.bat") as bat, open("apps/gsekit/scripts/backup_cfg.sh") as sh:
