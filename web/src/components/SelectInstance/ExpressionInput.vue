@@ -6,6 +6,7 @@
       <div class="single-input-container" :key="item.type">
         <div class="hold-text">{{ expressionData[item.key] }}</div>
         <input
+          v-test.range="'expressionInput'"
           v-model.trim="expressionData[item.key]"
           class="single-input" placeholder="*"
           @change="handleChange(item.type, $event)" />

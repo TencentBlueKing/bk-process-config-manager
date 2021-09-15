@@ -8,8 +8,11 @@
     <TemplateFieldList :selected-config.sync="selectedConfig" @change="updateSelectedConfig" />
     <div class="version-list">
       <div class="version-top-container">
-        <bk-button style="min-width: 104px;" theme="primary" @click="handleCreate">{{ $t('新建版本') }}</bk-button>
+        <bk-button style="min-width: 104px;" v-test="'addVersion'" theme="primary" @click="handleCreate">
+          {{ $t('新建版本') }}
+        </bk-button>
         <bk-input
+          v-test="'searchDesc'"
           v-model="searchKeyword"
           style="width: 480px;"
           right-icon="icon-search"
@@ -26,7 +29,7 @@
         @row-click="handleRowClick">
         <bk-table-column :label="$t('版本ID')" min-width="10">
           <template slot-scope="{ row }">
-            <bk-button theme="primary" text>{{ row.config_version_id }}</bk-button>
+            <bk-button v-test="'viewVersion'" theme="primary" text>{{ row.config_version_id }}</bk-button>
           </template>
         </bk-table-column>
         <bk-table-column :label="$t('版本描述')" min-width="20">
@@ -58,12 +61,13 @@
           <template slot-scope="{ row }">
             <div class="button-container">
               <span class="button-text">{{ row.is_draft ? $t('编辑') : $t('查看') }}</span>
-              <span v-if="!row.is_draft" class="button-text" @click.stop="handleCopyAndCreate(row)">
+              <span v-if="!row.is_draft" v-test="'copy'" class="button-text" @click.stop="handleCopyAndCreate(row)">
                 {{ $t('复制并新建') }}
               </span>
               <template v-if="row.is_active">
                 <AuthTag
                   v-if="selectedConfig.is_bound"
+                  v-test="'configRelease'"
                   :class="['button-text', { 'is-disabled': !authMap.operate_config }]"
                   action="operate_config"
                   :authorized="authMap.operate_config"

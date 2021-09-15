@@ -1,9 +1,10 @@
 <template>
-  <div class="history-list">
+  <div class="history-list" v-test="'history'">
     <div class="history-list-header">{{ $t('任务历史') }}</div>
     <div class="search-area">
       <bk-search-select
         ref="searchSelect"
+        v-test.common="'searchSelect'"
         :data="searchSelectData"
         v-model="searchSelectValue"
         :show-condition="false"
@@ -11,6 +12,7 @@
         @change="handleSearchSelectChange">
       </bk-search-select>
       <bk-date-picker
+        v-test="'picker'"
         v-model="initDateTimeRange"
         :placeholder="$t('选择日期时间范围')"
         :type="'datetimerange'"
@@ -31,7 +33,7 @@
       @page-limit-change="handlePageLimitChange">
       <bk-table-column prop="id" :label="$t('ID')" width="90">
         <template slot-scope="props">
-          <span class="button-text">{{ props.row.id }}</span>
+          <span class="button-text" v-test="'viewTask'">{{ props.row.id }}</span>
         </template>
       </bk-table-column>
       <bk-table-column
@@ -90,6 +92,7 @@
       <bk-table-column :label="$t('操作')" min-width="60">
         <div slot-scope="props" @click.stop>
           <bk-button
+            v-test="'taskRetry'"
             :disabled="props.row.status !== 'failed'"
             theme="primary"
             text

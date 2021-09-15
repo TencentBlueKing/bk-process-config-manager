@@ -6,6 +6,7 @@
                     :content="!isSelected ? $t('请先选择进程') : $t('进程运行中，无需启动')">
           <bk-button
             class="operate-btn"
+            v-test="'batchStart'"
             :disabled="disabled || isDataLoading || !isSelected || isAllowStart"
             theme="primary"
             :loading="isBtnLoading === 'start'"
@@ -17,6 +18,7 @@
                     :content="!isSelected ? $t('请先选择进程') : $t('进程未运行')">
           <bk-button
             class="operate-btn"
+            v-test="'batchStop'"
             :disabled="disabled || isDataLoading || !isSelected || isAllowStop"
             :loading="isBtnLoading === 'stop'"
             @click="operateProcess('stop')">
@@ -31,6 +33,7 @@
                     :content="!isSelected ? $t('请先选择进程') : $t('所选进程暂未关联配置文件，无法进行配置下发')">
           <bk-button
             class="king-btn"
+            v-test="'batchRelease'"
             :disabled="disabled || isDataLoading || !isSelected || isAllowIssued"
             @click="operateConfigDistribute">
             {{ $t('配置下发') }}
@@ -52,13 +55,15 @@
       trigger="click"
       :arrow="false"
       :distance="2">
-      <bk-button icon-right="icon-angle-down" :disabled="isDataLoading || !isSelected">
+      <bk-button v-test.common="'more'" icon-right="icon-angle-down" :disabled="isDataLoading || !isSelected">
         {{ $t('更多') }}
       </bk-button>
       <ul class="dot-menu-list" slot="content">
         <li
           class="dot-menu-item"
+          v-test.common="'moreItem'"
           v-for="item in jobAction.slice(2)"
+          :test-key="item.type"
           :key="item.type"
           @click="operateProcess(item.type)">
           {{ item.actionName }}
@@ -67,6 +72,7 @@
     </bk-popover>
     <div class="synchronous-btn">
       <bk-button
+        v-test="'syncStatus'"
         icon="bk-icon icon-refresh"
         :loading="isSynchronousLoading"
         @click="synchronousProcess">
@@ -82,10 +88,12 @@
         :arrow="false"
         :distance="2">
         <div class="icon-btn">
-          <i class="bk-icon icon-angle-down"></i>
+          <i class="bk-icon icon-angle-down" v-test="'syncMore'"></i>
         </div>
         <ul class="dot-menu-list" slot="content">
-          <li class="dot-menu-item" @click="switchSynchronousText">{{ $t('同步CMDB进程配置') }}</li>
+          <li class="dot-menu-item" v-test.common="'moreItem'" @click="switchSynchronousText">
+            {{ $t('同步CMDB进程配置') }}
+          </li>
         </ul>
       </bk-popover>
     </div>

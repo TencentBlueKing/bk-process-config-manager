@@ -1,5 +1,5 @@
 <template>
-  <div class="variable-panel-container">
+  <div class="variable-panel-container" v-test="'variable'">
     <div class="right-panel-header">
       <div class="icon-container" @click="$emit('close')">
         <span class="bk-icon icon-expand-line"></span>
@@ -13,6 +13,7 @@
         </bk-button>
       </div> -->
       <bk-input
+        v-test="'variableSearch'"
         v-model="keyword"
         :clearable="true"
         class="king-input"
@@ -27,7 +28,8 @@
           </div>
           <ul class="table-body">
             <template v-for="item in globalVariables">
-              <li v-show="item.isShow" class="couple-container" :key="item.key">
+              <li v-show="item.isShow" class="couple-container" :key="item.key"
+                  v-test="'variableItem'" :test-key="item.key">
                 <div class="copy-text-container" :data-copy-text="item.key">
                   <span class="text-overflow-row couple-left">{{ item.name }}</span>
                   <span class="text-overflow-row couple-right">{{ item.key }}</span>
