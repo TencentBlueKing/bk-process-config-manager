@@ -13,13 +13,18 @@ from concurrent.futures.thread import ThreadPoolExecutor
 from multiprocessing.pool import ThreadPool
 
 from django.conf import settings
+from django.db import connections
 
 from apps.exceptions import AppBaseException
 from apps.utils.local import get_request
 
 
 def batch_request(
-    func, params, get_data=lambda x: x["info"], get_count=lambda x: x["count"], limit=500,
+    func,
+    params,
+    get_data=lambda x: x["info"],
+    get_count=lambda x: x["count"],
+    limit=500,
 ):
     """
     异步并发请求接口
@@ -124,4 +129,5 @@ def request_multi_thread(
         tasks = [ex.submit(func, **params) for params in params_list]
     for future in as_completed(tasks):
         result.extend(get_data(future.result()))
+    connections.close_all()
     return result
