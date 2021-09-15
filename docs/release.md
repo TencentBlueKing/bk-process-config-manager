@@ -1,5 +1,13 @@
 # Release
 
+## 1.0.3
+
+- bugfix
+  - 第三方系统请求API时报JWG校验错误问题 (fixed #66)
+  - 备份文件后未下发配置 (fixed #71)
+- feature
+  - 增加测试点 (close
+
 ## 1.0.2
 
 - bugfix
