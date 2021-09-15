@@ -23,6 +23,8 @@ mistune==0.8.4
 
 # jwt
 PyJWT==1.7.1
+pycrypto==2.6.1
+cryptography==3.2
 
 # iam
 bk-iam==1.1.19
