@@ -13,7 +13,8 @@
       <div
         ref="triggerRef"
         class="custom-tree-select-trigger"
-        :class="{ 'active': showDropdown, 'is-not-selected': !selectedName }">
+        :class="{ 'active': showDropdown, 'is-not-selected': !selectedName }"
+        v-test="'treeSelect'">
         <span v-if="selectedName">{{ selectedName }}</span>
         <span v-else class="holder-text">{{ $t('请选择进程实例') }}</span>
         <span
@@ -27,6 +28,7 @@
         <div class="input-container">
           <span class="bk-icon icon-search"></span>
           <input
+            v-test="'searchInstance'"
             v-model.trim="searchKeyword"
             ref="searchInput"
             type="text"

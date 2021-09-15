@@ -57,6 +57,7 @@
         :render-header="renderSelectionHeader">
         <div slot-scope="props" @click.stop>
           <bk-checkbox
+            v-test.common="'rowSelect'"
             :value="props.row.isSelect"
             :disabled="props.row.disable"
             @change="handleRowCheck(props.row)">
@@ -144,6 +145,7 @@
                           :content="$t('进程运行中，无需启动')">
                 <bk-button
                   style="margin-right: 12px;"
+                  v-test="'start'"
                   :disabled="disabled || row.process_status === 1"
                   theme="primary"
                   text
@@ -155,6 +157,7 @@
                           :content="$t('进程未运行')">
                 <bk-button
                   style="margin-right: 12px;"
+                  v-test="'stop'"
                   :disabled="disabled || row.process_status === 2"
                   theme="primary"
                   text
@@ -169,6 +172,7 @@
               <bk-popover :disabled="Boolean(row.templateCount)"
                           :content="$t('没有绑定配置文件，无法进行配置下发')">
                 <bk-button
+                  v-test="'release'"
                   :disabled="disabled || !Boolean(row.templateCount)"
                   theme="primary"
                   text
@@ -180,13 +184,15 @@
           </AuthTag>
           <bk-popover placement="bottom-start" theme="dot-menu light" trigger="click" :arrow="false" :distance="0">
             <div class="dot-menu-trigger">
-              <span class="bk-icon icon-more"></span>
+              <span class="bk-icon icon-more" v-test.common="'more'"></span>
             </div>
             <ul class="dot-menu-list" slot="content">
               <AuthTag
                 tag="li"
                 class="dot-menu-item"
+                v-test.common="'moreItem'"
                 v-for="item in jobAction.slice(2)"
+                :test-key="item.type"
                 :key="item.type"
                 action="manage_process"
                 :authorized="authMap.manage_process"

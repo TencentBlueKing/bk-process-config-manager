@@ -126,6 +126,7 @@
           <template slot-scope="{ row }">
             <bk-button
               theme="primary" text style="margin-right: 6px;"
+              v-test.release="'generate'"
               :disabled="isTasking || row.taskStatus === 'pending' || row.taskStatus === 'running'"
               @click="regenerate(row)">
               {{ $t('重新生成') }}

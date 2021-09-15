@@ -27,7 +27,7 @@
       </template>
     </div>
     <div slot="footer" class="footer-container">
-      <bk-button class="confirm-button" theme="primary" :loading="loading" @click="handleConfirm">
+      <bk-button v-test="'cover'" class="confirm-button" theme="primary" :loading="loading" @click="handleConfirm">
         {{ $t('确定覆盖') }}
       </bk-button>
       <bk-button @click="handleCancel">{{ $t('取消') }}</bk-button>

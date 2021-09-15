@@ -1,5 +1,6 @@
 <template>
-  <div class="version-detail-container" v-bkloading="{ isLoading: versionLoading, opacity: .1 }">
+  <div
+    class="version-detail-container" v-test="'versionDetail'" v-bkloading="{ isLoading: versionLoading, opacity: .1 }">
     <template v-if="selectedVersion">
       <div class="template-title">
         <span class="gsekit-icon gsekit-icon-down-line" @click="backToVersionList"></span>
@@ -25,6 +26,7 @@
               <span>{{ $t('高亮风格') }}</span>
               <bk-select
                 v-model="codeLanguage"
+                v-test="'highlight'"
                 class="king-select dark"
                 ext-popover-cls="dark"
                 :clearable="false">
@@ -43,11 +45,14 @@
             <div v-else class="code-header-right">
               <bk-button
                 class="king-button king-button-copy"
+                v-test="'copy'"
                 theme="primary"
                 icon="plus-line"
                 @click="copyAndCreate">{{ $t('复制并新建') }}
               </bk-button>
-              <bk-button class="king-button dark" @click="handleOpenPreview">{{ $t('预览') }}</bk-button>
+              <bk-button class="king-button dark" v-test="'preview'" @click="handleOpenPreview">
+                {{ $t('预览') }}
+              </bk-button>
             </div>
           </div>
           <CodeEditor
@@ -75,6 +80,7 @@
       <div v-if="selectedVersion.is_draft" class="code-footer">
         <bk-button
           v-bk-tooltips="emptyContentTips"
+          v-test="'save'"
           theme="primary"
           class="king-button"
           :class="(!currentEditorContent || !canSave) && 'dark is-disabled'"
@@ -85,6 +91,7 @@
           v-bk-tooltips="emptyContentTips"
           style="margin-right: 60px;"
           class="king-button dark"
+          v-test="'saveDraft'"
           :class="!currentEditorContent && 'is-disabled'"
           :loading="saveDraftLoading"
           @click="handleSaveDraft">
@@ -94,10 +101,11 @@
           v-bk-tooltips="disableDiffTips"
           class="king-button dark"
           :class="!usableVersion && 'is-disabled'"
+          v-test="'diff'"
           @click="handleDiff">
           {{ $t('对比') }}
         </bk-button>
-        <bk-button class="king-button dark" @click="handleOpenVariable">
+        <bk-button class="king-button dark" v-test="'showVariable'" @click="handleOpenVariable">
           {{ $t('变量') }}
         </bk-button>
         <bk-button
@@ -105,6 +113,7 @@
           style="margin-right: 60px;"
           class="king-button dark"
           :class="{ 'is-draft-updated': isDraftUpdated && showPreviewPanel }"
+          v-test="'preview'"
           @click="handleOpenPreview">
           {{ $t('预览') }}
         </bk-button>

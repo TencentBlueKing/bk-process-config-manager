@@ -30,7 +30,8 @@
     <template v-else>
       <section class="detail-search">
         <div class="btn-section">
-          <bk-button @click="onAllRetry" :disabled="jobInfo.status !== 'failed'" :loading="retryLoading">
+          <bk-button
+            v-test="'retryAll'" @click="onAllRetry" :disabled="jobInfo.status !== 'failed'" :loading="retryLoading">
             {{ $t('重试所有失败') }}
           </bk-button>
           <bk-dropdown-menu
@@ -43,6 +44,7 @@
             <bk-button
               slot="dropdown-trigger"
               class="copy-dropdown-btn"
+              v-test.common="'more'"
               :disabled="['running', 'pending'].includes(jobInfo.status)">
               <span class="icon-down-wrapper">
                 <span>{{ $t('复制') }}</span>
@@ -51,13 +53,20 @@
             </bk-button>
             <ul class="bk-dropdown-list" slot="dropdown-content">
               <li v-for="(copyType, index) in copyTypeList" :key="index + Date.now()">
-                <a href="javascript:" @click.prevent.stop="handleCopy(copyType.key)">{{ copyType.name }}</a>
+                <a
+                  href="javascript:"
+                  v-test.common="'moreItem'"
+                  :test-key="copyType.key || 'all'"
+                  @click.prevent.stop="handleCopy(copyType.key)">
+                  {{ copyType.name }}
+                </a>
               </li>
             </ul>
           </bk-dropdown-menu>
         </div>
         <bk-search-select
           ref="searchSelect"
+          v-test.common="'searchSelect'"
           v-model="searchSelectValue"
           :show-condition="false"
           :data="searchSelectData"
@@ -67,6 +76,7 @@
       <section class="tab-header" v-if="statusTabList.length">
         <div
           v-for="item in statusTabList"
+          v-test="'tableTabItem'"
           :key="item.err_code"
           :class="['tab-item', { 'active': selectedTabCode === item.err_code }]"
           @click="handleTabChange(item)">

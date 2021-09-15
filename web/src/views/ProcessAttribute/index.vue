@@ -56,6 +56,7 @@
             <bk-search-select
               class="search-input"
               ref="searchSelect"
+              v-test.common="'searchSelect'"
               :placeholder="$t('进程别名、进程名称、配置缺失情况')"
               :show-condition="false"
               :data="filterSearchSelectData"

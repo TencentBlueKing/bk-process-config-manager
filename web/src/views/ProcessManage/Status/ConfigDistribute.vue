@@ -10,6 +10,7 @@
         <div :class="['common-form-item', { 'default-width': !isContrast }]">
           <label class="required">{{ $t('配置模板') }}</label>
           <bk-select
+            v-test="'tempSelect'"
             v-model="templateId"
             :clearable="false"
             :disabled="isBatch || isGenerateLoading"
@@ -25,6 +26,7 @@
             :loading="isGenerateLoading"
             :diasbled="isReleaseLoading"
             :theme="'primary'"
+            v-test="'configGenerate'"
             @click="setSyncGenerateConfig(true)">
             <div class="generate-btn">
               <i class="swither-icon gsekit-icon gsekit-icon-swither-small"></i>
@@ -94,6 +96,7 @@
         <bk-popover :disabled="isDataLoading || Boolean(generatedConfig.created_at)"
                     :content="$t('请重新生成')">
           <bk-button
+            v-test="'configRelease'"
             :disabled="isDataLoading || !generatedConfig.created_at"
             :loading="isReleaseLoading"
             theme="primary"
@@ -102,6 +105,7 @@
           </bk-button>
         </bk-popover>
         <bk-button
+          v-test="'configContrast'"
           @click="onConfigContrast"
           :disabled="isDataLoading || !generatedConfig.content"
           :class="{ 'pressed': isContrast }">

@@ -24,16 +24,18 @@
       <ProcessSelect ref="processSelect" v-show="!isFirstStep" />
     </template>
     <div slot="footer" class="footer-wrapper">
-      <bk-button v-show="isFirstStep" theme="primary" :loading="createLoading" @click="handleCreate">
+      <bk-button
+        v-show="isFirstStep" v-test.common="'stepNext'" theme="primary" :loading="createLoading" @click="handleCreate">
         {{ $t('下一步') }}
       </bk-button>
-      <bk-button v-show="isFirstStep" @click="handleCancel">
+      <bk-button v-show="isFirstStep" v-test.form="'cancel'" @click="handleCancel">
         {{ $t('取消') }}
       </bk-button>
-      <bk-button v-show="!isFirstStep" theme="primary" :loading="bindLoading" @click="handleBind">
+      <bk-button
+        v-show="!isFirstStep" v-test.form="'confirm'" theme="primary" :loading="bindLoading" @click="handleBind">
         {{ $t('关联') }}
       </bk-button>
-      <bk-button v-show="!isFirstStep" @click="handleSkip">
+      <bk-button v-show="!isFirstStep" v-test.form="'cancel'" @click="handleSkip">
         {{ $t('暂不关联') }}
       </bk-button>
     </div>
