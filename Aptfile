@@ -1,4 +1,6 @@
 # you can list packages
 libssl-dev
 default-libmysqlclient-dev
-
+vim
+iputils-ping
+mysql-client

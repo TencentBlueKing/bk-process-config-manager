@@ -191,7 +191,7 @@ class BulkGseOperateProcessService(MultiJobTaskBaseService):
             f"{host_info['bk_cloud_id']}:{host_info['bk_host_innerip']}:"
             f"{namespace}:{process_info['bk_process_name']}_{local_inst_id}"
         )
-        return gse_api_result.get(uniq_key) or {
+        return gse_api_result["data"].get(uniq_key) or {
             "content": "",
             "error_code": GseDataErrorCode.RUNNING,
             "error_msg": "handling",
@@ -327,7 +327,7 @@ class BulkGseOperateProcessService(MultiJobTaskBaseService):
         job_tasks = data.get_one_of_inputs("job_tasks")
         op_type = data.get_one_of_inputs("op_type")
         task_id = data.get_one_of_outputs("task_id")
-        gse_api_result = GseApi.get_proc_operate_result({"task_id": task_id})
+        gse_api_result = GseApi.get_proc_operate_result({"task_id": task_id}, raw=True)
         if gse_api_result["code"] == GSE_RUNNING_TASK_CODE:
             # 查询的任务等待执行中，还未入到redis，继续下一次查询
             return self.return_data(result=True)
@@ -418,7 +418,7 @@ class BulkGseCheckProcessService(BulkGseOperateProcessService):
             # 兼容新版引擎，TODO 待优化，在 execute 处提前 finish_schedule
             return self.return_data(result=True, is_finished=True)
 
-        gse_api_result = GseApi.get_proc_operate_result({"task_id": task_id})
+        gse_api_result = GseApi.get_proc_operate_result({"task_id": task_id}, raw=True)
         if gse_api_result["code"] == GSE_RUNNING_TASK_CODE:
             # 查询的任务等待执行中，还未入到redis，继续下一次查询
             return self.return_data(result=True)
