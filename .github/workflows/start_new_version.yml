@@ -19,10 +19,17 @@ jobs:
         python-version: 3.6
     - name: Start New Version
       run: |
+        pip install PyYAML
         eval $(./scripts/parse_app_yml.sh app.yml "yml_")
         echo current_version:${yml_version}
+        python scripts/extract_version_log.py ${yml_version}
         git config --global user.email "github-actions@users.noreply.github.com"
         git config --global user.name "github-actions"
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
+        git checkout "V${yml_version}rc"
+        git add .
+        git commit -m "docs: auto generate version log"
+        git push
         git tag -a V${yml_version} -m "$(cat release/V${yml_version}*)"
         git push origin V${yml_version}
         echo next_version:${yml_next_version}
