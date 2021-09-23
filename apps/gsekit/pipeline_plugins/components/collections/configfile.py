@@ -489,6 +489,8 @@ class BulkExecuteJobPlatformService(MultiJobTaskBaseService):
             host_info = inst_job_task.extra_data["process_info"]["host"]
 
             for config_inst in config_instances:
+                if config_inst["id"] not in config_instance_id_content_map:
+                    continue
 
                 file_target_path = config_inst["path"]
                 file_name = config_inst["file_name"]
