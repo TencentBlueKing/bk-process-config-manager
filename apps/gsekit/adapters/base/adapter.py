@@ -10,23 +10,21 @@ See the License for the specific language governing permissions and limitations 
 """
 from typing import Dict, Any, List
 
+from bamboo_engine.builder import ServiceActivity, Var, Data, NodeOutput
+
 from apps.gsekit.adapters.base.pipeline_managers import ManagerFactory
 from apps.gsekit.configfile.models import ConfigTemplate, ConfigTemplateBindingRelationship
 from apps.gsekit.job.models import Job, JobTask
 from apps.gsekit.pipeline_plugins.components.collections.configfile import (
-    GenerateConfigComponent,
     BulkGenerateConfigComponent,
     BulkPushConfigComponent,
-    BulkBackupConfigComponent
+    BulkBackupConfigComponent,
 )
 from apps.gsekit.pipeline_plugins.components.collections.gse import (
-    GseOperateProcessComponent,
     GseOpType,
-    GseCheckProcessComponent,
     BulkGseOperateProcessComponent,
     BulkGseCheckProcessComponent,
 )
-from bamboo_engine.builder import ServiceActivity, Var, Data, NodeOutput
 
 
 class BaseActivityManager(object):
@@ -86,56 +84,6 @@ class BaseChannelAdapters(object):
 
     def post_delete_config_template_relation(self, relation: ConfigTemplateBindingRelationship):
         pass
-
-    class GenerateConfigActivityManager(BaseActivityManager):
-        def generate_activities(self, global_pipeline_data: Data = None) -> Dict:
-            return {
-                "activities": [self.generate_config()],
-                "sub_process_data": None,
-            }
-
-        def generate_config(self):
-            act = ServiceActivity(component_code=GenerateConfigComponent.code)
-            act.component.inputs.job_task_id = Var(type=Var.PLAIN, value=self.job_task.id)
-            act.component.inputs.bk_username = Var(type=Var.PLAIN, value=self.job.created_by)
-            act.component.inputs.bk_biz_id = Var(type=Var.PLAIN, value=self.job.bk_biz_id)
-            return act
-
-    class OperateProcessActivityManager(BaseActivityManager):
-        def __init__(self, job: Job, job_task: JobTask, *args, **kwargs):
-            self.job = job
-            self.job_task = job_task
-            self.op_type = kwargs["op_type"]
-            super().__init__(job, job_task, *args, **kwargs)
-
-        def generate_activities(self, global_pipeline_data: Data = None) -> Dict[str, Any]:
-            proc_op_act = self.operate_process()
-            check_status_act = self.check_status()
-
-            # 全局具有多个重复流程，通过全局上下文交互变量需要用job_task_id唯一标识变量
-            proc_op_act_status_output_name = "${" + f"job_task_id_{self.job_task.id}_last_proc_op_status" + "}"
-            # proc_op_act的进程操作状态传入check_status_act
-            check_status_act.component.inputs["last_proc_op_status"] = Var(
-                type=Var.SPLICE, value=proc_op_act_status_output_name
-            )
-            global_pipeline_data.inputs[proc_op_act_status_output_name] = NodeOutput(
-                type=Var.SPLICE, source_act=proc_op_act.id, source_key="proc_op_status", value=""
-            )
-            return {"activities": [proc_op_act, check_status_act], "sub_process_data": None}
-
-        def operate_process(self):
-            """进程操作原子"""
-            act = ServiceActivity(component_code=GseOperateProcessComponent.code)
-            act.component.inputs.job_task_id = Var(type=Var.PLAIN, value=self.job_task.id)
-            act.component.inputs.op_type = Var(type=Var.PLAIN, value=self.op_type)
-            return act
-
-        def check_status(self):
-            """查询进程状态，更新写入DB"""
-            act = ServiceActivity(component_code=GseCheckProcessComponent.code)
-            act.component.inputs.job_task_id = Var(type=Var.PLAIN, value=self.job_task.id)
-            act.component.inputs.op_type = Var(type=Var.PLAIN, value=GseOpType.CHECK)
-            return act
 
     class BulkOperateProcessActivityManager(BulkBaseActivityManager):
         def __init__(self, job: Job, job_task_ids, *args, **kwargs):
