@@ -511,6 +511,8 @@ export default {
             if (type === 'config') {
               // 需重新拉取筛选数据
               this.$router.go(0);
+            } else if (type === 'status') { // 仅更新表格数据(状态)
+              this.handlePageChange(this.pagination.current);
             }
           }
           if (this.showNormalProcess) {
@@ -527,7 +529,9 @@ export default {
         console.warn(error);
       } finally {
         this.isSynchronousLoading = false;
-        this.isDataLoading = false;
+        if (type !== 'status') {
+          this.isDataLoading = false;
+        }
       }
     },
     // 复制逻辑
