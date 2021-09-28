@@ -446,7 +446,7 @@ class BulkGseCheckProcessService(BulkGseOperateProcessService):
                 self.increment_inst_status_count(job_task, process_status, is_auto)
                 self.sync_status_to_proc(job_task)
 
-        if GseDataErrorCode.RUNNING in set([result["error_code"] for key, result in gse_api_result.items()]):
+        if GseDataErrorCode.RUNNING in set([result["error_code"] for key, result in gse_api_result["data"].items()]):
             # RUNNING 进入下一次轮询
             return self.return_data(result=True)
 
