@@ -1,5 +1,10 @@
 # Release
 
+## 1.0.4
+
+- bugfix
+  - 调用GSE接口未就绪时报错问题 (fixed #74)
+
 ## 1.0.3
 
 - bugfix
