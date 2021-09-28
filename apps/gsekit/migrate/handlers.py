@@ -76,9 +76,7 @@ class MigrateHandlers(object):
         return self.perform_request(uri=f"api/get_host_no/{bk_module_id}")["objects"] or {}
 
     def get_module_id_host_no_map_list(self, bk_module_id):
-        return [{
-            bk_module_id: self.perform_request(uri=f"api/get_host_no/{bk_module_id}")["objects"] or {}
-        }]
+        return [{bk_module_id: self.perform_request(uri=f"api/get_host_no/{bk_module_id}")["objects"] or {}}]
 
     def diff_biz_process(self):
         cmdb_handler = CMDBHandler(bk_biz_id=self.bk_biz_id)
@@ -156,9 +154,9 @@ class MigrateHandlers(object):
                 for gsekit_proc in to_be_created_process_templates:
                     for cmdb_proc in cmdb_process_templates:
                         if (
-                                gsekit_proc["ProcName"] == cmdb_proc["property"]["bk_func_name"]["value"]
-                                and gsekit_proc["FuncID"] == cmdb_proc["property"]["bk_process_name"]["value"]
-                                and gsekit_proc["FuncName"] == cmdb_proc["property"]["bk_start_param_regex"]["value"]
+                            gsekit_proc["ProcName"] == cmdb_proc["property"]["bk_func_name"]["value"]
+                            and gsekit_proc["FuncID"] == cmdb_proc["property"]["bk_process_name"]["value"]
+                            and gsekit_proc["FuncName"] == cmdb_proc["property"]["bk_start_param_regex"]["value"]
                         ):
                             to_be_created_map.append(
                                 GsekitProcessToCCProcessTemplateMap(
@@ -346,8 +344,9 @@ class MigrateHandlers(object):
         cmdb_module_proc_name_map = migrate_data["cmdb_module_proc_name_map"]
         module_id_host_no_map = {}
         params_list = [{"bk_module_id": bk_module_id} for bk_module_id in cmdb_module_proc_name_map.keys()]
-        module_id_host_no_map_list = request_multi_thread(self.get_module_id_host_no_map_list, params_list,
-                                                          get_data=lambda x: x)
+        module_id_host_no_map_list = request_multi_thread(
+            self.get_module_id_host_no_map_list, params_list, get_data=lambda x: x
+        )
         for _module_id_host_no_map in module_id_host_no_map_list:
             module_id_host_no_map.update(_module_id_host_no_map)
         for bk_module_id, cmdb_process_name_map in cmdb_module_proc_name_map.items():
@@ -389,19 +388,21 @@ class MigrateHandlers(object):
                             )
                         )
         # 检查待创建实例中不符合唯一键的项
-        # exact_created_inst = []
         uniq_key_set = set()
+        duplicate_proc_instances = set()
         for inst in to_be_created_inst:
-            # if inst.local_inst_id_uniq_key not in uniq_key_set:
-            #     exact_created_inst.append(inst)
             if inst.local_inst_id_uniq_key in uniq_key_set:
-                raise DuplicateProcessInstException(uniq_key=inst.local_inst_id_uniq_key)
+                duplicate_proc_instances.add(inst.local_inst_id_uniq_key)
+                continue
             uniq_key_set.add(inst.local_inst_id_uniq_key)
+
+        # 存在重复进程实例
+        if duplicate_proc_instances:
+            raise DuplicateProcessInstException(uniq_key=duplicate_proc_instances)
 
         with transaction.atomic():
             # 删除已同步的进程实例，使用金枪鱼的数据进行重建后再执行同步
             ProcessInst.objects.filter(bk_biz_id=self.bk_biz_id).delete()
-            # ProcessInst.objects.bulk_create(exact_created_inst)
             ProcessInst.objects.bulk_create(to_be_created_inst)
 
     @MigrationStatus.set_migrate_status(MigrationStatus.MigrateObject.IAM)
@@ -416,7 +417,8 @@ class MigrateHandlers(object):
             resource = ResourceEnum.CONFIG_TEMPLATE.create_instance(str(config_template.config_template_id), attribute)
             # 新建授权
             result, msg = Permission().grant_creator_action(
-                resource=resource, creator=perm_gainer or config_template.created_by,
+                resource=resource,
+                creator=perm_gainer or config_template.created_by,
             )
             if not result:
                 raise AppBaseException(msg)

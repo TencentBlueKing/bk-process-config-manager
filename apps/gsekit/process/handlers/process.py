@@ -735,10 +735,16 @@ class ProcessHandler(APIModel):
 
         # 检查待创建实例中不符合唯一键的项
         uniq_key_set = set()
+        duplicate_proc_instances = set()
         for inst in to_be_created_inst:
             if inst.local_inst_id_uniq_key in uniq_key_set:
-                raise DuplicateProcessInstException(uniq_key=inst.local_inst_id_uniq_key)
+                duplicate_proc_instances.add(inst.local_inst_id_uniq_key)
+                continue
             uniq_key_set.add(inst.local_inst_id_uniq_key)
+
+        # 存在重复进程实例
+        if duplicate_proc_instances:
+            raise DuplicateProcessInstException(uniq_key=duplicate_proc_instances)
 
         with transaction.atomic():
             if to_be_deleted_inst_condition:

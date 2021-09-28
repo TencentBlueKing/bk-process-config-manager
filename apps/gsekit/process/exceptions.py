@@ -44,7 +44,7 @@ class GenerateProcessObjException(ProcessBaseException):
 class DuplicateProcessInstException(ProcessBaseException):
     ERROR_CODE = "005"
     MESSAGE = _("进程实例重复")
-    MESSAGE_TPL = _("进程实例重复: {uniq_key}，请删除或合并对应实例")
+    MESSAGE_TPL = _("进程实例重复，请删除或合并对应实例（{uniq_key}）")
 
 
 class ProcessNotMatchException(ProcessBaseException):
