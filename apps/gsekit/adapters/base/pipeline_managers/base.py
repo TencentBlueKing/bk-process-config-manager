@@ -21,7 +21,8 @@ from apps.gsekit.cmdb.handlers.cmdb import CMDBHandler
 from apps.gsekit.job.exceptions import JobEmptyTaskException
 from apps.gsekit.job.models import Job, JobTask, JobProcInstStatusStatistics
 from apps.gsekit.pipeline_plugins.components.collections.base import ActivityType
-from apps.gsekit.process.models import ProcessInst
+from apps.gsekit.process.handlers.process import ProcessHandler
+from apps.gsekit.process.models import ProcessInst, Process
 from apps.utils.batch_request import batch_request
 
 
@@ -70,7 +71,11 @@ class BasePipelineManager(object):
                 job_task_extra_data["retryable"] = True
                 job_task_extra_data["solutions"] = []
                 to_be_created_job_tasks.append(
-                    JobTask(job_id=self.job.id, bk_process_id=bk_process_id, extra_data=job_task_extra_data,)
+                    JobTask(
+                        job_id=self.job.id,
+                        bk_process_id=bk_process_id,
+                        extra_data=job_task_extra_data,
+                    )
                 )
             if self.job.job_object in [Job.JobObject.PROCESS] and proc_inst_map[bk_process_id]:
                 to_be_created_proc_inst_status_statistics.append(
@@ -114,8 +119,19 @@ class BasePipelineManager(object):
             extra_data = {}
 
         bk_process_ids = [process_info["process"]["bk_process_id"] for process_info in process_related_info]
-
         proc_inst_map = defaultdict(list)
+        if extra_data.get("extra_filter_conditions"):
+            extra_filter_conditions = extra_data["extra_filter_conditions"]
+            process_queryset = ProcessHandler(bk_biz_id=self.job.bk_biz_id).list(
+                process_queryset=Process.objects.filter(bk_biz_id=self.job.bk_biz_id, bk_process_id__in=bk_process_ids),
+                scope=self.job.scope,
+                expression_scope=self.job.expression_scope,
+                bk_cloud_ids=extra_filter_conditions.get("bk_cloud_ids"),
+                bk_host_innerips=extra_filter_conditions.get("bk_host_innerips"),
+                process_status_list=extra_filter_conditions.get("process_status_list"),
+                is_auto_list=extra_filter_conditions.get("is_auto_list"),
+            )
+            bk_process_ids = process_queryset.values_list("bk_process_id", flat=True)
         for proc_inst in ProcessInst.objects.filter(bk_process_id__in=bk_process_ids).values(
             "bk_process_id", "inst_id", "local_inst_id", "process_status"
         ):

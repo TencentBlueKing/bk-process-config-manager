@@ -10,7 +10,7 @@ See the License for the specific language governing permissions and limitations 
 """
 from collections import defaultdict
 from time import sleep
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from django.db import IntegrityError
 from django.db.models import Count
@@ -30,7 +30,7 @@ from common.log import logger
 
 
 class ConfigTemplateHandler(APIModel):
-    def __init__(self, bk_biz_id: int = None, config_template_id: int = None):
+    def __init__(self, bk_biz_id: Optional[int] = None, config_template_id: Optional[int] = None):
         super().__init__()
         self.config_template_id = None if config_template_id is None else int(config_template_id)
         self.bk_biz_id = None if bk_biz_id is None else int(bk_biz_id)
@@ -336,8 +336,9 @@ class ConfigTemplateHandler(APIModel):
         bk_biz_id: int,
         config_template_id: int,
         scope: Dict,
-        expression_scope: Dict = None,
-        config_version_ids: List = None,
+        expression_scope: Optional[Dict] = None,
+        config_version_ids: Optional[List] = None,
+        extra_filter_conditions: Optional[Dict] = None,
     ):
         """
         生成配置
@@ -346,6 +347,7 @@ class ConfigTemplateHandler(APIModel):
         :param scope: 进程范围
         :param expression_scope: 进程表达式范围
         :param config_version_ids: 配置模板版本列表
+        :param extra_filter_conditions: 额外的过滤条件
         :return:
         """
         extra_data = {}
@@ -359,6 +361,8 @@ class ConfigTemplateHandler(APIModel):
                         ]
                     }
                 )
+        if extra_filter_conditions:
+            extra_data["extra_filter_conditions"] = extra_filter_conditions
         return JobHandlers(bk_biz_id=bk_biz_id).create_job(
             job_action=Job.JobAction.GENERATE,
             job_object=Job.JobObject.CONFIGFILE,

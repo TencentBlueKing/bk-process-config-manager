@@ -38,6 +38,8 @@ INSTALLED_APPS += (
     "pipeline.component_framework",
     "pipeline.django_signal_valve",
     "pipeline.eri",
+    # db
+    "django_dbconn_retry",
 )
 
 # 自定义中间件

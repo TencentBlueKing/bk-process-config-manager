@@ -2,10 +2,11 @@
 # 需要额外的python包，可直接在文件后面添加
 # 请确保指定的包和版本号，可通过pip安装
 
-blueapps-open==4.0.0rc
+blueapps-open==4.0.1
 python-json-logger==0.1.7
 requests==2.22.0
 MarkupSafe==1.1.1
+django-dbconn-retry==0.1.5
 
 # django
 django==3.2.4

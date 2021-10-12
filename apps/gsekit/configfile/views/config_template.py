@@ -249,9 +249,20 @@ class ConfigTemplateViews(ModelViewSet):
         config_version_ids = self.validated_data.get("config_version_ids", [])
         scope = self.validated_data.get("scope")
         expression_scope = self.validated_data.get("expression_scope")
+        extra_filter_conditions = {
+            "bk_host_innerips": self.validated_data.get("bk_host_innerips"),
+            "bk_cloud_ids": self.validated_data.get("bk_cloud_ids"),
+            "is_auto_list": self.validated_data.get("is_auto_list"),
+            "process_status_list": self.validated_data.get("process_status_list"),
+        }
         return Response(
             ConfigTemplateHandler.generate_config(
-                bk_biz_id, config_template_id, scope, expression_scope, config_version_ids=config_version_ids
+                bk_biz_id,
+                config_template_id,
+                scope,
+                expression_scope,
+                config_version_ids=config_version_ids,
+                extra_filter_conditions=extra_filter_conditions,
             )
         )
 
@@ -289,6 +300,12 @@ class ConfigTemplateViews(ModelViewSet):
                     "config_version_ids_map": [
                         {"config_template_id": config_template_id, "config_version_ids": config_version_ids}
                     ],
+                    "extra_filter_conditions": {
+                        "bk_host_innerips": self.validated_data.get("bk_host_innerips"),
+                        "bk_cloud_ids": self.validated_data.get("bk_cloud_ids"),
+                        "is_auto_list": self.validated_data.get("is_auto_list"),
+                        "process_status_list": self.validated_data.get("process_status_list"),
+                    },
                 }
                 if config_template_id
                 else None,
