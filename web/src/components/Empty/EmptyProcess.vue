@@ -26,9 +26,9 @@
           class="empty-box-item"
           desc-path="完善进程信息提示"
           :index="2"
-          :link-btn="$t('进程管理')"
+          :link-btn="$t('进程属性')"
           :image-src="emptyProcessSrc"
-          @click="handleClick('process')">
+          @click="handleClick('attributes')">
         </EmptyBox>
       </section>
     </div>
@@ -80,9 +80,9 @@ export default {
       if (type === 'cmdb') {
         const { bizId } = this.$store.state;
         window.open(`${window.PROJECT_CONFIG.CMDB_URL}/#/business/${bizId}/index?node=biz-${bizId}`, '_blank');
-      } else if (type === 'process') {
+      } else if (type === 'attributes') {
         this.$router.push({
-          name: 'process-manage-initial',
+          name: 'process-attr',
         });
       } else if (type === 'document') {
         console.log(type);
