@@ -87,6 +87,14 @@ class ProcessViews(APIViewSet):
                 created_by=request.user.username,
                 scope=self.validated_data.get("scope"),
                 expression_scope=self.validated_data.get("expression_scope"),
+                extra_data={
+                    "extra_filter_conditions": {
+                        "bk_host_innerips": self.validated_data.get("bk_host_innerips"),
+                        "bk_cloud_ids": self.validated_data.get("bk_cloud_ids"),
+                        "is_auto_list": self.validated_data.get("is_auto_list"),
+                        "process_status_list": self.validated_data.get("process_status_list"),
+                    }
+                },
             )
         )
 
@@ -195,14 +203,16 @@ class ProcessViews(APIViewSet):
         )
 
     @swagger_auto_schema(
-        operation_summary="刷新业务进程缓存", tags=ProcessViewTags,
+        operation_summary="刷新业务进程缓存",
+        tags=ProcessViewTags,
     )
     @action(detail=False, methods=["POST"])
     def flush_process(self, request, bk_biz_id, *args, **kwargs):
         return Response(ProcessHandler(bk_biz_id=bk_biz_id).sync_biz_process())
 
     @swagger_auto_schema(
-        operation_summary="同步进程状态", tags=ProcessViewTags,
+        operation_summary="同步进程状态",
+        tags=ProcessViewTags,
     )
     @action(detail=False, methods=["POST"])
     def sync_process_status(self, request, bk_biz_id, *args, **kwargs):

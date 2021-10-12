@@ -132,6 +132,14 @@ class ProcessInstanceConfigResponseSerializer(serializers.Serializer):
 class ProcessFilterBaseSerializer(serializers.Serializer):
     scope = ScopeSerializer(help_text=_("进程范围"), required=False)
     expression_scope = ExpresssionScopeSerializer(help_text=_("操作范围表达式, 和scope同时传入时, 优先使用scope"), required=False)
+    bk_host_innerips = serializers.ListField(child=serializers.CharField(help_text=_("内网IP")), required=False)
+    bk_cloud_ids = serializers.ListField(help_text=_("云区域ID列表"), required=False)
+    is_auto_list = serializers.ListField(
+        help_text=_("托管状态列表"), child=serializers.BooleanField(help_text=_("托管状态")), required=False
+    )
+    process_status_list = serializers.ListField(
+        help_text=_("进程状态列表"), child=serializers.IntegerField(help_text=_("进程状态")), required=False
+    )
 
     def validate(self, data):
         if not ("scope" in data or "expression_scope" in data):
@@ -140,17 +148,9 @@ class ProcessFilterBaseSerializer(serializers.Serializer):
 
 
 class ProcessStatusRequestSerializer(PageSerializer, OrderingSerializer, ProcessFilterBaseSerializer):
-    bk_host_innerips = serializers.ListField(child=serializers.CharField(help_text=_("内网IP")), required=False)
-    bk_cloud_ids = serializers.ListField(help_text=_("云区域ID列表"), required=False)
     process_status = serializers.IntegerField(help_text=_("进程状态"), required=False)
     searches = serializers.ListField(help_text=_("多模糊查询:支持内网IP及云区域名称"), child=serializers.CharField(), required=False)
     is_auto = serializers.BooleanField(help_text=_("托管状态"), required=False)
-    is_auto_list = serializers.ListField(
-        help_text=_("托管状态列表"), child=serializers.BooleanField(help_text=_("托管状态")), required=False
-    )
-    process_status_list = serializers.ListField(
-        help_text=_("进程状态列表"), child=serializers.IntegerField(help_text=_("进程状态")), required=False
-    )
 
     class Meta:
         swagger_schema_fields = {"example": mock_data.PROCESS_STATUS_REQUEST_BODY}
