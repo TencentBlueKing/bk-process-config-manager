@@ -138,7 +138,8 @@ export default {
       this.$router.push('/process-manage/status');
     },
     handleLogout() {
-      location.assign('/console/accounts/logout/');
+      // location.assign('/console/accounts/logout/');
+      location.href = `${window.PROJECT_CONFIG.LOGIN_URL}?&c_url=${window.location}`;
     },
     async resetAuthInfo() {
       const currentBiz = this.bizList.find(item => item.bk_biz_id === this.bizId);
