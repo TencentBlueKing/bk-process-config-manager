@@ -19,6 +19,7 @@
                 const TAM_AEGIS_KEY = '{{TAM_AEGIS_KEY}}' // TAM监控key
                 const TAM_AEGIS_URL = '{{TAM_AEGIS_URL}}' // TAM监控接入链接
                 const CMDB_URL = '{{CMDB_URL}}' // 配置平台路径
+                const LOGIN_URL = '{{LOGIN_URL}}'
 
                 // BK_STATIC_URL 不能以 / 结尾
                 if (BK_STATIC_URL.endsWith('/')) {
@@ -39,7 +40,8 @@
                     LOGIN_SERVICE_URL: LOGIN_SERVICE_URL,
                     TAM_AEGIS_KEY: TAM_AEGIS_KEY,
                     TAM_AEGIS_URL: TAM_AEGIS_URL,
-                    CMDB_URL: CMDB_URL
+                    CMDB_URL: CMDB_URL,
+                    LOGIN_URL: LOGIN_URL
                 }
             })()
         </script>
