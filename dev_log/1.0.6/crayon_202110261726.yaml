@@ -1,0 +1,3 @@
+---
+optimization:
+  - "CMDB batch_create_proc_template 限制创建数量不大于100 (closed #89)"

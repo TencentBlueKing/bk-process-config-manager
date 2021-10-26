@@ -20,12 +20,18 @@ repos:
         entry: python scripts/check_migrate/check_migrate.py
         language: system
         types: [python]
+      - id: check-sensitive-info
+        name: Check Sensitive Info
+        entry: sh scripts/workflows/pre-commit/check_sensitive_info.sh
+        language: system
       - id: check-commit-message
         name: Check commit message
         entry: python scripts/workflows/pre-commit/check_commit_message.py
         language: system
         stages: [commit-msg]
-      - id: check-sensitive-info
-        name: Check Sensitive Info
-        entry: sh scripts/workflows/pre-commit/check_sensitive_info.sh
+      - id: generate-dev-log
+        name: Generate dev log
+        entry: python scripts/workflows/pre-commit/generate_dev_log.py
         language: system
+        always_run: true
+        stages: [commit-msg]

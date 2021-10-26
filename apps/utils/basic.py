@@ -13,6 +13,8 @@ from datetime import datetime
 
 from django.utils import timezone
 
+from typing import Any, List
+
 
 def utc_strftime2local_strftime(
     utc_strftime: str, fmt: str = "%Y-%m-%d %H:%M:%S.%f", target_fmt: str = "%Y-%m-%d %H:%M:%S"
@@ -71,3 +73,12 @@ def distinct_dict_list(dict_list: list):
     :return: 去重后的字典列表
     """
     return [dict(tupl) for tupl in set([tuple(sorted(item.items())) for item in dict_list])]
+
+
+def list_slice(lst: List[Any], limit: int) -> List[List[Any]]:
+    begin = 0
+    slice_list = []
+    while begin < len(lst):
+        slice_list.append(lst[begin : begin + limit])
+        begin += limit
+    return slice_list
