@@ -29,6 +29,7 @@ from apps.gsekit.process.handlers.process import ProcessHandler
 from apps.gsekit.process.models import Process, ProcessInst
 from apps.iam import Permission, ResourceEnum
 from apps.utils.batch_request import batch_request, request_multi_thread
+from apps.utils import basic
 
 DIRECT_OLD_GSEKIT_ROOT = os.getenv("DIRECT_OLD_GSEKIT_ROOT", "http://apps.****.com/ieod-bkapp-gsekit-prod")
 
@@ -115,38 +116,49 @@ class MigrateHandlers(object):
             to_be_created_process_templates = module_process_difference["to_be_created_process_templates"]
             to_be_modified_process_templates = module_process_difference["to_be_modified_process_templates"]
             if to_be_created_process_templates:
-                batch_create_params = {
-                    "bk_biz_id": self.bk_biz_id,
-                    "service_template_id": int(service_template["ModuleID"]),
-                    "processes": [
-                        {
-                            "spec": {
-                                "auto_start": {"as_default_value": True, "value": True},
-                                "bk_start_check_secs": {
-                                    "as_default_value": True,
-                                    "value": int(proc["StartCheckBeginTime"]) or 5,
-                                },
-                                "bk_func_name": {"as_default_value": True, "value": proc["ProcName"]},
-                                "bk_process_name": {"as_default_value": True, "value": proc["FuncID"]},
-                                "description": {"as_default_value": True, "value": proc["FuncName"]},
-                                "face_stop_cmd": {"as_default_value": True, "value": proc["KillCmd"]},
-                                "pid_file": {"as_default_value": True, "value": proc["PidFile"]},
-                                "priority": {"as_default_value": True, "value": int(proc["Seq"]) or 1},
-                                "proc_num": {"as_default_value": True, "value": int(proc["ProcNum"]) or 1},
-                                "reload_cmd": {"as_default_value": True, "value": proc["ReloadCmd"]},
-                                "restart_cmd": {"as_default_value": True, "value": proc["ReStartCmd"]},
-                                "start_cmd": {"as_default_value": True, "value": proc["StartCmd"]},
-                                "stop_cmd": {"as_default_value": True, "value": proc["StopCmd"]},
-                                "timeout": {"as_default_value": True, "value": int(proc["OpTimeout"]) or 60},
-                                "user": {"as_default_value": True, "value": proc["User"]},
-                                "work_path": {"as_default_value": True, "value": proc["WorkPath"]},
-                                "bk_start_param_regex": {"as_default_value": True, "value": proc["FuncName"]},
-                            }
+                to_be_created_processes = [
+                    {
+                        "spec": {
+                            "auto_start": {"as_default_value": True, "value": True},
+                            "bk_start_check_secs": {
+                                "as_default_value": True,
+                                "value": int(proc["StartCheckBeginTime"]) or 5,
+                            },
+                            "bk_func_name": {"as_default_value": True, "value": proc["ProcName"]},
+                            "bk_process_name": {"as_default_value": True, "value": proc["FuncID"]},
+                            "description": {"as_default_value": True, "value": proc["FuncName"]},
+                            "face_stop_cmd": {"as_default_value": True, "value": proc["KillCmd"]},
+                            "pid_file": {"as_default_value": True, "value": proc["PidFile"]},
+                            "priority": {"as_default_value": True, "value": int(proc["Seq"]) or 1},
+                            "proc_num": {"as_default_value": True, "value": int(proc["ProcNum"]) or 1},
+                            "reload_cmd": {"as_default_value": True, "value": proc["ReloadCmd"]},
+                            "restart_cmd": {"as_default_value": True, "value": proc["ReStartCmd"]},
+                            "start_cmd": {"as_default_value": True, "value": proc["StartCmd"]},
+                            "stop_cmd": {"as_default_value": True, "value": proc["StopCmd"]},
+                            "timeout": {"as_default_value": True, "value": int(proc["OpTimeout"]) or 60},
+                            "user": {"as_default_value": True, "value": proc["User"]},
+                            "work_path": {"as_default_value": True, "value": proc["WorkPath"]},
+                            "bk_start_param_regex": {"as_default_value": True, "value": proc["FuncName"]},
                         }
-                        for proc in to_be_created_process_templates
-                    ],
-                }
-                batch_create_results = CCApi.batch_create_proc_template(batch_create_params)
+                    }
+                    for proc in to_be_created_process_templates
+                ]
+
+                # CMDB限制该接口的processes长度上限为100
+                to_be_created_processes_slice_list = basic.list_slice(to_be_created_processes, limit=100)
+                params_list = [
+                    {
+                        "params": {
+                            "bk_biz_id": self.bk_biz_id,
+                            "service_template_id": int(service_template["ModuleID"]),
+                            "processes": to_be_created_processes_slice,
+                        }
+                    }
+                    for to_be_created_processes_slice in to_be_created_processes_slice_list
+                ]
+                batch_create_results = request_multi_thread(
+                    func=CCApi.batch_create_proc_template, params_list=params_list, get_data=lambda x: x
+                )
                 cmdb_process_templates = CMDBHandler(bk_biz_id=self.bk_biz_id).process_template(
                     process_template_ids=batch_create_results
                 )
