@@ -152,12 +152,9 @@ class CMDBViews(APIViewSet):
     )
     def check_service_template_difference(self, request, bk_biz_id, *args, **kwargs):
         service_template_id = self.validated_data["service_template_id"]
-        has_difference = (
-            CMDBHandler(bk_biz_id)
-            .check_service_template_difference(service_template_id)
-            .get(service_template_id, False)
+        return Response(
+            CMDBHandler(bk_biz_id).check_service_templates_difference([service_template_id])[service_template_id]
         )
-        return Response(has_difference)
 
     @swagger_auto_schema(
         operation_summary="批量查询服务模板是否需要同步",
