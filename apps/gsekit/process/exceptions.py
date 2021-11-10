@@ -28,7 +28,9 @@ class ProcessDoseNotExistException(ProcessBaseException):
 class ProcessAttrIsNotConfiguredException(ProcessBaseException):
     ERROR_CODE = "002"
     MESSAGE = _("未配置该操作对应的进程属性")
-    MESSAGE_TPL = _("进程【{process_name}】未配置进程属性【{process_attr}】。【注意】此任务为操作时配置的快照【无法直接重试】，请配置后新建任务进行操作")
+    MESSAGE_TPL = _(
+        "进程【{process_name}】未配置进程属性【{process_attr}】或【配置平台】编辑进程模板信息后未锁定并同步。【注意】此任务为操作时配置的快照（无法直接重试），请配置后新建任务进行操作"
+    )
 
 
 class ProcessInstDoseNotExistException(ProcessBaseException):

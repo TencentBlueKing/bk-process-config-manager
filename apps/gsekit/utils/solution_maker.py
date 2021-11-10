@@ -31,15 +31,35 @@ class BaseSolutionMaker(object):
             link_highlight = self.LINK_HIGHLIGHT
         self.link_highlight = link_highlight
 
-    def generate_html(self, link: str):
+    def generate_html(self, link: str, site_url: str = settings.SITE_URL) -> str:
         """生成可点击的html"""
-        return _('<span>点击跳转到</span><a href="{link}" target="_blank">[{highlight}]</a>，请您进行[{action}]操作').format(
-            highlight=self.link_highlight, link=f"{settings.SITE_URL}{link}", action=self.action
-        )
+        return _(
+            '<span>点击跳转到</span><a href="{link}" target="_blank">[{highlight}]</a>，' "请您进行 <b>[{action}]</b> 操作"
+        ).format(highlight=self.link_highlight, link=f"{site_url}{link}", action=self.action)
 
     def make(self) -> List:
         """得出解决方案"""
         raise NotImplementedError
+
+
+class SyncCmdbSvcTmplSolutionMakerMaker(BaseSolutionMaker):
+
+    ACTION = _("锁定进程模板信息并同步")
+    LINK_HIGHLIGHT = _("配置平台-服务模板")
+
+    def __init__(self, bk_biz_id: int, process_template_id: int):
+        self.bk_biz_id = bk_biz_id
+        self.process_template_id = process_template_id
+        super().__init__()
+
+    def make(self) -> List:
+        link = f"/#/business/{self.bk_biz_id}/service/"
+        process = Process.objects.filter(process_template_id=self.process_template_id).first()
+        if process:
+            link += f"operational/template/{process.service_template_id}?_f=1&tab=config"
+        else:
+            link += "template"
+        return [{"html": self.generate_html(site_url=settings.BK_CC_HOST, link=link)}]
 
 
 class SyncProcessSolutionMaker(BaseSolutionMaker):
@@ -73,7 +93,7 @@ class BindTemplateSolutionMaker(BaseSolutionMaker):
 
 class EditProcessSolutionMaker(BaseSolutionMaker):
     ACTION = _("配置文件")
-    LINK_HIGHLIGHT = _("进程管理")
+    LINK_HIGHLIGHT = _("进程属性")
 
     def __init__(self, service_instance_id: int, process_template_id: int, bk_process_id: int, action: str = None):
         self.service_instance_id = service_instance_id
