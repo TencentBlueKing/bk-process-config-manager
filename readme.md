@@ -1,10 +1,16 @@
 ![](docs/resource/img/logo_zh.png)
 ---
 [![license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/TencentBlueKing/bk-process-config-manager/blob/master/LICENSE)
-[![Release](https://img.shields.io/badge/release-1.0.0-brightgreen.svg)](https://github.com/TencentBlueKing/bk-process-config-manager/releases)
 [![Coverage Status](https://codecov.io/gh/TencentBlueKing/bk-process-config-manager/branch/master/graph/badge.svg)](https://codecov.io/gh/TencentBlueKing/bk-process-config-manager)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/TencentBlueKing/bk-process-config-manager/pulls)
 [![unittest](https://github.com/TencentBlueKing/bk-process-config-manager/actions/workflows/codecov.yml/badge.svg)](https://github.com/TencentBlueKing/bk-process-config-manager/actions/workflows/codecov.yml)
+[![Create release](https://github.com/TencentBlueKing/bk-process-config-manager/actions/workflows/release_2_create_release.yml/badge.svg)](https://github.com/TencentBlueKing/bk-process-config-manager/actions/workflows/release_2_create_release.yml)
+
+[![Release](https://badgen.net/github/release/TencentBlueKing/bk-process-config-manager)](https://github.com/TencentBlueKing/bk-process-config-manager/releases)
+[![Latest tag](https://badgen.net/github/tag/TencentBlueKing/bk-process-config-manager)](https://github.com/TencentBlueKing/bk-process-config-manager/tags)
+[![Issues](https://badgen.net/github/issues/TencentBlueKing/bk-process-config-manager)](https://github.com/TencentBlueKing/bk-process-config-manager/issues)
+[![Prs](https://badgen.net/github/prs/TencentBlueKing/bk-process-config-manager)](https://github.com/TencentBlueKing/bk-process-config-manager/pulls)
+[![Last commit](https://badgen.net/github/last-commit/TencentBlueKing/bk-process-config-manager/V1.0.X)](https://github.com/TencentBlueKing/bk-process-config-manager/commits/V1.0.X)
 
 [English](readme_en.md) | 简体中文
 
