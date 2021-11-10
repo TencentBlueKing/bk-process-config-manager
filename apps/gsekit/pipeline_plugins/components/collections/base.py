@@ -108,15 +108,17 @@ class JobTaskBaseService(Service):
         process_info = job_task.extra_data["process_info"]
         has_solution = True
         if isinstance(error, process_exceptions.ProcessAttrIsNotConfiguredException):
-            extra_data.update(
-                retryable=False,
-                solutions=solution_maker.EditProcessSolutionMaker(
-                    process_info["service_instance"]["id"],
-                    process_info["process_template"]["id"],
-                    process_info["process"]["bk_process_id"],
-                    action=_("编辑进程属性"),
-                ).make(),
-            )
+            edit_process_solutions = solution_maker.EditProcessSolutionMaker(
+                process_info["service_instance"]["id"],
+                process_info["process_template"]["id"],
+                process_info["process"]["bk_process_id"],
+                action=_("编辑进程属性"),
+            ).make()
+            sync_cmdb_svc_tmpl_solutions = solution_maker.SyncCmdbSvcTmplSolutionMakerMaker(
+                bk_biz_id=process_info["process"]["bk_biz_id"],
+                process_template_id=process_info["process_template"]["id"],
+            ).make()
+            extra_data.update(retryable=False, solutions=edit_process_solutions + sync_cmdb_svc_tmpl_solutions)
         elif isinstance(error, configfile_exceptions.ProcessDoseNotBindTemplate):
             extra_data.update(
                 solutions=solution_maker.BindTemplateSolutionMaker(
