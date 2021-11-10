@@ -10,7 +10,7 @@
       },
       {
         "title": "### ✨ Optimizations",
-        "labels": ["kind/optimization", "optimization", "perf(front)", "optimize(front)"]
+        "labels": ["kind/optimization", "optimization", "perf(front)", "optimize(front)", "style(front)"]
       },
       {
         "title": "### 🐛 Bugfixes",
@@ -39,7 +39,7 @@
         "target": "$1"
       },
       {
-        "pattern": "^(refactor|feat|perf|optimize|fix|docs|test|build)\\(front\\):(.*)",
+        "pattern": "^(refactor|feat|perf|optimize|fix|docs|test|build|style)\\(front\\):(.*)",
         "target": "$1(front)"
       }
     ],
