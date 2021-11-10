@@ -205,8 +205,8 @@
                         <div class="message-text">{{ '解决方案：' }}</div>
                         <div v-for="(soluteItem, index) in row.extra_data.solutions" :key="index">
                             <div class="solute-item">
-                                {{ index + 1 + '.' }}
-                                <span v-html="soluteItem.html"></span>
+                            <span class="solute-item-order">{{ index + 1 + '.' }}</span>
+                            <div class="solute-item-content" v-html="soluteItem.html"></div>
                             </div>
                         </div>
                     </div>
