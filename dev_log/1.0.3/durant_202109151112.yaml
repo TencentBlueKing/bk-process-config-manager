@@ -1,2 +1,0 @@
-bugfix:
-  - "第三方系统请求API时报JWG校验错误问题 (fixed #66)"
