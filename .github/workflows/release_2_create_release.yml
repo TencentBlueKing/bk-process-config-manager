@@ -63,6 +63,7 @@ jobs:
         echo "GITHUB_REPO_URL=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" >> $GITHUB_ENV
         # 主分支
         echo "DEFAULT_BRANCH=${{ github.event.repository.default_branch }}" >> $GITHUB_ENV
+        echo "DEFAULT_BRANCH=_V1.0.X/issue#96_optimization_wf" >> $GITHUB_ENV
 
         # 从yaml文件中获取待发布版本号
         prerelease_version=$( python scripts/workflows/release/op_yaml.py -f ${{ env.APP_DESC_YAML }} --keyword-path ${{ env.VERSION_KW_P }} --op get )

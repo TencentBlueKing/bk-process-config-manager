@@ -7,6 +7,7 @@ on:
   push:
     branches:
       - "V[0-9]+.[0-9]+.X"
+      - "_V1.0.X/issue#96_optimization_wf"
 
 jobs:
   build:
