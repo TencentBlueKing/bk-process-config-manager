@@ -452,7 +452,14 @@ export default {
 
           .solute-item {
             display: flex;
-            align-items: center;
+            /* align-items: center; */
+          }
+          .solute-item-order {
+            display: inline-block;
+            width: 16px;
+          }
+          .solute-item-content {
+            flex: 1;
           }
         }
       }

@@ -11,9 +11,9 @@
           <div class="message-text">{{ '解决方案：' }}</div>
           <div v-for="(soluteItem, index) in solutions" :key="index">
             <div class="solute-item">
-              {{ index + 1 + '.' }}
+              <span class="solute-item-order">{{ index + 1 + '.' }}</span>
               <!-- eslint-disable-next-line vue/no-v-html -->
-              <span v-html="soluteItem.html"></span>
+              <div class="solute-item-content" v-html="soluteItem.html"></div>
             </div>
           </div>
         </div>
