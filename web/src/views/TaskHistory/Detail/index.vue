@@ -199,7 +199,7 @@
                 <template slot="content">
                     <div class="failed-message">
                         <div class="message-text">{{ '失败信息：' }}</div>
-                        <div>{{ row.extra_data.failed_reason || '--' }}</div>
+                        <div v-html="row.extra_data.failed_reason || '--'"></div>
                     </div>
                     <div class="resolve-message" v-if="row.extra_data.solutions && row.extra_data.solutions.length">
                         <div class="message-text">{{ '解决方案：' }}</div>
