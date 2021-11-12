@@ -29,7 +29,10 @@ class ProcessAttrIsNotConfiguredException(ProcessBaseException):
     ERROR_CODE = "002"
     MESSAGE = _("未配置该操作对应的进程属性")
     MESSAGE_TPL = _(
-        "进程【{process_name}】未配置进程属性【{process_attr}】或【配置平台】编辑进程模板信息后未锁定并同步。【注意】此任务为操作时配置的快照（无法直接重试），请配置后新建任务进行操作"
+        "进程【{process_name}】有两种异常可能："
+        "<div><span>1.</span> 未配置进程属性【{process_attr}】</div>"
+        "<div><span>2.</span> 在【配置平台】编辑进程模板信息后未锁定并同步。</div>"
+        "<b>注意：</b>此任务为操作时配置的快照（无法直接重试），请配置后新建任务进行操作"
     )
 
 

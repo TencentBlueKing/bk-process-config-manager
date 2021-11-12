@@ -31,11 +31,16 @@ class BaseSolutionMaker(object):
             link_highlight = self.LINK_HIGHLIGHT
         self.link_highlight = link_highlight
 
-    def generate_html(self, link: str, site_url: str = settings.SITE_URL) -> str:
-        """生成可点击的html"""
+    def generate_html(self, link: str, site_url: str = "") -> str:
+        """
+        生成可点击的html
+        :param link: 访问地址
+        :param site_url: 访问站点，空串表示本站访问
+        :return:
+        """
         return _(
             '<span>点击跳转到</span><a href="{link}" target="_blank">[{highlight}]</a>，' "请您进行 <b>[{action}]</b> 操作"
-        ).format(highlight=self.link_highlight, link=f"{site_url}{link}", action=self.action)
+        ).format(highlight=self.link_highlight, link=f"{site_url}/{link}", action=self.action)
 
     def make(self) -> List:
         """得出解决方案"""

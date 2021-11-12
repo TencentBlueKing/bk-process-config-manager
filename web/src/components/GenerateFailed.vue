@@ -5,7 +5,8 @@
       <template slot="content">
         <div class="failed-message">
           <div class="message-text">{{ '失败信息：' }}</div>
-          <div>{{ failedReason || '--' }}</div>
+          <!-- eslint-disable-next-line vue/no-v-html -->
+          <div v-html="failedReason || '--'"></div>
         </div>
         <div class="resolve-message" v-if="solutions && solutions.length">
           <div class="message-text">{{ '解决方案：' }}</div>
