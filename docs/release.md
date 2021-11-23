@@ -1,5 +1,29 @@
 # Release
 
+## 1.0.7 - 2021-11-23 
+
+### ✨ Optimizations
+
+- optimization: 备份配置文件时保留时间属性(close #108)
+
+- style(front): 任务历史失败后解决方案引导文本对齐（closed #99)
+
+- optimization: GitHub Actions 自动发布流程优化 (closed #96)
+
+
+### 🐛 Bugfixes
+
+- bugfix: 修复任务历史失败解决方案引导有误的问题 (fixed #98)
+
+- fix(front): 服务模板的表格分页点击失效 (close #105)
+
+- bugfix: 修复任务历史失败指引跳转404问题 (fixed #102)
+
+
+
+**Full Changelog**: https://github.com/TencentBlueKing/bk-process-config-manager/compare/v1.0.6...v1.0.7
+
+
 ## 1.0.6
 
 - bugfix
