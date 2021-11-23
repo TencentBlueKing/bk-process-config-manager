@@ -822,7 +822,7 @@ export default {
       }
     },
     handlePageChange({ page, limit }) {
-      Object(this.pagination, {
+      Object.assign(this.pagination, {
         current: page || 1,
         limit,
       });
@@ -941,7 +941,7 @@ export default {
       if (undoneRule && undoneRule.length) {
         data = data.filter(item => undoneRule.some(rule => !item[rule.field]));
       }
-      data = data.slice(page.start, page.limit);
+      data = data.slice(page.start, page.start + page.limit);
       return data;
     },
     handleUpdateTree(list) {
