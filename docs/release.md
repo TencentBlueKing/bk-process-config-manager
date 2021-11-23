@@ -2,6 +2,13 @@
 
 ## 1.0.6
 
+- bugfix
+  - 注销功能404 (closed #78)
+- optimization
+  - CMDB batch_create_proc_template 限制创建数量不大于100 (closed #89)
+
+## 1.0.6
+
 - optimization
   - CMDB batch_create_proc_template 限制创建数量不大于100 (closed #89)
 - bugfix
