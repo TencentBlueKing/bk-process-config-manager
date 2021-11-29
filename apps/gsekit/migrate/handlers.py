@@ -229,7 +229,7 @@ class MigrateHandlers(object):
 
     def list_config_versions(self, config_template_id):
         return self.perform_request(
-            uri=f"api/get_no_draft_versions_by_template_id/{self.bk_biz_id}/{config_template_id}/"
+            uri=f"api/get_no_draft_versions_by_template_id/{self.bk_biz_id}/{config_template_id}"
         )
 
     def get_process_templates_with_bound_info(self, bk_process_id):
