@@ -1,5 +1,16 @@
 # Release
 
+## 1.0.8 - 2021-11-29 
+
+### 🐛 Bugfixes
+
+- bugfix: 修复迁移配置模板报错的问题 (fixed #112)
+
+
+
+**Full Changelog**: https://github.com/TencentBlueKing/bk-process-config-manager/compare/v1.0.7...v1.0.8
+
+
 ## 1.0.7 - 2021-11-23 
 
 ### ✨ Optimizations
