@@ -31,7 +31,7 @@
       </li>
       <li class="couple">
         <label>{{ $t('输出格式') }}</label>
-        <span>{{ configFileDetail.line_separator || '--' }}</span>
+        <span>{{ fileFormatMap[configFileDetail.line_separator] || '--' }}</span>
       </li>
     </ul>
   </div>
@@ -39,12 +39,20 @@
 
 <script>
 export default {
-  name: 'TaskHistoryDetail',
+  name: 'ConfigFileDetail',
   props: {
     configFileDetail: {
       type: Object,
       default: () => ({}),
     },
+  },
+  data() {
+    return {
+      fileFormatMap: {
+        CRLF: 'CRLF - Windows（\\r\\n）',
+        LF: 'LF - Unix and macOS（\\n）',
+      },
+    };
   },
 };
 </script>
