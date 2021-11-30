@@ -2,7 +2,9 @@
 # 需要额外的python包，可直接在文件后面添加
 # 请确保指定的包和版本号，可通过pip安装
 
-blueapps-open==4.0.1
+# sed -i 's|blueapps-open|blueapps|g' requirements.txt
+# 确保内外部版本统一，打包脚本的替换规则为：blueapps-open -> blueapps，不替换版本号
+blueapps-open==4.0.2rc0
 python-json-logger==0.1.7
 requests==2.22.0
 MarkupSafe==1.1.1

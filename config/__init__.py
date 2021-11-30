@@ -13,7 +13,7 @@ import os
 
 __author__ = "蓝鲸智云"
 __copyright__ = "Copyright © 2012-2019 Tencent BlueKing. All Rights Reserved."
-__all__ = ["celery_app", "ENVIRONMENT", "RUN_VER", "BK_URL", "BASE_DIR"]
+__all__ = ["celery_app", "RUN_VER", "BK_URL", "BASE_DIR"]
 
 # This will make sure the app is always imported when
 # Django starts so that shared_task will use this app.
@@ -32,16 +32,11 @@ def get_env_or_raise(key):
     return value
 
 
-# V3判断环境的环境变量为BKPAAS_ENVIRONMENT
-if "BKPAAS_ENVIRONMENT" in os.environ:
-    ENVIRONMENT = os.getenv("BKPAAS_ENVIRONMENT", "dev")
-# V2判断环境的环境变量为BK_ENV
-else:
-    PAAS_V2_ENVIRONMENT = os.environ.get("BK_ENV", "development")
-    ENVIRONMENT = {"development": "dev", "testing": "stag", "production": "prod"}.get(PAAS_V2_ENVIRONMENT)
-
 # SaaS运行版本，如非必要请勿修改
 RUN_VER = os.environ.get("BKPAAS_ENGINE_REGION", "open")
+# 兼容 V3 取值差异
+if RUN_VER == "default":
+    RUN_VER = "open"
 
 APP_ID = APP_CODE = os.environ.get("APP_ID", "bk_gsekit")
 APP_TOKEN = SECRET_KEY = os.environ.get("APP_TOKEN", "28b7b410-c7b7-4537-9a65-8ce55738170e")
