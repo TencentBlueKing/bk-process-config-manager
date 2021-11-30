@@ -1,0 +1,65 @@
+spec_version: 2
+app_version: "{{APP_VERSION}}"
+app:
+    region: default
+    bk_app_code: "bk_gsekit"
+    bk_app_name: 进程配置管理
+    market:
+        category: 运维工具
+        introduction: 进程配置管理
+        display_options:
+            width: 1300
+            height: 720
+            is_win_maximize: True
+            open_mode: "new_tab"
+modules:
+    default:
+        is_default: True
+        source_dir: src
+        language: Python
+        services:
+            - name: mysql
+            - name: redis
+            - name: rabbitmq
+        env_variables:
+            - key: BKAPP_IS_V3_CONTAINER
+              value: "True"
+              description: 是否部署在V3PaaS容器
+            - key: PIP_VERSION
+              value: "20.2.3"
+              description: 固化pip版本
+
+        svc_discovery:
+            bk_saas:
+                - bk_app_code: "bk_iam"
+                - bk_app_code: "bk_gsekit"
+
+        processes:
+            web:
+                command: gunicorn --timeout 600 --max-requests 200 --max-requests-jitter 20 wsgi -w 8 -b :$PORT --access-logfile - --error-logfile - --access-logformat '[%(h)s] %({request_id}i)s %(u)s %(t)s "%(r)s" %(s)s %(D)s %(b)s "%(f)s" "%(a)s"'
+                plan: 4C2G5R
+                replicas: 1
+            dworker:
+                command: celery -A blueapps.core.celery worker -Q default -n default@%h -c 5 -l info --maxtasksperchild=50
+                plan: 4C2G5R
+                replicas: 1
+            cworker:
+                command: celery -A blueapps.core.celery worker -Q pipeline_additional_task,pipeline_additional_task_priority -n common_worker@%h -l info -c 5 --maxtasksperchild=50
+                plan: 4C2G5R
+                replicas: 1
+            ereworker:
+                command: celery -A blueapps.core.celery worker -Q er_execute -n er_execute_worker@%h -l info -P threads -c 64 --maxtasksperchild=50
+                plan: 4C2G5R
+                replicas: 1
+            ersworker:
+                command: celery -A blueapps.core.celery worker -Q er_schedule -n er_schedule_worker@%h -l info -P threads -c 64 --maxtasksperchild=50
+                plan: 4C2G5R
+                replicas: 1
+            beat:
+                command: celery -A blueapps.core.celery beat -l info
+                plan: 4C2G5R
+                replicas: 1
+            pwatch:
+                command: python manage.py watch_process
+                plan: 4C2G5R
+                replicas: 1

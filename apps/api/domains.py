@@ -13,7 +13,7 @@ from django.conf import settings
 
 ESB_PREFIX = "/api/c/compapi/v2/"
 
-APIGATEWAY_ROOT_PREFIX_FORMAT = "{}{}{{}}/".format(settings.BK_PAAS_INNER_HOST, ESB_PREFIX)
+APIGATEWAY_ROOT_PREFIX_FORMAT = "{}{}{{}}/".format(settings.BK_COMPONENT_API_URL, ESB_PREFIX)
 
 CC_APIGATEWAY_ROOT = os.getenv("BKAPP_CC_APIGATEWAY_ROOT") or APIGATEWAY_ROOT_PREFIX_FORMAT.format("cc")
 JOB_APIGATEWAY_ROOT_V3 = os.getenv("BKAPP_JOB_APIGATEWAY_ROOT") or APIGATEWAY_ROOT_PREFIX_FORMAT.format("jobv3")

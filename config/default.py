@@ -8,7 +8,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and limitations under the License.
 """
-import importlib
 
 from blueapps.conf.default_settings import *  # noqa
 from blueapps.conf.log import get_logging_config_dict
@@ -16,9 +15,13 @@ from pipeline.celery.settings import *  # noqa
 from pipeline.eri.celery import queues
 from celery import Celery
 
+import env
+
 # pipeline 配置
 from pipeline.celery.settings import *
 
+
+ENVIRONMENT = env.ENVIRONMENT
 
 CELERY_QUEUES.extend(queues.CELERY_QUEUES)  # 向 broker 队列中添加 bamboo-engine 专用队列
 
@@ -187,8 +190,10 @@ TEMPLATES = [
 # ===============================================================================
 BK_PAAS_HOST = os.environ.get("BK_PAAS_HOST", "")
 BK_PAAS_INNER_HOST = os.environ.get("BK_PAAS_INNER_HOST", BK_PAAS_HOST)
+BK_COMPONENT_API_URL = env.BK_COMPONENT_API_URL
+
 BK_CC_HOST = os.environ.get("BK_CC_HOST", BK_PAAS_HOST.replace("paas", "cmdb"))
-BK_SAAS_HOST = os.environ.get("BK_SAAS_HOST", f"{BK_PAAS_HOST}/o/{APP_CODE}/")
+BK_SAAS_HOST = env.BK_SAAS_HOST
 
 BK_ADMIN_USERNAME = os.getenv("BKAPP_ADMIN_USERNAME", "admin")
 
@@ -211,19 +216,17 @@ ADAPTER_TYPE = os.getenv("BKAPP_ADAPTER_TYPE", "base")
 # ==============================================================================
 # IAM
 # ==============================================================================
-BK_IAM_SYSTEM_ID = "bk_gsekit"
+BK_IAM_SKIP = False
 BK_IAM_SYSTEM_NAME = "GSEKIT"
 BK_IAM_MIGRATION_APP_NAME = "iam"
-BK_IAM_SKIP = False
 
-BK_IAM_INNER_HOST = os.getenv("BK_IAM_V3_INNER_HOST", "http://bkiam.service.consul")
-
-# BK_IAM_RESOURCE_API_HOST = os.getenv("BKAPP_IAM_RESOURCE_API_HOST", f"{BK_PAAS_HOST}/o/{APP_CODE}/")
-BK_IAM_RESOURCE_API_HOST = os.getenv("BKAPP_IAM_RESOURCE_API_HOST", f"{BK_PAAS_INNER_HOST}/o/{APP_CODE}/")
+BK_IAM_SYSTEM_ID = os.getenv("BKAPP_IAM_SYSTEM_ID", "bk_gsekit")
+BK_IAM_RESOURCE_API_HOST = env.BK_IAM_RESOURCE_API_HOST
 
 # 权限中心 SaaS host
 BK_IAM_APP_CODE = os.getenv("BK_IAM_V3_APP_CODE", "bk_iam")
-BK_IAM_SAAS_HOST = os.environ.get("BK_IAM_V3_SAAS_HOST", f"{BK_PAAS_HOST}/o/{BK_IAM_APP_CODE}/")
+BK_IAM_INNER_HOST = os.getenv("BK_IAM_V3_INNER_HOST", "http://bkiam.service.consul")
+BK_IAM_SAAS_HOST = env.BK_IAM_SAAS_HOST
 
 # TAM
 TAM_AEGIS_KEY = os.getenv("BKAPP_TAM_AEGIS_KEY")
