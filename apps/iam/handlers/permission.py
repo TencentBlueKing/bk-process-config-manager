@@ -56,9 +56,10 @@ class Permission(object):
     @classmethod
     def get_iam_client(cls):
         if settings.BK_IAM_SKIP:
-            return DummyIAM(settings.APP_ID, settings.APP_TOKEN,
-                            settings.BK_IAM_INNER_HOST, settings.BK_PAAS_INNER_HOST)
-        return IAM(settings.APP_ID, settings.APP_TOKEN, settings.BK_IAM_INNER_HOST, settings.BK_PAAS_INNER_HOST)
+            return DummyIAM(
+                settings.APP_ID, settings.APP_TOKEN, settings.BK_IAM_INNER_HOST, settings.BK_COMPONENT_API_URL
+            )
+        return IAM(settings.APP_ID, settings.APP_TOKEN, settings.BK_IAM_INNER_HOST, settings.BK_COMPONENT_API_URL)
 
     def make_request(self, action: Union[ActionMeta, str], resources: List[Resource] = None) -> Request:
         """
@@ -125,7 +126,9 @@ class Permission(object):
 
                     related_resources.append(
                         RelatedResourceType(
-                            system_id=related_resource.system_id, type=related_resource.id, instances=instances,
+                            system_id=related_resource.system_id,
+                            type=related_resource.id,
+                            instances=instances,
                         )
                     )
 
@@ -207,7 +210,9 @@ class Permission(object):
         if not result and raise_exception:
             apply_data, apply_url = self.get_apply_data([action], resources)
             raise PermissionDeniedError(
-                action_name=action.name, apply_url=apply_url, permission=apply_data,
+                action_name=action.name,
+                apply_url=apply_url,
+                permission=apply_data,
             )
 
         return result
