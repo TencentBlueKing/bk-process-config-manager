@@ -60,6 +60,7 @@
             :content="selectedVersion.content"
             :language="codeLanguage"
             :readonly="!selectedVersion.is_draft"
+            :eol="endOfLine"
             @change="handleEditorContentChange" />
         </div>
         <!-- 右边变量和预览 -->
@@ -273,6 +274,11 @@ export default {
         tips.disable = false;
       }
       return tips;
+    },
+    endOfLine() {
+      return this.selectedConfig && this.selectedConfig.line_separator
+        ? this.selectedConfig.line_separator
+        : 'LF';
     },
   },
   watch: {
