@@ -1,5 +1,30 @@
 # Release
 
+## 1.0.9 - 2022-01-11 
+
+### 🚀 Features
+
+- feature: PaaS容器部署适配 (closed #19)
+
+
+### ✨ Optimizations
+
+- style(front): 置文件下发详情页面中展示详细的输出格式信息 (close #110)
+
+
+### 🐛 Bugfixes
+
+- fix(front): 进程属性无服务模板时跳转 【配置平台】 无响应问题 (close #115)
+
+- fix(front): 配置模板文件内容中换行符不对应问题 (closed #122)
+
+- bugfix: 修复单个进程实例下发配置时一直提示需要生成新版本的问题 (fixed #121)
+
+
+
+**Full Changelog**: https://github.com/TencentBlueKing/bk-process-config-manager/compare/v1.0.8...v1.0.9
+
+
 ## 1.0.8 - 2021-11-29 
 
 ### 🐛 Bugfixes
