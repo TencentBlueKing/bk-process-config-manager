@@ -42,12 +42,7 @@ class ConfigInstanceViews(APIViewSet):
         return None
 
     def get_permissions(self):
-        # TODO 待确认是否需要细粒度控制配置实例的查看权限
-        # if self.action in ["retrieve", "latest_config_instance", "list_config_instances"]:
-        #     return [
-        #         InstanceActionPermission([ActionEnum.EDIT_CONFIG_TEMPLATE], ResourceEnum.CONFIG_TEMPLATE),
-        #         self.get_instance_ids_getter,
-        #     ]
+        # 权限控制无需细到配置实例，仅需业务查看权限即可
         return [ViewBusinessPermission()]
 
     def get_serializer_class(self, *args, **kwargs):

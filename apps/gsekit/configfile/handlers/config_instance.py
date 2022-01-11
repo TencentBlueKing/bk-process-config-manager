@@ -229,7 +229,11 @@ class ConfigInstanceHandler(APIModel):
 
         result = {"generated_config": first_latest_config, "released_config": first_released_config, "is_latest": True}
         if first_latest_released_config:
-            result = {"generated_config": first_latest_released_config, "released_config": first_latest_released_config}
+            result = {
+                "generated_config": first_latest_released_config,
+                "released_config": first_latest_released_config,
+                "is_latest": True,
+            }
 
         if not result["generated_config"]:
             return result
