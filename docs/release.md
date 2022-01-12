@@ -1,5 +1,16 @@
 # Release
 
+## 1.0.10 - 2022-01-12 
+
+### 🐛 Bugfixes
+
+- bugfix: 修复windows换行符导致 (reopen #121)
+
+
+
+**Full Changelog**: https://github.com/TencentBlueKing/bk-process-config-manager/compare/v1.0.9...v1.0.10
+
+
 ## 1.0.9 - 2022-01-11 
 
 ### 🚀 Features
