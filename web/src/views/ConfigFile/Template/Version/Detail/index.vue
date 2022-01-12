@@ -60,6 +60,7 @@
             :content="selectedVersion.content"
             :language="codeLanguage"
             :readonly="!selectedVersion.is_draft"
+            :eol="endOfLine"
             @change="handleEditorContentChange" />
         </div>
         <!-- 右边变量和预览 -->
@@ -274,6 +275,11 @@ export default {
       }
       return tips;
     },
+    endOfLine() {
+      return this.selectedConfig && this.selectedConfig.line_separator
+        ? this.selectedConfig.line_separator
+        : 'LF';
+    },
   },
   watch: {
     selectedVersion: { // 以前有切换功能，现在暂时只是做一些初始化
@@ -315,7 +321,7 @@ export default {
         subTitle: this.$t('离开将会导致未保存信息丢失'),
         confirmFn: () => {
           // 离开前回填避免重复触发钩子
-          this.$refs.codeEditorRef.codeEditor.setValue(this.selectedVersion.content);
+          this.$refs.codeEditorRef.setValue(this.selectedVersion.content);
           next();
         },
       });
