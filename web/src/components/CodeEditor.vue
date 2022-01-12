@@ -19,6 +19,11 @@ export default {
       type: Boolean,
       default: true,
     },
+    // 行尾
+    eol: {
+      type: String,
+      default: 'LF',
+    },
   },
   data() {
     return {
@@ -28,7 +33,7 @@ export default {
   },
   watch: {
     content(val) {
-      this.codeEditor.setValue(val);
+      this.setValue(val);
       this.layoutEditor(true);
     },
     language(val) {
@@ -57,7 +62,7 @@ export default {
         theme: 'vs-dark',
         minimap: { enabled: false },
         readOnly: this.readonly,
-        value: this.content,
+        value: this.getEolContent(this.content, this.eol),
         language: this.language || 'python',
       });
       this.$emit('change', this.getContent());
@@ -79,8 +84,21 @@ export default {
         this.layoutEditor(true);
       }, 300);
     },
+    setValue(val) {
+      if (this.codeEditor && this.codeEditor.setValue) {
+        this.codeEditor.setValue(this.getEolContent(val, this.eol));
+      }
+    },
     getContent() {
-      return this.codeEditor.getValue();
+      const val = this.codeEditor.getValue() || '';
+      return this.getEolContent(val, this.eol);
+    },
+    getEolContent(val, eol = 'LF') {
+      const lfStr = val.replace(/\r\n/ig, '\n');
+      if (eol === 'LF') {
+        return lfStr;
+      }
+      return lfStr.replace(/\n/ig, '\r\n');
     },
     // 窗口 resize 时自动计算样式，如果是父组件元素样式改变(如全屏)，需要手动调用且马上生效，调用此方法参数为 true 禁用防抖
     layoutEditor(immediately) {
