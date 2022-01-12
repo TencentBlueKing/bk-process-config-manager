@@ -19,11 +19,6 @@ export default {
       type: Boolean,
       default: true,
     },
-    // 行尾
-    eol: {
-      type: String,
-      default: 'LF',
-    },
   },
   data() {
     return {
@@ -85,11 +80,7 @@ export default {
       }, 300);
     },
     getContent() {
-      const res = this.codeEditor.getValue() || '';
-      if (this.eol === 'LF') {
-        return res.replace(/\r\n/ig, '\n');
-      }
-      return res.replace(/\n/ig, '\r\n');
+      return this.codeEditor.getValue();
     },
     // 窗口 resize 时自动计算样式，如果是父组件元素样式改变(如全屏)，需要手动调用且马上生效，调用此方法参数为 true 禁用防抖
     layoutEditor(immediately) {
