@@ -1,5 +1,18 @@
 # Release
 
+## 1.0.11 - 2022-01-20 
+
+### 🐛 Bugfixes
+
+- fix(front): 配置模板文件内容中换行符不对应问题 (closed #122)
+
+- bugfix: 修复子任务状态更新失败的问题(fixed #130)
+
+
+
+**Full Changelog**: https://github.com/TencentBlueKing/bk-process-config-manager/compare/v1.0.10...v1.0.11
+
+
 ## 1.0.10 - 2022-01-12 
 
 ### 🐛 Bugfixes
