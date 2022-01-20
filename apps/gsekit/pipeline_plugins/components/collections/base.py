@@ -358,7 +358,8 @@ class MultiJobTaskBaseService(JobTaskBaseService):
             for job_task in job_tasks.filter(status=job_models.JobStatus.RUNNING):
                 error = PipelineTimeoutException()
                 job_task.set_status(
-                    job_models.JobStatus.FAILED, extra_data={"failed_reason": error.message, "err_code": error.code}
+                    job_models.JobStatus.FAILED,
+                    extra_data={"failed_reason": str(error.message), "err_code": error.code},
                 )
             self.finish_schedule()
             return False
