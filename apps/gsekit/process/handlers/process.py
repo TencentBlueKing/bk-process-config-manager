@@ -527,15 +527,17 @@ class ProcessHandler(APIModel):
             bk_process_name = local_process.bk_process_name
 
             # 构造缓存进程实例唯一性信息
-            local_process_uniq_info = {"bk_process_name": bk_process_name}
+            local_process_uniq_info = {"bk_process_name": bk_process_name, "bk_module_id": bk_module_id}
+
             if bk_process_id not in local_process_id_uniq_info_map:
                 local_process_id_uniq_info_map[bk_process_id] = local_process_uniq_info
             else:
                 # 同ID进程唯一性信息不一致，说明缓存有脏数据，记录进程ID后续重建全部实例
                 if local_process_id_uniq_info_map[bk_process_id] != local_process_uniq_info:
                     change_uniq_info_process_ids.add(bk_process_id)
-                # 进程实例需要重建，无需对脏数据执行下列计算，create_process_inst 在无记录下会对实例进行重建
-                continue
+                    host_num_key_map.pop(local_process.bk_host_num_key, None)
+                    # 进程实例需要重建，无需对脏数据执行下列计算，create_process_inst 在无记录下会对实例进行重建
+                    continue
 
             local_inst_id_uniq_key_map[local_process.local_inst_id_uniq_key] = local_process
             host_num_key_map[local_process.bk_host_num_key] = {
@@ -578,7 +580,8 @@ class ProcessHandler(APIModel):
 
             # 校验进程模板唯一性信息是否修改，如果修改需要重建该bk_process_id下的进程实例
             local_process_uniq_info = local_process_id_uniq_info_map.get(bk_process_id)
-            if local_process_uniq_info != {"bk_process_name": bk_process_name}:
+
+            if local_process_uniq_info != {"bk_process_name": bk_process_name, "bk_module_id": bk_module_id}:
                 change_uniq_info_process_ids.add(bk_process_id)
 
         to_be_deleted_inst_condition = []
