@@ -5,7 +5,7 @@ is_use_celery: true
 author: 蓝鲸智云
 introduction: 进程配置管理
 introduction_en: process&config manager
-version: 1.0.12
+version: 1.0.13
 category: 运维工具
 language_support: 英语,中文
 desktop:
