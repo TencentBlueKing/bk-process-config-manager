@@ -73,7 +73,19 @@ class MakoNodeVisitor(ast.NodeVisitor):
         BLACK_LIST_METHODS.extend(methods)
     BLACK_LIST_METHODS = set(BLACK_LIST_METHODS)
 
-    WHITE_LIST_MODULES = ["datetime", "re", "random", "json", "math", "test", "path", "enumerate", "name", "time"]
+    WHITE_LIST_MODULES = [
+        "datetime",
+        "re",
+        "random",
+        "json",
+        "math",
+        "test",
+        "path",
+        "enumerate",
+        "name",
+        "time",
+        "replace",
+    ]
     WHITE_LIST_ATTR = ["get"]
 
     def __init__(self, black_list_methods=None, white_list_modules=None):
