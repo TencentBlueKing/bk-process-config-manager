@@ -1,5 +1,23 @@
 # Release
 
+## 1.0.12 - 2022-03-08 
+
+### 🚀 Features
+
+- feature: PaaS 镜像部署适配 (closed #135)
+
+- feature: 修复转移主机到其他模块并修改该模块下进程启动数量导致同步CMDB进程配置失败的问题 (fixed #133)
+
+
+### ✨ Optimizations
+
+- optimization: mako渲染支持replace方法
+
+
+
+**Full Changelog**: https://github.com/TencentBlueKing/bk-process-config-manager/compare/v1.0.11...v1.0.12
+
+
 ## 1.0.11 - 2022-01-20 
 
 ### 🐛 Bugfixes
