@@ -241,3 +241,11 @@ CACHES["default"] = {
     "LOCATION": "django_cache",
     "OPTIONS": {"MAX_ENTRIES": 10000, "CULL_FREQUENCY": 10},
 }
+
+# 设置DB连接超时时间，配合django_dbconn_retry，解决因DB不稳定导致的各种问题，如：
+# 1. 接口偶现超时 2. pipeline任务执行偶现不执行 等问题
+CONNECT_TIMEOUT = 5
+if "OPTIONS" in DATABASES["default"]:
+    DATABASES["default"]["OPTIONS"]["connect_timeout"] = CONNECT_TIMEOUT
+else:
+    DATABASES["default"]["OPTIONS"] = {"connect_timeout": CONNECT_TIMEOUT}
