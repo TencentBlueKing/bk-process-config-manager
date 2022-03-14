@@ -1,5 +1,16 @@
 # Release
 
+## 1.0.13 - 2022-03-14 
+
+### 🐛 Bugfixes
+
+- bugfix: 解决因DB问题导致的接口偶现超时等问题(fixed #140)
+
+
+
+**Full Changelog**: https://github.com/TencentBlueKing/bk-process-config-manager/compare/v1.0.12...v1.0.13
+
+
 ## 1.0.12 - 2022-03-08 
 
 ### 🚀 Features
