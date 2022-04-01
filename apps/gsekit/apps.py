@@ -15,6 +15,8 @@ from django.apps import AppConfig
 from django.conf import settings
 from django.db import IntegrityError
 
+from apps import BluekingInstrumentor
+
 logger = logging.getLogger("app")
 
 
@@ -23,6 +25,9 @@ class BackendConfig(AppConfig):
     verbose_name = "Gsekit"
 
     def ready(self):
+        if settings.ENABLE_OTEL_TRACE:
+            BluekingInstrumentor().instrument()
+
         self.connect_signals()
 
         # 没migrate之前，无法执行 fetch_esb_api_key, 直接返回

@@ -67,5 +67,5 @@ class GlobalSettings(models.Model):
             return ""
 
     class Meta:
-        verbose_name = _("全局配置表")
-        verbose_name_plural = _("全局配置表")
+        verbose_name = _("全局配置表（GlobalSettings）")
+        verbose_name_plural = _("全局配置表（GlobalSettings）")

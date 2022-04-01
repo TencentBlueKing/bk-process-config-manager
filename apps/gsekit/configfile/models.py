@@ -41,8 +41,8 @@ class ConfigTemplateVersion(OperateRecordModel):
         }
 
     class Meta:
-        verbose_name = _("配置模板版本")
-        verbose_name_plural = _("配置模板版本")
+        verbose_name = _("配置模板版本（ConfigTemplateVersion）")
+        verbose_name_plural = _("配置模板版本（ConfigTemplateVersion）")
         ordering = ["-config_version_id"]
 
 
@@ -108,8 +108,8 @@ class ConfigTemplate(OperateRecordModel):
         return ConfigTemplateVersion.objects.filter(config_template_id=self.config_template_id).exists()
 
     class Meta:
-        verbose_name = _("配置模板")
-        verbose_name_plural = _("配置模板")
+        verbose_name = _("配置模板（ConfigTemplate）")
+        verbose_name_plural = _("配置模板（ConfigTemplate）")
         unique_together = ("bk_biz_id", "template_name")
         ordering = ["-config_template_id"]
 
@@ -159,11 +159,15 @@ class ConfigTemplateBindingRelationship(OperateRecordModel):
         template_relation_q = Q()
         if process_template_id:
             template_relation_q = Q(
-                process_object_type=Process.ProcessObjectType.TEMPLATE, process_object_id=process_template_id,
+                process_object_type=Process.ProcessObjectType.TEMPLATE,
+                process_object_id=process_template_id,
             )
 
         config_template_ids = cls.objects.filter(
-            Q(process_object_type=Process.ProcessObjectType.INSTANCE, process_object_id=bk_process_id,)
+            Q(
+                process_object_type=Process.ProcessObjectType.INSTANCE,
+                process_object_id=bk_process_id,
+            )
             | template_relation_q
         ).values_list("config_template_id", flat=True)
         return set(config_template_ids)
@@ -178,8 +182,8 @@ class ConfigTemplateBindingRelationship(OperateRecordModel):
         return relation_mapping
 
     class Meta:
-        verbose_name = _("配置模板与进程的绑定关系")
-        verbose_name_plural = _("配置模板与进程的绑定关系")
+        verbose_name = _("配置模板与进程的绑定关系（ConfigTemplateBindingRelationship）")
+        verbose_name_plural = _("配置模板与进程的绑定关系（ConfigTemplateBindingRelationship）")
 
 
 class ConfigInstance(models.Model):
@@ -273,6 +277,6 @@ class ConfigInstance(models.Model):
         )
 
     class Meta:
-        verbose_name = _("配置实例（已渲染）")
-        verbose_name_plural = _("配置实例（已渲染）")
+        verbose_name = _("配置实例（ConfigInstance）")
+        verbose_name_plural = _("配置实例（ConfigInstance）")
         ordering = ["-id"]

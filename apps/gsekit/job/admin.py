@@ -16,13 +16,26 @@ from . import models
 
 @admin.register(models.Job)
 class JobAdmin(admin.ModelAdmin):
-    list_display = [field.name for field in models.Job._meta.get_fields()]
-    search_fields = ["pipeline_id"]
-    list_filter = ["job_object", "job_action", "status", "is_ready"]
+    list_display = [
+        "id",
+        "bk_biz_id",
+        "expression_scope",
+        "job_object",
+        "job_action",
+        "status",
+        "created_by",
+        "start_time",
+        "end_time",
+        "bk_app_code",
+    ]
+    search_fields = ["bk_biz_id", "created_by", "pipeline_id"]
+    list_filter = ["job_object", "job_action", "status", "is_ready", "bk_app_code"]
+    list_editable = ["status"]
 
 
 @admin.register(models.JobTask)
 class JobTaskAdmin(admin.ModelAdmin):
-    list_display = [field.name for field in models.JobTask._meta.get_fields()]
-    search_fields = ["pipeline_id"]
-    list_filter = ["status"]
+    list_display = ["id", "job_id", "bk_process_id", "status", "err_code", "start_time", "end_time", "pipeline_id"]
+    search_fields = ["job_id", "pipeline_id"]
+    list_filter = ["status", "err_code"]
+    list_editable = ["status"]

@@ -70,8 +70,8 @@ class Process(models.Model):
         return self.generate_process_obj(bk_process_id=self.bk_process_id, process_template_id=self.process_template_id)
 
     class Meta:
-        verbose_name = _("业务进程缓存")
-        verbose_name_plural = _("业务进程缓存")
+        verbose_name = _("业务进程（Process）")
+        verbose_name_plural = _("业务进程（Process）")
 
 
 class ProcessInst(models.Model):
@@ -132,5 +132,5 @@ class ProcessInst(models.Model):
             ["bk_module_id", "bk_process_name", "inst_id"],
             ["bk_host_innerip", "bk_cloud_id", "bk_process_name", "local_inst_id"],
         ]
-        verbose_name = _("进程实例")
-        verbose_name_plural = _("进程实例")
+        verbose_name = _("进程实例（ProcessInst）")
+        verbose_name_plural = _("进程实例（ProcessInst）")

@@ -17,12 +17,12 @@ from . import models
 @admin.register(models.Process)
 class ProcessAdmin(admin.ModelAdmin):
     list_display = [field.name for field in models.Process._meta.get_fields()]
-    search_fields = ["expression", "bk_host_innerip"]
-    list_filter = ["bk_biz_id", "process_status", "is_auto", "bk_process_name"]
+    search_fields = ["expression", "bk_process_id", "bk_host_innerip"]
+    list_filter = ["bk_biz_id", "process_status", "is_auto", "bk_cloud_id", "bk_set_env"]
 
 
 @admin.register(models.ProcessInst)
 class ProcessInstAdmin(admin.ModelAdmin):
     list_display = [field.name for field in models.ProcessInst._meta.get_fields()]
-    search_fields = ["bk_host_innerip"]
-    list_filter = ["bk_biz_id", "process_status", "is_auto", "bk_process_name"]
+    search_fields = ["bk_process_id", "bk_host_innerip"]
+    list_filter = ["bk_biz_id", "process_status", "is_auto"]
