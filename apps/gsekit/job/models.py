@@ -22,6 +22,7 @@ from apps.exceptions import AppBaseException
 from apps.gsekit.configfile.exceptions import ProcessDoseNotBindTemplate
 from apps.gsekit.configfile.models import ConfigTemplateBindingRelationship, ConfigInstance
 from apps.gsekit.process.models import Process
+from apps.prometheus.models import export_job_prometheus_mixin
 
 logger = logging.getLogger("app")
 
@@ -63,6 +64,8 @@ class JobStatus(object):
     FAILED = "failed"
     IGNORED = "ignored"
 
+    PROCESSING_STATUS = [PENDING, RUNNING]
+
     @classmethod
     def get_status_err_code(cls, status: str):
         status_err_code_map = {
@@ -85,7 +88,7 @@ JOB_STATUS_CHOICES = (
 )
 
 
-class Job(models.Model):
+class Job(export_job_prometheus_mixin(), models.Model):
     class JobObject(object):
         CONFIGFILE = "configfile"
         PROCESS = "process"
@@ -145,8 +148,8 @@ class Job(models.Model):
 
     class Meta:
         ordering = ("-id",)
-        verbose_name = _("任务历史")
-        verbose_name_plural = _("任务历史")
+        verbose_name = _("任务（Job）")
+        verbose_name_plural = _("任务历史（Job）")
 
 
 class JobTask(models.Model):
@@ -281,8 +284,8 @@ class JobTask(models.Model):
         return job_task_config_template_ids_map
 
     class Meta:
-        verbose_name = _("任务详情")
-        verbose_name_plural = _("任务详情")
+        verbose_name = _("任务详情（JobTask）")
+        verbose_name_plural = _("任务详情（JobTask）")
 
 
 class JobProcInstStatusStatistics(models.Model):
