@@ -48,6 +48,7 @@ swagger_format_view = schema_view.without_ui(cache_timeout=0)
 setattr(swagger_format_view, "login_exempt", True)
 urlpatterns = [
     url(r"^$", home.index),
+    url(r"^metrics/?$", home.metrics),
     url(r"api/(?P<bk_biz_id>\d+)/", include(biz_router.urls)),
     url(r"^", include(none_biz_router.urls)),
     url(r"^swagger(?P<format>\.json|\.yaml)$", swagger_format_view, name="schema-json"),
