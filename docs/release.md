@@ -1,5 +1,16 @@
 # Release
 
+## 1.0.14 - 2022-04-02 
+
+### ✨ Optimizations
+
+- optimization: 可观测性建设与鲁棒性提升(close #143)
+
+
+
+**Full Changelog**: https://github.com/TencentBlueKing/bk-process-config-manager/compare/v1.0.13...v1.0.14
+
+
 ## 1.0.13 - 2022-03-14 
 
 ### 🐛 Bugfixes
