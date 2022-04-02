@@ -107,6 +107,7 @@ export default {
           this.updateBizList(bizList);
           const targetBiz = this.$route.query.biz || localStorage.getItem('bizId');
           if (targetBiz && bizList.some(item => item.bk_biz_id === targetBiz)) {
+            this.updateBiz(targetBiz);
             this.bizId = targetBiz;
           } else {
             this.bizId = bizList[0].bk_biz_id;
