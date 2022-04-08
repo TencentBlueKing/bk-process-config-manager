@@ -20,7 +20,8 @@ class PipelineBaseException(AppBaseException):
 
 class PipelineTimeoutException(PipelineBaseException):
     ERROR_CODE = "001"
-    MESSAGE = _("Pipeline超时")
+    MESSAGE = _("执行超时")
+    MESSAGE_TPL = _("执行超时，有两种异常可能：" "<div><span>1.</span> 脚本执行时间过长 </div>" "<div><span>2.</span> 脚本未正常退出 </div>")
 
 
 class GseApiException(PipelineBaseException):

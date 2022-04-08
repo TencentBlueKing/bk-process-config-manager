@@ -151,6 +151,7 @@ class ProcessStatusRequestSerializer(PageSerializer, OrderingSerializer, Process
     process_status = serializers.IntegerField(help_text=_("进程状态"), required=False)
     searches = serializers.ListField(help_text=_("多模糊查询:支持内网IP及云区域名称"), child=serializers.CharField(), required=False)
     is_auto = serializers.BooleanField(help_text=_("托管状态"), required=False)
+    fields = serializers.ListField(help_text=_("返回的字段"), required=False, allow_empty=True)
 
     class Meta:
         swagger_schema_fields = {"example": mock_data.PROCESS_STATUS_REQUEST_BODY}
