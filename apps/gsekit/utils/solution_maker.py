@@ -11,7 +11,8 @@ See the License for the specific language governing permissions and limitations 
 from typing import List
 
 from django.conf import settings
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _lazy
+from django.utils.translation import ugettext as _
 
 from apps.gsekit.process.models import Process
 
@@ -49,8 +50,8 @@ class BaseSolutionMaker(object):
 
 class SyncCmdbSvcTmplSolutionMakerMaker(BaseSolutionMaker):
 
-    ACTION = _("锁定进程模板信息并同步")
-    LINK_HIGHLIGHT = _("配置平台-服务模板")
+    ACTION = _lazy("锁定进程模板信息并同步")
+    LINK_HIGHLIGHT = _lazy("配置平台-服务模板")
 
     def __init__(self, bk_biz_id: int, process_template_id: int):
         self.bk_biz_id = bk_biz_id
@@ -68,8 +69,8 @@ class SyncCmdbSvcTmplSolutionMakerMaker(BaseSolutionMaker):
 
 
 class SyncProcessSolutionMaker(BaseSolutionMaker):
-    ACTION = _("同步CMDB进程配置")
-    LINK_HIGHLIGHT = _("进程状态")
+    ACTION = _lazy("同步CMDB进程配置")
+    LINK_HIGHLIGHT = _lazy("进程状态")
 
     def __init__(self):
         super().__init__()
@@ -97,8 +98,8 @@ class BindTemplateSolutionMaker(BaseSolutionMaker):
 
 
 class EditProcessSolutionMaker(BaseSolutionMaker):
-    ACTION = _("配置文件")
-    LINK_HIGHLIGHT = _("进程属性")
+    ACTION = _lazy("配置文件")
+    LINK_HIGHLIGHT = _lazy("进程属性")
 
     def __init__(self, service_instance_id: int, process_template_id: int, bk_process_id: int, action: str = None):
         self.service_instance_id = service_instance_id
@@ -116,11 +117,16 @@ class EditProcessSolutionMaker(BaseSolutionMaker):
 
 
 class EditTemplateSolutionMaker(BaseSolutionMaker):
-    ACTION = _("关联进程")
-    LINK_HIGHLIGHT = _("配置文件")
+    ACTION = _lazy("关联进程")
+    LINK_HIGHLIGHT = _lazy("配置文件")
 
     def __init__(self):
         super().__init__()
 
     def make(self):
         return [{"html": self.generate_html(link="config-file/template/")}]
+
+
+class PipelineTimeoutSolutionMaker(BaseSolutionMaker):
+    def make(self):
+        return [{"html": _("检查脚本是否执行完成且正常退出")}, {"html": _("联系系统负责人排查")}]

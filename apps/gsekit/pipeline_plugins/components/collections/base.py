@@ -127,6 +127,10 @@ class JobTaskBaseService(Service):
                     process_info["process"]["bk_process_id"],
                 ).make(),
             )
+        elif isinstance(error, PipelineTimeoutException):
+            extra_data.update(
+                solutions=solution_maker.PipelineTimeoutSolutionMaker().make(),
+            )
         else:
             has_solution = False
 
@@ -188,12 +192,7 @@ class JobTaskBaseService(Service):
         # 校验轮询是否超时
         polling_time = data.get_one_of_outputs("polling_time")
         if polling_time + POLLING_INTERVAL > GlobalSettings.pipeline_polling_timeout():
-            error = PipelineTimeoutException()
-            job_task.set_status(
-                job_models.JobStatus.FAILED, extra_data={"failed_reason": error.message, "err_code": error.code}
-            )
-            self.finish_schedule()
-            return False
+            raise PipelineTimeoutException()
 
         data.outputs.polling_time = polling_time + POLLING_INTERVAL
         return True
@@ -355,12 +354,13 @@ class MultiJobTaskBaseService(JobTaskBaseService):
         # 校验轮询是否超时
         polling_time = data.get_one_of_outputs("polling_time")
         if polling_time + POLLING_INTERVAL > GlobalSettings.pipeline_polling_timeout():
-            for job_task in job_tasks.filter(status=job_models.JobStatus.RUNNING):
-                error = PipelineTimeoutException()
-                job_task.set_status(
-                    job_models.JobStatus.FAILED,
-                    extra_data={"failed_reason": str(error.message), "err_code": error.code},
-                )
+            for job_task in job_tasks:
+                # 已有状态的任务直接跳过
+                if job_task.status not in [job_models.JobStatus.RUNNING, job_models.JobStatus.PENDING]:
+                    continue
+                # 其他任务标记超时
+                extra_data = self.exception_handler(PipelineTimeoutException(), job_task)
+                job_task.set_status(job_models.JobStatus.FAILED, extra_data=extra_data)
             self.finish_schedule()
             return False
 
