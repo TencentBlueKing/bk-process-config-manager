@@ -54,7 +54,7 @@ class GlobalSettings(models.Model):
     def pipeline_polling_timeout(cls):
         # 支持全局配置
         try:
-            return cls.objects.get(key=cls.KEYS.PIPELINE_POLLING_TIMEOUT).v_json
+            return int(cls.objects.get(key=cls.KEYS.PIPELINE_POLLING_TIMEOUT).v_json)
         except cls.DoesNotExist:
             # 默认15分钟
             return 60 * 15
