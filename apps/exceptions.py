@@ -112,8 +112,9 @@ class AppBaseException(Exception):
             except TypeError:
                 # 忽略 __init__ 需要额外参数的异常类
                 continue
-            err_code_map[cls_inst.code] = cls_inst.message
-            err_code_map[int(cls_inst.code)] = cls_inst.message
+            message = getattr(cls_inst, "MESSAGE", _("系统错误"))
+            err_code_map[cls_inst.code] = message
+            err_code_map[int(cls_inst.code)] = message
         return err_code_map
 
 

@@ -118,6 +118,7 @@ PROCESS_STATUS_REQUEST_BODY = {
         "bk_process_name": "*",
         "bk_process_id": "4[6, 8, 9]",
     },
+    "fields": [],
 }
 PROCESS_STATUS_RESPONSE = {
     "count": 2,

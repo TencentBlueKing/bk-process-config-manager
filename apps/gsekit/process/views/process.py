@@ -64,12 +64,18 @@ class ProcessViews(APIViewSet):
             is_auto_list=self.validated_data.get("is_auto_list"),
         )
         process_list = queryset_to_dict_list(self.paginate_queryset(queryset))
+        process_list = ProcessHandler.fill_extra_info_to_process(
+            process_list, topo_name=True, bound_template=True, proc_inst=True
+        )
+        # 过滤指定需要的字段，减少请求的网络和内存消耗
+        fields = self.validated_data.get("fields")
+        if fields:
+            process_list = [{field: process.get(field) for field in fields} for process in process_list]
+
         return Response(
             {
                 "count": queryset.count(),
-                "list": ProcessHandler.fill_extra_info_to_process(
-                    process_list, topo_name=True, bound_template=True, proc_inst=True
-                ),
+                "list": process_list,
             }
         )
 
