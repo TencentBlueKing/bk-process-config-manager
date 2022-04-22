@@ -86,7 +86,7 @@ class MakoNodeVisitor(ast.NodeVisitor):
         "time",
         "replace",
     ]
-    WHITE_LIST_ATTR = ["get"]
+    WHITE_LIST_ATTR = ["get", "replace"]
 
     def __init__(self, black_list_methods=None, white_list_modules=None):
         self.black_list_methods = black_list_methods or self.BLACK_LIST_METHODS
