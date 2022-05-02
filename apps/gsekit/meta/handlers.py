@@ -74,22 +74,24 @@ class MetaHandler(object):
 
     @staticmethod
     def get_job_task_filter_choices(job_id: int):
-        """"任务详细过滤列表"""
+        """ "任务详细过滤列表"""
         filter_info_list = (
             JobTask.objects.filter(job_id=job_id)
             .extra(
                 select={
-                    "filter_info": "JSON_EXTRACT(extra_data, '$.process_info.set', '$.process_info.module', "
-                    "'$.process_info.process.bk_process_id', '$.process_info.process.bk_process_name')",
+                    "set_info": "JSON_EXTRACT(extra_data, '$.process_info.set')",
+                    "module_info": "JSON_EXTRACT(extra_data, '$.process_info.module')",
+                    "bk_process_name": "JSON_EXTRACT(extra_data, '$.process_info.process.bk_process_name')",
                 }
             )
-            .values_list("filter_info", flat=True)
+            .values("set_info", "module_info", "bk_process_name")
         )
 
         filter_choices = defaultdict(list)
         for filter_info in filter_info_list:
-            filter_info = json.loads(filter_info)
-            set_info, module_info, bk_process_id, bk_process_name = filter_info
+            set_info = json.loads(filter_info["set_info"])
+            module_info = json.loads(filter_info["module_info"])
+            bk_process_name = json.loads(filter_info["bk_process_name"])
             filter_choices["set"].append({"id": set_info["bk_set_id"], "name": set_info["bk_set_name"]})
             filter_choices["module"].append({"id": module_info["bk_module_id"], "name": module_info["bk_module_name"]})
             filter_choices["process"].append({"id": bk_process_name, "name": bk_process_name})
