@@ -193,7 +193,11 @@ class JobHandlers(APIModel):
             job.status = JobStatus.PENDING
             job.save(update_fields=["status"])
             job_tasks.update(status=JobStatus.PENDING, err_code=JobErrCode.PENDING)
-            for pipeline_id, pipeline_job_tasks in groupby(job_tasks, lambda x: x.pipeline_id):
+            job_tasks_gby_pipeline_id = groupby(sorted(job_tasks, key=lambda t: t.pipeline_id), lambda x: x.pipeline_id)
+            for pipeline_id, pipeline_job_tasks in job_tasks_gby_pipeline_id:
+                # pipeline node id 为空 表示节点暂未执行，忽略
+                if not pipeline_id:
+                    continue
                 job_task_ids = [job_task.id for job_task in pipeline_job_tasks]
                 # 批量操作的流水线
                 data = {key: data_input.value for key, data_input in runtime.get_data_inputs(pipeline_id).items()}
