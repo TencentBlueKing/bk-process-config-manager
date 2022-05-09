@@ -96,3 +96,19 @@ class BkJobIpStatus(object):
         403: _("任务强制终止成功"),
         404: _("任务强制终止失败"),
     }
+
+
+class TaskGranularity(object):
+    BIZ = "BIZ"
+    SET = "SET"
+    MODULE = "MODULE"
+    HOST = "HOST"
+
+    TASK_GRANULARITY_NODE_KEY_FIELD_MAP = {
+        BIZ: "bk_biz_id",
+        SET: "bk_set_id",
+        MODULE: "bk_module_id",
+        HOST: "bk_host_id",
+    }
+
+    TASK_GRANULARITY_CHOICES = [BIZ, SET, MODULE, HOST]
