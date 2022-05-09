@@ -22,6 +22,7 @@ from apps.exceptions import AppBaseException
 from apps.gsekit.configfile.exceptions import ProcessDoseNotBindTemplate
 from apps.gsekit.configfile.models import ConfigTemplateBindingRelationship, ConfigInstance
 from apps.gsekit.process.models import Process
+from apps.gsekit import constants
 from apps.prometheus.models import export_job_prometheus_mixin
 
 logger = logging.getLogger("app")
@@ -135,6 +136,9 @@ class Job(export_job_prometheus_mixin(), models.Model):
     start_time = models.DateTimeField(_("开始时间"), auto_now_add=True, db_index=True)
     end_time = models.DateTimeField(_("结束时间"), null=True)
     pipeline_id = models.CharField(_("PIPELINE ID"), max_length=33, db_index=True)
+    task_granularity = models.CharField(
+        _("任务聚合粒度"), max_length=32, db_index=True, default=constants.TaskGranularity.BIZ
+    )
     extra_data = models.JSONField(_("额外数据"), default=dict)
 
     bk_app_code = models.CharField(_("蓝鲸应用ID"), max_length=32, default=settings.APP_CODE)
