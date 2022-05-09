@@ -70,6 +70,12 @@ class BasePipelineManager(object):
                 job_task_extra_data["local_inst_id"] = proc_inst["local_inst_id"]
                 job_task_extra_data["retryable"] = True
                 job_task_extra_data["solutions"] = []
+                job_task_extra_data["topo_level_info"] = {
+                    "bk_biz_id": process_info["process"]["bk_biz_id"],
+                    "bk_set_id": process_info["set"]["bk_set_id"],
+                    "bk_module_id": process_info["module"]["bk_module_id"],
+                    "bk_host_id": process_info["host"]["bk_host_id"],
+                }
                 to_be_created_job_tasks.append(
                     JobTask(
                         job_id=self.job.id,

@@ -9,10 +9,13 @@ an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express o
 See the License for the specific language governing permissions and limitations under the License.
 """
 import datetime
+import typing
 
 from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+
+from apps.gsekit import constants
 
 
 class GlobalSettings(models.Model):
@@ -28,6 +31,24 @@ class GlobalSettings(models.Model):
         FOOTER = "FOOTER"  # 页面注脚
         APIGW_PUBLIC_KEY = "APIGW_PUBLIC_KEY"  # APIGW 公钥
         PIPELINE_POLLING_TIMEOUT = "PIPELINE_POLLING_TIMEOUT"  # pipeline 轮询超时时间
+        PROCESS_TASK_GRANULARITY = "PROCESS_TASK_GRANULARITY"  # 进程任务聚合粒度
+
+    @classmethod
+    def process_task_aggregate_info(cls, bk_biz_id: int) -> typing.Dict[str, str]:
+        biz_task_granularity: typing.Dict[str, typing.Union[str, typing.List[int]]] = cls.objects.get_or_create(
+            key=cls.KEYS.PROCESS_TASK_GRANULARITY, defaults=dict(v_json={"DEFAULT": constants.TaskGranularity.BIZ})
+        )[0].v_json
+        default_task_granularity: str = biz_task_granularity.get("DEFAULT", constants.TaskGranularity.BIZ)
+        for task_granularity in constants.TaskGranularity.TASK_GRANULARITY_CHOICES:
+            if bk_biz_id in biz_task_granularity.get(task_granularity, []):
+                return {
+                    "task_granularity": task_granularity,
+                    "node_key_field": constants.TaskGranularity.TASK_GRANULARITY_NODE_KEY_FIELD_MAP[task_granularity],
+                }
+        return {
+            "task_granularity": default_task_granularity,
+            "node_key_field": constants.TaskGranularity.TASK_GRANULARITY_NODE_KEY_FIELD_MAP[default_task_granularity],
+        }
 
     @classmethod
     def pipeline_polling_timeout(cls):

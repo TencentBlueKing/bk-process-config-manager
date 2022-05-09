@@ -13,6 +13,7 @@ from django.db import transaction
 from django.utils import timezone
 from django.utils.translation import ugettext as _
 
+from apps.gsekit import constants
 from apps.gsekit.job.models import Job, JobStatus, JobTask, JobErrCode
 from apps.gsekit.pipeline_plugins.exceptions import GsePriorityException
 from apps.gsekit.utils.notification_maker import JobNotificationMaker, ContentType, MsgType
@@ -61,6 +62,14 @@ def activity_failed_handler(pipeline_id, pipeline_activity_id, *args, **kwargs):
                 failed_reason = _(
                     "优先级等于[{priority}]的进程({bk_func_name}-{bk_process_name})操作已失败，优先级大于此的进程操作不会被继续执行"
                 ).format(priority=priority, bk_func_name=bk_func_name, bk_process_name=bk_process_name)
+
+            process_task_aggregate_node_key_field = constants.TaskGranularity.TASK_GRANULARITY_NODE_KEY_FIELD_MAP[
+                job.task_granularity
+            ]
+            if job_task.extra_data.get("topo_level_info"):
+                conditions[
+                    f"extra_data__topo_level_info__{process_task_aggregate_node_key_field}"
+                ] = job_task.extra_data["topo_level_info"][process_task_aggregate_node_key_field]
 
             with transaction.atomic():
                 for job_task in JobTask.objects.filter(job_id=job.id, status=JobStatus.PENDING, **conditions):
