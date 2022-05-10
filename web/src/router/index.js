@@ -191,9 +191,6 @@ const cancelRequest = async () => {
 router.beforeEach(async (to, from, next) => {
   router.__from_name = from.name;
   await cancelRequest();
-  if (to.query.biz) {
-    store.commit('updateBiz', to.query.biz);
-  }
   if (!to.query.biz && store.state.bizId) {
     // 是否 replace
     let replace = false;
