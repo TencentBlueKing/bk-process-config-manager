@@ -14,12 +14,13 @@ from django.utils import timezone
 from django.utils.translation import ugettext as _
 
 from apps.gsekit import constants
+from apps.gsekit.job.handlers import JobHandlers
 from apps.gsekit.job.models import Job, JobStatus, JobTask, JobErrCode
 from apps.gsekit.pipeline_plugins.exceptions import GsePriorityException
 from apps.gsekit.utils.notification_maker import JobNotificationMaker, ContentType, MsgType
 
 
-def pipeline_end_handler(sender, root_pipeline_id, **kwargs):
+def pipeline_finished_handler(sender, root_pipeline_id, **kwargs):
     """pipeline结束信号处理"""
     # 设置 Job 和 JobTask 的状态
     Job.objects.filter(pipeline_id=root_pipeline_id).update(status=JobStatus.SUCCEEDED, end_time=timezone.now())
@@ -33,13 +34,29 @@ def pipeline_end_handler(sender, root_pipeline_id, **kwargs):
     ).send()
 
 
+def pipeline_failed_handler(pipeline_id):
+    """任务流程整体失败判定"""
+    job = Job.objects.get(pipeline_id=pipeline_id)
+    status_counter = JobHandlers.get_task_status_counter(JobTask.objects.filter(job_id=job.id))["status_counter"]
+
+    # 存在执行中的实例，整体任务还在执行中，不处理
+    if status_counter.get(JobStatus.PENDING, 0) + status_counter.get(JobStatus.RUNNING, 0) != 0:
+        return
+
+    # 不存在执行中的实例，且任务存在失败实例，回写失败状态并发送通知
+    if status_counter.get(JobStatus.FAILED, 0) != 0:
+        job.status = JobStatus.FAILED
+        job.end_time = timezone.now()
+        job.save(update_fields=["status", "end_time"])
+        JobNotificationMaker(
+            job=Job.objects.get(pipeline_id=pipeline_id), content_type=ContentType.HTML, msg_type=MsgType.MAIL
+        ).send()
+
+
 def activity_failed_handler(pipeline_id, pipeline_activity_id, *args, **kwargs):
     """activity失败信号处理"""
     with transaction.atomic():
         job = Job.objects.get(pipeline_id=pipeline_id)
-        job.status = JobStatus.FAILED
-        job.end_time = timezone.now()
-        job.save(update_fields=["status", "end_time"])
 
         # 优先级前置的进程操作已失败
         if job.job_object == Job.JobObject.PROCESS:
@@ -78,14 +95,13 @@ def activity_failed_handler(pipeline_id, pipeline_activity_id, *args, **kwargs):
                         extra_data={"failed_reason": failed_reason, "err_code": GsePriorityException().code},
                     )
 
-    JobNotificationMaker(
-        job=Job.objects.get(pipeline_id=pipeline_id), content_type=ContentType.HTML, msg_type=MsgType.MAIL
-    ).send()
-
 
 def bamboo_engine_eri_post_set_state_handler(node_id, to_state, version, root_id, parent_id, loop, **kwargs):
     # 适配bamboo_engine信号
     if to_state == states.FAILED:
         activity_failed_handler(root_id, node_id)
-    elif to_state == states.FINISHED and node_id == root_id:
-        pipeline_end_handler(None, root_id)
+
+    if to_state == states.FINISHED and node_id == root_id:
+        pipeline_finished_handler(None, root_id)
+    elif to_state in [states.FAILED, states.REVOKED, states.FINISHED]:
+        pipeline_failed_handler(root_id)
