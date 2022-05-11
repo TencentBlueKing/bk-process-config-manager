@@ -206,10 +206,11 @@ class BulkGseOperateProcessService(MultiJobTaskBaseService):
             increment_auto_field: F(increment_auto_field) + 1,
             increment_status_field: F(increment_status_field) + 1,
         }
-
-        JobProcInstStatusStatistics.objects.filter(job_id=job_task.job_id, bk_process_id=job_task.bk_process_id).update(
-            **update_params
-        )
+        # 查出 ID 再更新，避免按 job_id where..update 的情况下多行加锁导致死锁
+        statistics_id = JobProcInstStatusStatistics.objects.get(
+            job_id=job_task.job_id, bk_process_id=job_task.bk_process_id
+        ).id
+        JobProcInstStatusStatistics.objects.filter(id=statistics_id).update(**update_params)
 
     @classmethod
     def sync_status_to_proc(cls, job_task: JobTask):
