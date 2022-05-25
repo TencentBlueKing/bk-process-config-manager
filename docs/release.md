@@ -1,5 +1,18 @@
 # Release
 
+## 1.0.16 - 2022-05-25 
+
+### 🐛 Bugfixes
+
+- bugfix: 修复进程优先级缺失情况下任务创建失败的问题 (closed #179)
+
+- bugfix: 修复Windows 配置文件备份报错：The syntax of the command is incorrect. (closed #177)
+
+
+
+**Full Changelog**: https://github.com/TencentBlueKing/bk-process-config-manager/compare/v1.0.15...v1.0.16
+
+
 ## 1.0.15 - 2022-05-12 
 
 ### 🚀 Features
