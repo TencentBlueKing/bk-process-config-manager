@@ -14,6 +14,8 @@ import hashlib
 import itertools
 import logging
 import shlex
+import ntpath
+import posixpath
 from asyncio import sleep
 from collections import defaultdict
 from typing import List, Dict
@@ -760,17 +762,25 @@ class BulkBackupConfigService(BulkExecuteJobPlatformService):
         """备份文件无需关注是否成功"""
         return True
 
+    @staticmethod
+    def gen_script(file_target_path: str, file_name: str, os_type: int, script_details: Dict[int, str]) -> str:
+        # Windows 下兼容 / 分隔符
+        if os_type == JOB_TASK_OS_TYPE["win"]:
+            file_target_path = file_target_path.replace(posixpath.sep, ntpath.sep)
+        return script_details[os_type].format(
+            file_target_path=file_target_path,
+            file_name=file_name,
+            now_time=datetime.datetime.now().strftime("%Y%m%d_%H%M%S"),
+        )
+
     def _execute(self, data, parent_data):
         with open("apps/gsekit/scripts/backup_cfg.bat") as bat, open("apps/gsekit/scripts/backup_cfg.sh") as sh:
             script_content = {JOB_TASK_OS_TYPE["win"]: bat.read(), JOB_TASK_OS_TYPE["linux"]: sh.read()}
+
         job_params = {
             "script_content": {
                 "args": ["file_target_path", "file_name", "os_type", script_content],
-                "func": lambda file_target_path, file_name, os_type, script_details: script_details[os_type].format(
-                    file_target_path=file_target_path,
-                    file_name=file_name,
-                    now_time=datetime.datetime.now().strftime("%Y%m%d_%H%M%S"),
-                ),
+                "func": self.gen_script,
             }
         }
         data.inputs.job_params = job_params
