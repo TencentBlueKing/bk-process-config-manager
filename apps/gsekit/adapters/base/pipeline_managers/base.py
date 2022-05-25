@@ -62,6 +62,8 @@ class BasePipelineManager(object):
             # 非指定环境类型集群的进程不操作
             if bk_set_env != process_info["set"]["bk_set_env"]:
                 continue
+            # 进程优先级为空时取默认值 0
+            process_info["process"]["priority"] = process_info["process"].get("priority") or 0
             bk_process_id = process_info["process"]["bk_process_id"]
             for proc_inst in proc_inst_map[bk_process_id]:
                 job_task_extra_data = copy.deepcopy(extra_data)
