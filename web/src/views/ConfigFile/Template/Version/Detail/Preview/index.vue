@@ -179,21 +179,29 @@ export default {
         const markMatch = message.match(/\[.*\]/g);
         if (message && markMatch) {
           const markListStr = markMatch[0].substring(1, markMatch[0].length - 1);
-          this.$emit('markers', markListStr.split(',').map((msg) => {
-            // [lineRange, obj, type, errors] -  第3行：${a}，错误：Undefined
-            const markInfo = msg.replace(/[，：]/g, ' ').split(' ');
-            return {
-              // code:"1005"
-              lineRange: markInfo[0],
-              message: `${markInfo[1]}, ${markInfo[3]}`,
-              owner: this.previewLanguage,
-            };
-          }));
+          this.$emit('markers', [this.formatMaker(markListStr)]);
+          // this.$emit('markers', markListStr.split(',').map((msg) => {
+          //   // [lineRange, obj, type, errors] -  第3行：${a}，错误：Undefined
+          //   const markInfo = msg.replace(/[，：]/g, ' ').split(' ');
+          //   return {
+          //     // code:"1005"
+          //     lineRange: markInfo[0],
+          //     message: `${markInfo[1]}, ${markInfo[3]}`,
+          //     owner: this.previewLanguage,
+          //   };
+          // }));
         }
         this.codeContent = '';
       } finally {
         this.basicLoading = false;
       }
+    },
+    formatMaker(msg, type = 'msg') {
+      const errorInfo = msg.split('，错误：');
+      return {
+        type,
+        message: errorInfo.join(' '),
+      };
     },
   },
 };

@@ -70,10 +70,13 @@
                 <ul ref="codeMarkerRef">
                   <li v-for="(marker, index) in currentEditorMarkers" :key="index" class="code-marker-item">
                     <i class="marker-icon bk-icon icon-close-circle-shape"></i>
-                    <span class="marker-owner">[{{ marker.owner }}]</span>
-                    <span class="marker-message">{{ marker.message }}</span>
-                    <span class="marker-code" v-if="marker.code">[{{ marker.code }}]</span>
-                    <span class="marker-range">({{ marker.lineRange }})</span>
+                    <span class="marker-message" v-if="marker.type === 'msg'">{{ marker.message }}</span>
+                    <template v-else>
+                      <span class="marker-owner">[{{ marker.owner }}]</span>
+                      <span class="marker-message">{{ marker.message }}</span>
+                      <span class="marker-code" v-if="marker.code">[{{ marker.code }}]</span>
+                      <span class="marker-range">({{ marker.lineRange }})</span>
+                    </template>
                   </li>
                 </ul>
               </div>
