@@ -497,6 +497,7 @@ export default {
     },
     // tab栏切换
     handleTabChange(item) {
+      this.pagination.current = 1;
       this.selectedTabCode = item.err_code;
       this.isTableLoading = true;
       this.getTaskHistoryDetail();
