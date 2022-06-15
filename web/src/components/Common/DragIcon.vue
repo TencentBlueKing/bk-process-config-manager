@@ -1,5 +1,5 @@
 <template>
-  <div class="drag-icon" @mousedown.left="$emit('dragBegin', $event)">
+  <div :class="['drag-icon', placement]" @mousedown.left="$emit('dragBegin', $event, prop)">
     <span class="dot"></span>
     <span class="dot"></span>
     <span class="dot"></span>
@@ -7,22 +7,48 @@
   </div>
 </template>
 
-<style scoped>
+<script>
+export default {
+  props: {
+    prop: {
+      type: String,
+      default: 'default',
+    },
+    placement: {
+      type: String,
+      default: 'left',
+    },
+  },
+};
+</script>
+
+<style scoped lang="postcss">
   @import '../../css/variable.css';
 
   .drag-icon {
     position: absolute;
-    top: 50%;
-    left: 0;
-    display: flex;
-    flex-flow: column;
     justify-content: space-between;
-    width: 9px;
-    height: 36px;
-    padding: 9px 3px;
-    transform: translateY(-50%);
+    display: flex;
     z-index: 10;
     cursor: move;
+    &.left {
+      flex-flow: column;
+      top: 50%;
+      left: 0;
+      width: 9px;
+      height: 36px;
+      padding: 9px 3px;
+      transform: translateY(-50%);
+    }
+
+    &.top {
+      width: 36px;
+      height: 9px;
+      left: 50%;
+      top: 0;
+      padding: 3px 9px;
+      transform: translateX(-50%);
+    }
 
     .dot {
       width: 3px;

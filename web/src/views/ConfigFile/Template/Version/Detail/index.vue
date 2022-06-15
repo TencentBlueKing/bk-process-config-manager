@@ -55,13 +55,31 @@
               </bk-button>
             </div>
           </div>
-          <CodeEditor
-            ref="codeEditorRef"
-            :content="selectedVersion.content"
-            :language="codeLanguage"
-            :readonly="!selectedVersion.is_draft"
-            :eol="endOfLine"
-            @change="handleEditorContentChange" />
+          <div class="editor-main">
+            <CodeEditor
+              ref="codeEditorRef"
+              :content="selectedVersion.content"
+              :language="codeLanguage"
+              :readonly="!selectedVersion.is_draft"
+              :eol="endOfLine"
+              @markers="handleUpdateMarkers"
+              @change="handleEditorContentChange" />
+
+            <div v-if="showMarkersAside" class="code-marker-aside" :style="{ height: markerAsideHeight + 'px' }">
+              <div class="code-marker">
+                <ul ref="codeMarkerRef">
+                  <li v-for="(marker, index) in currentEditorMarkers" :key="index" class="code-marker-item">
+                    <i class="marker-icon bk-icon icon-close-circle-shape"></i>
+                    <span class="marker-owner">[{{ marker.owner }}]</span>
+                    <span class="marker-message">{{ marker.message }}</span>
+                    <span class="marker-code">[{{ marker.code }}]</span>
+                    <span class="marker-range">({{ marker.lineRange }})</span>
+                  </li>
+                </ul>
+              </div>
+              <DragIcon prop="marker" placement="top" :class="isMarkerDragActive && 'active'" @dragBegin="dragBegin" />
+            </div>
+          </div>
         </div>
         <!-- 右边变量和预览 -->
         <div v-show="showRightPanel" class="detail-right-panel" :style="{ width: rightPanelWidth + 'px' }">
@@ -198,6 +216,12 @@ export default {
       formatDate,
       codeLanguage: 'python', // 高亮风格
       currentEditorContent: '', // 当前草稿输入的内容
+      currentEditorMarkers: [], // 当前编译器错误信息
+      markerAsideHeight: 0,
+      minMarkerHeight: 48,
+      maxMarkerHeight: 400,
+      isMarkerDragActive: false,
+      dragType: '',
       saveLoading: false, // 保存弹窗按钮loading
       isFullScreen: false, // 全屏
 
@@ -218,6 +242,9 @@ export default {
   computed: {
     showRightPanel() {
       return this.showVariablePanel || this.showPreviewPanel;
+    },
+    showMarkersAside() {
+      return !!this.currentEditorMarkers.length;
     },
     isDraftUpdated() { // 草稿有更新，需要重新预览哦
       return this.previewContentCache && this.currentEditorContent !== this.previewContentCache;
@@ -306,6 +333,17 @@ export default {
     rightPanelWidth() {
       window.bus.$emit('resize');
     },
+    showMarkersAside(val) {
+      this.$nextTick(() => {
+        if (val) {
+          if (this.$refs.codeMarkerRef) {
+            const height = this.$refs.codeMarkerRef.clientHeight;
+            this.markerAsideHeight = height > 168 ? 200  : height + 32;
+          }
+        }
+        window.bus.$emit('resize', true);
+      });
+    },
   },
   mounted() {
     window.addEventListener('keydown', this.handleKeydown);
@@ -338,6 +376,9 @@ export default {
 
     handleEditorContentChange(val) {
       this.currentEditorContent = val;
+    },
+    handleUpdateMarkers(markers = []) {
+      this.currentEditorMarkers = markers;
     },
 
     // 保存草稿为可用
@@ -541,29 +582,55 @@ export default {
     },
 
     // 拖动右边栏的宽度
-    dragBegin(e) {
-      this.isDragActive = true;
-      this.currentWidth = this.rightPanelWidth;
-      this.currentScreenX = e.screenX;
+    dragBegin(e, prop) {
+      this.dragType = prop;
+      if (prop === 'default') {
+        this.isDragActive = true;
+        this.currentWidth = this.rightPanelWidth;
+        this.currentScreenX = e.screenX;
+      } else {
+        this.isMarkerDragActive = true;
+        this.currentHeight = this.markerAsideHeight;
+        this.currentScreenY = e.screenY;
+      }
       window.addEventListener('mousemove', this.dragMoving, { passive: true });
       window.addEventListener('mouseup', this.dragStop, { passive: true });
     },
     dragMoving(e) {
-      const newWidth = this.currentWidth - e.screenX + this.currentScreenX;
-      if (newWidth < this.minWidth) {
-        this.rightPanelWidth = this.minWidth;
-      } else if (newWidth > this.maxWidth) {
-        this.rightPanelWidth = this.maxWidth;
+      if (this.dragType === 'default') {
+        const newWidth = this.currentWidth - e.screenX + this.currentScreenX;
+        if (newWidth < this.minWidth) {
+          this.rightPanelWidth = this.minWidth;
+        } else if (newWidth > this.maxWidth) {
+          this.rightPanelWidth = this.maxWidth;
+        } else {
+          this.rightPanelWidth = newWidth;
+        }
       } else {
-        this.rightPanelWidth = newWidth;
+        const newHeight = this.currentHeight - e.screenY + this.currentScreenY;
+        if (newHeight < this.minMarkerHeight) {
+          this.markerAsideHeight = this.minMarkerHeight;
+        } else if (newHeight > this.maxMarkerHeight) {
+          this.markerAsideHeight = this.maxMarkerHeight;
+        } else {
+          this.markerAsideHeight = newHeight;
+        }
       }
     },
     dragStop() {
       this.isDragActive = false;
+      this.isMarkerDragActive = false;
       this.currentWidth = null;
       this.currentScreenX = null;
+      this.dragType = '';
+      this.currentHeight = null;
+      this.currentScreenY = null;
       window.removeEventListener('mousemove', this.dragMoving);
       window.removeEventListener('mouseup', this.dragStop);
+      this.handleErrorResize();
+    },
+    handleErrorResize() {
+      window.bus.$emit('resize', true);
     },
   },
 };
@@ -571,6 +638,7 @@ export default {
 
 <style scoped lang="postcss">
   @import '../../../../../css/variable.css';
+  @import '../../../../../css/mixins/scroll.css';
 
   .version-detail-container {
     position: relative;
@@ -651,6 +719,50 @@ export default {
               }
             }
           }
+        }
+        .editor-main {
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+          overflow: hidden;
+        }
+        .code-marker-aside {
+          flex-shrink: 0;
+          position: relative;
+          min-height: 48px;
+          padding-top: 16px;
+          border-left: 4px solid #b34747;
+          background: #212121;
+          overflow: hidden;
+          box-shadow: 0 0px 2px rgb(0, 0, 0, .3);
+        }
+        .code-marker {
+          height: 100%;
+          padding: 0 20px 16px 40px;
+          line-height: 16px;
+          font-size: 12px;
+          overflow: auto;
+          @mixin scroller;
+        }
+        .code-marker-item {
+          position: relative;
+          & + .code-marker-item {
+            margin-top: 12px;
+          }
+        }
+        .marker-icon {
+          position: absolute;
+          left: -20px;
+          top: 2px;
+          color: #b34747;
+        }
+        .marker-message {
+          color: #dcdee5;
+        }
+        .marker-owner,
+        .marker-code,
+        .marker-range {
+          color: #979ba5;
         }
 
         &.full-screen {
