@@ -172,8 +172,24 @@ export default {
         this.codeLanguage = this.previewLanguage;
         this.codeContent = res.data;
         this.$emit('update:previewContentCache', this.previewContent);
+        this.$emit('markers', []);
       } catch (e) {
         console.warn(e);
+        const { message = '' } = e;
+        const markMatch = message.match(/\[.*\]/g);
+        if (message && markMatch) {
+          const markListStr = markMatch[0].substring(1, markMatch[0].length - 1);
+          this.$emit('markers', markListStr.split(',').map((msg) => {
+            // [lineRange, obj, type, errors] -  第3行：${a}，错误：Undefined
+            const markInfo = msg.replace(/[，：]/g, ' ').split(' ');
+            return {
+              // code:"1005"
+              lineRange: markInfo[0],
+              message: `${markInfo[1]}, ${markInfo[3]}`,
+              owner: this.previewLanguage,
+            };
+          }));
+        }
         this.codeContent = '';
       } finally {
         this.basicLoading = false;
