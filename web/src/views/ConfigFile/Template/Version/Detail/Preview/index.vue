@@ -172,11 +172,34 @@ export default {
         this.codeLanguage = this.previewLanguage;
         this.codeContent = res.data;
         this.$emit('update:previewContentCache', this.previewContent);
+        this.$emit('markers', []);
       } catch (e) {
         console.warn(e);
+        this.formatMaker(e);
         this.codeContent = '';
       } finally {
         this.basicLoading = false;
+      }
+    },
+    formatMaker(error) {
+      const markers = [];
+      try {
+        const msgReg = /\[.*\]/g;
+        let { message } = error;
+        if (!message) throw new Error();
+        if (msgReg.test(message)) {
+          const markMatch = message.match(/\[.*\]/g);
+          if (markMatch) {
+            const markListStr = markMatch[0].substring(1, markMatch[0].length - 1);
+            message = markListStr.replace('，错误：', ' ');
+          }
+        }
+        markers.push({ type: 'msg', message });
+      } catch (e) {
+        markers.push({ type: 'msg', message: JSON.stringify(error) });
+      } finally {
+        console.log(markers);
+        this.$emit('markers', markers);
       }
     },
   },
