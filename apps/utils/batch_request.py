@@ -8,6 +8,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and limitations under the License.
 """
+import time
 from concurrent.futures import as_completed
 from concurrent.futures.thread import ThreadPoolExecutor
 from multiprocessing.pool import ThreadPool
@@ -105,6 +106,7 @@ def request_multi_thread(
     params_list,
     get_data=lambda x: x.get("info", []) if x else [],
     get_request_target=lambda x: x.get("params", {}),
+    interval: float = 0,
 ):
     """
     并发请求接口，每次按不同参数请求最后叠加请求结果
@@ -112,6 +114,7 @@ def request_multi_thread(
     :param params_list: 参数列表
     :param get_data: 获取数据函数
     :param get_request_target:
+    :param interval: 任务提交间隔
     :return: 请求结果累计
     """
     # 参数预处理，添加request_id
@@ -126,7 +129,11 @@ def request_multi_thread(
 
     result = []
     with ThreadPoolExecutor(max_workers=settings.CONCURRENT_NUMBER) as ex:
-        tasks = [ex.submit(func, **params) for params in params_list]
+        tasks = []
+        for idx, params in enumerate(params_list):
+            if idx and interval:
+                time.sleep(interval)
+            tasks.append(ex.submit(func, **params))
     for future in as_completed(tasks):
         result.extend(get_data(future.result()))
     connections.close_all()
