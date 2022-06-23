@@ -9,25 +9,26 @@ an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express o
 See the License for the specific language governing permissions and limitations under the License.
 """
 import copy
-from collections import defaultdict
+from collections import defaultdict, ChainMap
 from itertools import groupby
-from typing import Dict, List, Set, Any
+from typing import Dict, List, Set, Any, Iterable
 from xml.dom.minidom import Document, Element
 
 from blueapps.account.models import User
 from django.core.cache import cache
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from lxml import etree
 
 from apps.api import CCApi
-from apps.gsekit import constants as gsetkit_const
+from apps.gsekit import constants as gsekit_const
 from apps.gsekit.cmdb import constants
 from apps.gsekit.constants import EXPRESSION_SPLITTER
 from apps.gsekit.process.models import Process
 from apps.gsekit.utils.expression_utils import match
 from apps.gsekit.utils.expression_utils.parse import BuildInChar
 from apps.iam import Permission, ActionEnum
-from apps.utils.basic import distinct_dict_list
+from apps.utils.basic import distinct_dict_list, list_slice
 from apps.utils.batch_request import batch_request, request_multi_thread
 
 # extend xpath function
@@ -176,7 +177,7 @@ class CMDBHandler(object):
         ]
         # 缓存云区域信息
         cache.set(
-            self.CACHE_CLOUD_TEMPLATE.format(bk_biz_id=self.bk_biz_id), cloud_areas, gsetkit_const.CacheExpire.HOUR
+            self.CACHE_CLOUD_TEMPLATE.format(bk_biz_id=self.bk_biz_id), cloud_areas, gsekit_const.CacheExpire.HOUR
         )
         return cloud_areas
 
@@ -241,7 +242,7 @@ class CMDBHandler(object):
         cache.set(
             self.CACHE_TOPO_ATTR_TEMPLATE.format(bk_biz_id=self.bk_biz_id),
             doc,
-            gsetkit_const.CacheExpire.HOUR,
+            gsekit_const.CacheExpire.HOUR,
         )
         return doc
 
@@ -622,7 +623,7 @@ class CMDBHandler(object):
         cache.set(
             CMDBHandler.CACHE_GLOBAL_VAR_TEMPLATE.format(bk_biz_id=self.bk_biz_id),
             attributes_group_by_obj,
-            gsetkit_const.CacheExpire.FREQUENT_UPDATE,
+            gsekit_const.CacheExpire.FREQUENT_UPDATE,
         )
         return attributes_group_by_obj
 
@@ -640,30 +641,47 @@ class CMDBHandler(object):
             },
         )
 
-    def check_service_template_difference(self, service_template_id: int, _request=None) -> Dict:
-        """检查服务模板是否有变更"""
+    def check_service_templates_difference(self, service_template_ids: Iterable[int], _request=None) -> Dict[int, bool]:
+        """
+        检查服务模板是否有变更
+        :param service_template_ids: 服务模板列表，不超过100
+        :param _request:
+        :return:
+        """
+        print(f"{timezone.now()} check")
         differences = CCApi.list_service_template_difference(
             {
-                "service_template_ids": [service_template_id],
+                "service_template_ids": service_template_ids,
                 "bk_biz_id": self.bk_biz_id,
                 "is_partial": True,
                 "_request": _request,
             }
         )
+        service_tmpl_id__need_sync_map: Dict[int, bool] = {}
         for diff in differences.get("service_templates") or []:
-            if diff["service_template_id"] == service_template_id and diff["need_sync"]:
-                return {service_template_id: True}
-        return {service_template_id: False}
+            service_tmpl_id__need_sync_map[diff["service_template_id"]] = diff["need_sync"]
 
-    def batch_check_service_template_difference(self) -> Dict:
+        # 缺省默认填充False
+        for service_template_id in service_template_ids:
+            if service_template_id not in service_tmpl_id__need_sync_map:
+                service_tmpl_id__need_sync_map[service_template_id] = False
+        return service_tmpl_id__need_sync_map
+
+    def batch_check_service_template_difference(self) -> List[Dict[int, bool]]:
         """检查服务模板是否有变更"""
         service_template_ids = [service_template["id"] for service_template in self.service_template()]
-        results = request_multi_thread(
-            self.check_service_template_difference,
-            params_list=[
-                {"service_template_id": service_template_id, "_request": get_request()}
-                for service_template_id in service_template_ids
-            ],
+        params_list = [
+            {"service_template_ids": service_template_ids, "_request": get_request()}
+            for service_template_ids in list_slice(service_template_ids, limit=5)
+        ]
+        service_tmpl_id__need_sync_map_list: List[Dict[int, bool]] = request_multi_thread(
+            self.check_service_templates_difference,
+            params_list=params_list,
             get_data=lambda x: [x],
+            # 100 次 API 调用最远间隔 3s，
+            interval=0.03,
         )
-        return results
+        is_diff_results: List[Dict[int, bool]] = []
+        for service_tmpl_id, is_diff in dict(ChainMap(*service_tmpl_id__need_sync_map_list)).items():
+            is_diff_results.append({service_tmpl_id: is_diff})
+        return is_diff_results
