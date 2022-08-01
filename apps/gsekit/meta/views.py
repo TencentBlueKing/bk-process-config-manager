@@ -26,14 +26,16 @@ MetaViewTags = ["meta"]
 
 class MetaViewSet(APIViewSet):
     @swagger_auto_schema(
-        operation_summary="footer内容", tags=MetaViewTags,
+        operation_summary="footer内容",
+        tags=MetaViewTags,
     )
     @action(detail=False, methods=["GET"])
     def footer(self, request, *args, **kwargs):
         return Response(GlobalSettings.footer())
 
     @swagger_auto_schema(
-        operation_summary="获取所有用户", tags=MetaViewTags,
+        operation_summary="获取所有用户",
+        tags=MetaViewTags,
     )
     @action(detail=False, methods=["GET"])
     def users(self, request, *args, **kwargs):
@@ -49,7 +51,8 @@ class MetaViewSet(APIViewSet):
         return Response(MetaHandler.get_user_info(request))
 
     @swagger_auto_schema(
-        operation_summary="任务历史过滤选项", tags=MetaViewTags,
+        operation_summary="任务历史过滤选项",
+        tags=MetaViewTags,
     )
     @action(detail=False, methods=["GET"])
     def job_filter_choices(self, request, *args, **kwargs):
@@ -76,14 +79,16 @@ class MetaViewSet(APIViewSet):
         return Response(MetaHandler.get_job_task_filter_choices(job_id))
 
     @swagger_auto_schema(
-        operation_summary="全局", tags=MetaViewTags,
+        operation_summary="全局",
+        tags=MetaViewTags,
     )
     @action(detail=False, methods=["GET"])
     def variables(self, request, *args, **kwargs):
         return Response(MetaHandler.get_job_filter_choices())
 
     @swagger_auto_schema(
-        operation_summary="获取老数据", tags=MetaViewTags,
+        operation_summary="获取老数据",
+        tags=MetaViewTags,
     )
     @action(detail=False, methods=["GET"])
     def get_old_data(self, request, *args, **kwargs):
@@ -123,3 +128,12 @@ class MetaViewSet(APIViewSet):
         expression = self.validated_data["expression"]
         candidates = self.validated_data["candidates"]
         return Response(MetaHandler().expression_match(expression, candidates))
+
+    @swagger_auto_schema(
+        operation_summary="业务接入情况概览",
+        tags=MetaViewTags,
+        responses={status.HTTP_200_OK: meta_serializer.AccessOverviewResponseSerializer()},
+    )
+    @action(methods=["GET"], detail=False)
+    def access_overview(self, request, bk_biz_id, *args, **kwargs):
+        return Response(MetaHandler().access_overview(bk_biz_id))

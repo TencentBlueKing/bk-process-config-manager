@@ -18,6 +18,7 @@ from apps.api import UserManageApi
 from apps.gsekit.cmdb.handlers.cmdb import CMDBHandler
 from apps.gsekit.job.models import Job, JOB_STATUS_CHOICES, JobTask
 from apps.gsekit.process.models import Process
+from apps.gsekit.configfile.models import ConfigTemplate
 from apps.gsekit.utils.expression_utils.parse import parse_exp2unix_shell_style
 from apps.utils.basic import distinct_dict_list
 
@@ -110,3 +111,24 @@ class MetaHandler(object):
         for exp in exps_with_unix_shell_style:
             filter_results.extend(fnmatch.filter(candidates, exp))
         return {"exps_with_unix_shell_style": exps_with_unix_shell_style, "filter_results": list(set(filter_results))}
+
+    @staticmethod
+    def access_overview(bk_biz_id: int) -> Dict[str, bool]:
+        """
+        业务接入情况概览
+        :param bk_biz_id: 业务 ID
+        :return:
+        """
+        access_overview_data: Dict[str, bool] = {
+            # 通过判断任务历史是否存在进程操作判断业务是否接入进程相关功能
+            Job.JobObject.PROCESS: Job.objects.filter(bk_biz_id=bk_biz_id, job_object=Job.JobObject.PROCESS).exists(),
+            # 通过是否存在配置模版判断业务是否接入配置相关功能
+            Job.JobObject.CONFIGFILE: ConfigTemplate.objects.filter(bk_biz_id=bk_biz_id).exists(),
+        }
+
+        # 其中一个部分接入视为已接入该系统
+        access_overview_data["is_access"] = any(
+            [access_overview_data[Job.JobObject.PROCESS], access_overview_data[Job.JobObject.CONFIGFILE]]
+        )
+
+        return access_overview_data

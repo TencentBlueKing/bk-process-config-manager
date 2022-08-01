@@ -52,3 +52,5 @@ EXPRESSION_MATCH_RESPONSE = {
     ],
     "filter_results": ["string1.集群1.server.worda-1.1.111", "string100.集群2.server.worda-1.2A"],
 }
+
+ACCESS_OVERVIEW_RESPONSE = {"is_access": True, "process": True, "configfile": True}
