@@ -45,3 +45,8 @@ class ExpressionMatchRequestSerializer(serializers.Serializer):
 class ExpressionMatchResponseSerializer(serializers.Serializer):
     class Meta:
         swagger_schema_fields = {"example": mock_data.EXPRESSION_MATCH_RESPONSE}
+
+
+class AccessOverviewResponseSerializer(serializers.Serializer):
+    class Meta:
+        swagger_schema_fields = {"example": mock_data.ACCESS_OVERVIEW_RESPONSE}
