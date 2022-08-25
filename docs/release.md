@@ -1,5 +1,21 @@
 # Release
 
+## 1.0.18 - 2022-08-25 
+
+### 🚀 Features
+
+- feature: 提供业务接入情况概览接口 (closed #193)
+
+
+### ✏️ Docs
+
+- docs: 开源信息更新 (closed #191)
+
+
+
+**Full Changelog**: https://github.com/TencentBlueKing/bk-process-config-manager/compare/v1.0.17...v1.0.18
+
+
 ## 1.0.17 - 2022-06-23 
 
 ### 🚀 Features
