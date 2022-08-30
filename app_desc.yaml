@@ -4,9 +4,11 @@ app:
     region: default
     bk_app_code: "bk_gsekit"
     bk_app_name: 进程配置管理
+    bk_app_name_en: bk-gsekit
     market:
         category: 运维工具
         introduction: 进程配置管理
+        introduction_en: process&config manager
         display_options:
             width: 1300
             height: 720

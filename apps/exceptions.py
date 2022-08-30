@@ -68,7 +68,10 @@ class AppBaseException(Exception):
             if kwargs.get("permission"):
                 permission = kwargs.get("permission")
                 client = IAM(
-                    settings.APP_ID, settings.APP_TOKEN, settings.BK_IAM_INNER_HOST, settings.BK_COMPONENT_API_URL
+                    settings.APP_ID,
+                    settings.APP_TOKEN,
+                    settings.BK_IAM_INNER_HOST,
+                    settings.BK_COMPONENT_API_OVERWRITE_URL,
                 )
                 for action in permission.get("actions") or []:
                     action["name"] = action.get("name") or action.get("id")

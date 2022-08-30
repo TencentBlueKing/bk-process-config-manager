@@ -57,9 +57,11 @@ class Permission(object):
     def get_iam_client(cls):
         if settings.BK_IAM_SKIP:
             return DummyIAM(
-                settings.APP_ID, settings.APP_TOKEN, settings.BK_IAM_INNER_HOST, settings.BK_COMPONENT_API_URL
+                settings.APP_ID, settings.APP_TOKEN, settings.BK_IAM_INNER_HOST, settings.BK_COMPONENT_API_OVERWRITE_URL
             )
-        return IAM(settings.APP_ID, settings.APP_TOKEN, settings.BK_IAM_INNER_HOST, settings.BK_COMPONENT_API_URL)
+        return IAM(
+            settings.APP_ID, settings.APP_TOKEN, settings.BK_IAM_INNER_HOST, settings.BK_COMPONENT_API_OVERWRITE_URL
+        )
 
     def make_request(self, action: Union[ActionMeta, str], resources: List[Resource] = None) -> Request:
         """
