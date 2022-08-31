@@ -1,10 +1,13 @@
 app_code: bk_gsekit
-app_name: GSEKIT
-app_name_en: GSEKIT
+app_name: 进程配置管理
+app_name_en: bk-gsekit
 is_use_celery: true
 author: 蓝鲸智云
+language: Python
 introduction: 进程配置管理
-introduction_en: process&config manager
+introduction_en: Process&config manager
+description: 进程配置管理是腾讯蓝鲸智云推出的一个专注于进程和配置文件管理的 SaaS 工具。
+description_en: Process&config manager is a SaaS tool launched by Tencent BlueKing that focuses on process and configuration file management.
 version: 1.0.19
 category: 运维工具
 language_support: 英语,中文
@@ -12,5 +15,6 @@ desktop:
   width: 1300
   height: 720
   is_max: true
+  open_mode: "new_tab"
 container:
   memory: 4096

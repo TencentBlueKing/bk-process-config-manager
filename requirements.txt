@@ -4,7 +4,7 @@
 
 # sed -i 's|blueapps-open|blueapps|g' requirements.txt
 # 确保内外部版本统一，打包脚本的替换规则为：blueapps-open -> blueapps，不替换版本号
-blueapps-open==4.0.2rc0
+blueapps[opentelemetry]==4.4.7
 python-json-logger==0.1.7
 requests==2.22.0
 MarkupSafe==1.1.1
@@ -59,11 +59,18 @@ packaging==20.9
 django-prometheus==2.2.0
 
 # opentelemetry
-opentelemetry-api==1.5.0
-opentelemetry-sdk==1.5.0
-opentelemetry-exporter-otlp==1.5.0
-opentelemetry-instrumentation-django==0.24b0
-opentelemetry-instrumentation-dbapi==0.24b0
-opentelemetry-instrumentation-requests==0.24b0
-opentelemetry-instrumentation-celery==0.24b0
-opentelemetry-instrumentation-logging==0.24b0
+grpcio==1.46.3
+protobuf==3.19.4
+opentelemetry-api==1.11.1
+opentelemetry-sdk==1.11.1
+opentelemetry-exporter-otlp==1.11.1
+opentelemetry-exporter-jaeger==1.11.1
+opentelemetry-exporter-jaeger-proto-grpc==1.11.1
+opentelemetry-exporter-jaeger-thrift==1.11.1
+opentelemetry-instrumentation==0.30b1
+opentelemetry-instrumentation-celery==0.30b1
+opentelemetry-instrumentation-django==0.30b1
+opentelemetry-instrumentation-dbapi==0.30b1
+opentelemetry-instrumentation-redis==0.30b1
+opentelemetry-instrumentation-logging==0.30b1
+opentelemetry-instrumentation-requests==0.30b1
