@@ -3,6 +3,7 @@ app_name: GSEKIT
 app_name_en: GSEKIT
 is_use_celery: true
 author: 蓝鲸智云
+language: Python
 introduction: 进程配置管理
 introduction_en: process&config manager
 version: 1.0.19
