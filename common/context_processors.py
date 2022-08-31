@@ -20,8 +20,8 @@ context_processor for common(setting)
 除setting外的其他context_processor内容，均采用组件的方式(string)
 """
 WEB_TITLE_MAP = {
-    "ieod": _("GSEKIT | 蓝鲸"),
-    "open": _("GSEKIT | 蓝鲸智云"),
+    "ieod": _("GSEKit | 腾讯蓝鲸智云"),
+    "open": _("GSEKit | 腾讯蓝鲸智云"),
 }
 
 

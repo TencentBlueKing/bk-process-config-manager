@@ -44,7 +44,7 @@ class ProcessPipelineManager(BasePipelineManager):
 
         return channel_adapter.BulkOperateProcessActivityManager
 
-    def create_pipeline(self, job_tasks: QuerySet[JobTask]) -> Dict[str, Any]:
+    def create_pipeline(self, job_tasks: QuerySet) -> Dict[str, Any]:
         """
         根据优先级生成不同的执行顺序的并行网关，组成pipeline
                  StartEvent
