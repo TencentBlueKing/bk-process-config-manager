@@ -1,5 +1,16 @@
 # Release
 
+## 1.0.19 - 2022-09-01 
+
+### 🚀 Features
+
+- feature: 构建依赖升级 & title 补充 (closed #197)
+
+
+
+**Full Changelog**: https://github.com/TencentBlueKing/bk-process-config-manager/compare/v1.0.18...v1.0.19
+
+
 ## 1.0.18 - 2022-08-25 
 
 ### 🚀 Features
