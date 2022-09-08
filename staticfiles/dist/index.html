@@ -1,0 +1,35 @@
+<!DOCTYPE html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1"><meta http-equiv=X-UA-Compatible content="ie=edge"><title>{{ TITLE }}</title><link rel="shortcut icon" href={{BK_STATIC_URL}}/favicon.png><link href={{BK_STATIC_URL}}/static/css/chunk-bk-magic-vue.30c42e89b2cfea4fb726.css rel=stylesheet><link href={{BK_STATIC_URL}}/static/css/main.57e0fd35b545d3c7e065.css rel=stylesheet><link href={{BK_STATIC_URL}}/static/css/vendors~main.eff0bf54b472be4beb87.css rel=stylesheet></head><body><div id=app></div><script>window.PROJECT_CONFIG = (function () {
+                const CSRF_COOKIE_NAME = '{{CSRF_COOKIE_NAME}}' // 401 登录地址
+                const IS_MOCK = '{{IS_MOCK}}' // 401 登录地址
+                let SITE_URL = '{{SITE_URL}}' // URL 路由基本前缀，例如：/saas/gsekit
+                let BK_STATIC_URL = '{{BK_STATIC_URL}}' // 静态文件路径，前端 index.html 所在路径相对于静态资源根路径，如 /gsekit/dist
+                const AJAX_URL_PREFIX = '{{AJAX_URL_PREFIX}}' // ajax 请求路径
+                const LOGIN_SERVICE_URL = '{{LOGIN_SERVICE_URL}}' // 401 登录地址
+                const TAM_AEGIS_KEY = '{{TAM_AEGIS_KEY}}' // TAM监控key
+                const TAM_AEGIS_URL = '{{TAM_AEGIS_URL}}' // TAM监控接入链接
+                const CMDB_URL = '{{CMDB_URL}}' // 配置平台路径
+                const LOGIN_URL = '{{LOGIN_URL}}'
+
+                // BK_STATIC_URL 不能以 / 结尾
+                if (BK_STATIC_URL.endsWith('/')) {
+                    BK_STATIC_URL = BK_STATIC_URL.slice(0, -1)
+                }
+
+                // SITE_URL 不能以 / 结尾
+                if (SITE_URL.endsWith('/')) {
+                    SITE_URL = SITE_URL.slice(0, -1)
+                }
+
+                return {
+                    CSRF_COOKIE_NAME: CSRF_COOKIE_NAME,
+                    IS_MOCK: IS_MOCK,
+                    SITE_URL: SITE_URL,
+                    BK_STATIC_URL: BK_STATIC_URL,
+                    AJAX_URL_PREFIX: AJAX_URL_PREFIX,
+                    LOGIN_SERVICE_URL: LOGIN_SERVICE_URL,
+                    TAM_AEGIS_KEY: TAM_AEGIS_KEY,
+                    TAM_AEGIS_URL: TAM_AEGIS_URL,
+                    CMDB_URL: CMDB_URL,
+                    LOGIN_URL: LOGIN_URL
+                }
+            })()</script>{% if TAM_AEGIS_KEY != "" %}<script src={{TAM_AEGIS_URL}}></script>{% endif %}<script type=text/javascript src={{BK_STATIC_URL}}/static/js/chunk-bk-magic-vue.d745d948b1ad35298479.js></script><script type=text/javascript src={{BK_STATIC_URL}}/static/js/main.b3085c00cb51c20256a9.js></script><script type=text/javascript src={{BK_STATIC_URL}}/static/js/vendors~main.b71d8bb4711bcaf0b75b.js></script></body></html>
