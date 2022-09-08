@@ -5,10 +5,10 @@
             "operation": "upsert_system",
             "data": {
                 "id": "bk_gsekit",
-                "name": "GSEKIT",
-                "name_en": "GSEKIT",
-                "description": "GSEKIT",
-                "description_en": "GSEKIT",
+                "name": "进程配置管理",
+                "name_en": "GSEKit",
+                "description": "进程配置管理是腾讯蓝鲸智云推出的一个专注于进程和配置文件管理的 SaaS 工具。",
+                "description_en": "Process&config manager is a SaaS tool launched by Tencent BlueKing that focuses on process and configuration file management.",
                 "clients": "bk_gsekit,gsekit2",
                 "provider_config": {
                     "host": "",
