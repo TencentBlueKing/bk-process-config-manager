@@ -91,7 +91,7 @@ class BaseNotificationMaker(object):
 
 
 class JobNotificationMaker(BaseNotificationMaker):
-    TITLE_TEMPLATE = "GSEKIT-任务执行结果通知"
+    TITLE_TEMPLATE = "{app_name}-任务执行结果通知"
 
     CONTENT_TEMPLATE = {
         ContentType.HTML: """
@@ -102,8 +102,8 @@ class JobNotificationMaker(BaseNotificationMaker):
             <title>{title}</title>
         </head>
         <body style='font-family: "PingFang SC", "Microsoft Yahei", Helvetica, Aria, serif'>
-            <h3>GSEKIT {job_type} #{job_id} {job_status_alias}</h3>
-            <p>来自 GSEKIT 的推送</p>
+            <h3>{app_name} {job_type} #{job_id} {job_status_alias}</h3>
+            <p>来自 {app_name} 的推送</p>
             <hr/>
             <div>
                 <p>业务： [{bk_biz_id}] {bk_biz_name}</p>
@@ -152,8 +152,9 @@ class JobNotificationMaker(BaseNotificationMaker):
         base_context = base_context or {}
         base_context.update(
             {
+                "app_name": settings.APP_NAME,
                 "job_id": job.id,
-                "title": self.get_title(),
+                "title": self.get_title(context={"app_name": settings.APP_NAME}),
                 "bk_biz_name": biz_id_name_map.get(job.bk_biz_id),
                 "job_status_alias": dict(JOB_STATUS_CHOICES)[job.status],
                 "bk_set_env_alias": self.BK_ENV_ALIAS_MAP[job.scope["bk_set_env"]],
