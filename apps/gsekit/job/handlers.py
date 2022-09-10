@@ -135,8 +135,14 @@ class JobHandlers(APIModel):
             if not value_list and value_list != 0:
                 continue
             if key in ["bk_set_ids", "bk_module_ids", "bk_process_ids", "bk_process_names"]:
+                if key not in ["bk_process_names"]:
+                    treated_value_list = [value for value in value_list if str(value).isdigit()]
+                else:
+                    treated_value_list = value_list
                 obj_id = key.split("_")[1]
-                filter_conditions[f"extra_data__process_info__{obj_id}__{key_filter_field_map[key]}"] = value_list
+                filter_conditions[
+                    f"extra_data__process_info__{obj_id}__{key_filter_field_map[key]}"
+                ] = treated_value_list
             elif key in ["statuses"]:
                 filter_conditions[f"{key_filter_field_map[key]}"] = value_list
             else:

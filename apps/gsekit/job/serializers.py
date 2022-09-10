@@ -34,14 +34,15 @@ class JobTaskResponseSerializer(serializers.Serializer):
 
 
 class JobTaskRequestSerializer(PageSerializer):
+    # 提高鲁棒性，使用 CharField 代替 IntegerField
     bk_set_ids = serializers.ListField(
-        help_text=_("集群ID列表"), child=serializers.IntegerField(help_text=_("集群ID")), required=False
+        help_text=_("集群ID列表"), child=serializers.CharField(help_text=_("集群ID")), required=False
     )
     bk_module_ids = serializers.ListField(
-        help_text=_("模块ID列表"), child=serializers.IntegerField(help_text=_("模块ID")), required=False
+        help_text=_("模块ID列表"), child=serializers.CharField(help_text=_("模块ID")), required=False
     )
     bk_process_ids = serializers.ListField(
-        help_text=_("进程ID列表"), child=serializers.IntegerField(help_text=_("进程ID")), required=False
+        help_text=_("进程ID列表"), child=serializers.CharField(help_text=_("进程ID")), required=False
     )
     bk_process_names = serializers.ListField(
         help_text=_("进程别名列表"), child=serializers.CharField(help_text=_("进程别名")), required=False
