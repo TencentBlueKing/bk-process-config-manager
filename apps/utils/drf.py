@@ -68,9 +68,13 @@ def format_serializer_errors(errors, fields, params, prefix="", return_all_error
             else:
                 if isinstance(field_errors, dict):
                     if hasattr(field, "child"):
-                        sub_format = format_serializer_errors(field_errors, field.child.fields, params, prefix=prefix)
+                        sub_format = format_serializer_errors(
+                            field_errors, getattr(field.child, "fields", {}), params, prefix=prefix
+                        )
                     else:
-                        sub_format = format_serializer_errors(field_errors, field.fields, params, prefix=prefix)
+                        sub_format = format_serializer_errors(
+                            field_errors, getattr(field, "fields", {}), params, prefix=prefix
+                        )
                     if not return_all_errors:
                         return f"{label}: {sub_format}"
                     sub_message += sub_format
@@ -131,7 +135,9 @@ class GeneralSerializer(ModelSerializer):
         # 捕获原生的参数校验异常，抛出SaaS封装的参数校验异常
         except DrfValidationError:
             if self._errors and raise_exception:
-                raise ValidationError(format_serializer_errors(self.errors, self.fields, self.initial_data),)
+                raise ValidationError(
+                    format_serializer_errors(self.errors, self.fields, self.initial_data),
+                )
 
         return not bool(self._errors)
 
@@ -154,7 +160,12 @@ class GeneralSerializer(ModelSerializer):
                 "`%s.objects.create()`. You may need to make the field "
                 "read-only, or override the %s.create() method to handle "
                 "this correctly.\nOriginal exception text was: %s."
-                % (model_class.__name__, model_class.__name__, self.__class__.__name__, exc,)
+                % (
+                    model_class.__name__,
+                    model_class.__name__,
+                    self.__class__.__name__,
+                    exc,
+                )
             )
             raise TypeError(msg)
 
