@@ -18,6 +18,7 @@ __all__ = ["celery_app", "RUN_VER", "BK_URL", "BASE_DIR"]
 # This will make sure the app is always imported when
 # Django starts so that shared_task will use this app.
 from blueapps.core.celery import celery_app
+from django.utils.translation import ugettext_lazy as _
 
 # app 基本信息
 
@@ -46,3 +47,6 @@ BK_URL = os.getenv("BKPAAS_URL", None)  # noqa
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# GSEKit 对于外部用户来说理解成本比较高，于是通过 RUN_ENV 区分内外部应用名称
+APP_NAME = (_("进程配置管理"), _("GSEKit"))[RUN_VER == "ieod"]

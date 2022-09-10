@@ -20,8 +20,8 @@ context_processor for common(setting)
 除setting外的其他context_processor内容，均采用组件的方式(string)
 """
 WEB_TITLE_MAP = {
-    "ieod": _("GSEKit | 腾讯蓝鲸智云"),
-    "open": _("GSEKit | 腾讯蓝鲸智云"),
+    "ieod": _("{app_name} | 腾讯蓝鲸智云").format(app_name=settings.APP_NAME),
+    "open": _("{app_name} | 腾讯蓝鲸智云").format(app_name=settings.APP_NAME),
 }
 
 
@@ -34,6 +34,7 @@ def mysetting(request):
         "RUN_MODE": settings.RUN_MODE,
         "ENVIRONMENT": settings.ENVIRONMENT,
         "APP_CODE": settings.APP_CODE,
+        "APP_NAME": settings.APP_NAME,
         "SITE_URL": settings.SITE_URL,
         "AJAX_URL_PREFIX": settings.SITE_URL,
         # 远程静态资源url

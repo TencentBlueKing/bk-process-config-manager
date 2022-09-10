@@ -307,7 +307,7 @@ class Permission(object):
 
         # 系统
         systems = [
-            {"system_id": settings.BK_IAM_SYSTEM_ID, "system_name": settings.BK_IAM_SYSTEM_NAME},
+            {"system_id": settings.BK_IAM_SYSTEM_ID, "system_name": settings.APP_NAME},
             {"system_id": "bk_cmdb", "system_name": _("配置平台")},
         ]
 
