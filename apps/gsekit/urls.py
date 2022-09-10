@@ -22,6 +22,8 @@ from apps.gsekit.meta import views as meta_view
 from apps.gsekit.operations import views as operations_view
 from apps.gsekit.migrate.views import MigrateViewSet
 from apps.gsekit.process.views import process
+from django.conf import settings
+from django.utils.translation import ugettext_lazy as _
 
 biz_router = routers.DefaultRouter(trailing_slash=True)
 biz_router.register(r"process", process.ProcessViews, basename="process")
@@ -40,7 +42,14 @@ none_biz_router.register(r"meta", operations_view.OperationsViewSet, basename="o
 
 
 schema_view = get_schema_view(
-    openapi.Info(title="GSEKIT API", default_version="v1", description="GSEKIT API"),
+    openapi.Info(
+        title=_("{app_name} API").format(app_name=settings.APP_NAME),
+        default_version="v1",
+        description=_(
+            "{app_name} 是腾讯蓝鲸智云推出的一个专注于进程和配置文件管理的 SaaS 工具。\n"
+            "GitHub 开源，欢迎共建：https://github.com/TencentBlueKing/bk-process-config-manager"
+        ).format(app_name=settings.APP_NAME),
+    ),
     public=True,
     permission_classes=(permissions.AllowAny,),
 )
