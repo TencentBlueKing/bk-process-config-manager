@@ -21,6 +21,7 @@ from apps.gsekit.job.models import Job
 from apps.iam import ActionEnum, ResourceEnum
 from apps.iam.handlers.drf import ViewBusinessPermission, InstanceActionPermission
 from apps.utils.drf import GeneralOrderingFilter
+from common.log import logger
 
 JobViewTags = ["job"]
 
@@ -52,6 +53,21 @@ class JobViews(ModelViewSet):
                 return [InstanceActionPermission([ActionEnum.MANAGE_PROCESS], ResourceEnum.BUSINESS)]
             if job_object == Job.JobObject.CONFIGFILE:
                 if job_action in [Job.JobAction.GENERATE, Job.JobAction.RELEASE]:
+                    return [InstanceActionPermission([ActionEnum.OPERATE_CONFIG], ResourceEnum.BUSINESS)]
+        elif self.action == self.retry.__name__:
+            try:
+                job_obj: Job = Job.objects.get(id=self.kwargs["pk"])
+            except KeyError:
+                logger.exception(f"api[{self.retry.__name__}]: cannot get pk")
+                return [ViewBusinessPermission()]
+            except Job.DoesNotExist:
+                logger.exception(f"api[{self.retry.__name__}]: Job(id -> {self.kwargs['pk']}) does not exist")
+                return [ViewBusinessPermission()]
+
+            if job_obj.job_object == Job.JobObject.PROCESS:
+                return [InstanceActionPermission([ActionEnum.MANAGE_PROCESS], ResourceEnum.BUSINESS)]
+            if job_obj.job_object == Job.JobObject.CONFIGFILE:
+                if job_obj.job_action in [Job.JobAction.GENERATE, Job.JobAction.RELEASE]:
                     return [InstanceActionPermission([ActionEnum.OPERATE_CONFIG], ResourceEnum.BUSINESS)]
         return [ViewBusinessPermission()]
 
