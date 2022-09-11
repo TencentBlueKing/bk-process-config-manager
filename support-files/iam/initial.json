@@ -249,9 +249,8 @@
                 ]
             }
         },
-
         {
-            "operation": "update_common_actions",
+            "operation": "upsert_common_actions",
             "data": [
                 {
                     "name": "业务运维",
