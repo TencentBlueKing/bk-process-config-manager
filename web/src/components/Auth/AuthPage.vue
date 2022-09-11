@@ -90,7 +90,7 @@ export default {
       } else if (type === 'newBiz') {
         window.open(`${window.PROJECT_CONFIG.CMDB_URL}/#/resource/business`, '_blank');
       } else {
-        console.log('official');
+        window.open(window.PROJECT_CONFIG.BKAPP_DOCS_URL, '_blank');
       }
     },
   },

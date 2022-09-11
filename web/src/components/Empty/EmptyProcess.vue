@@ -88,7 +88,7 @@ export default {
           name: 'process-attr',
         });
       } else if (type === 'document') {
-        console.log(type);
+        window.open(window.PROJECT_CONFIG.BKAPP_DOCS_URL, '_blank');
       }
     },
   },
