@@ -617,8 +617,9 @@ export default {
         params.page.start = (current - 1) * limit;
         params.page.sort = this.filterFields.join(',');
         if (this.searchSelectValue.length) {
-          const undoneRule = [];
-          const blurryRule = [];
+          const undoneRule = []; // 或
+          const blurryRule = []; // 且
+          const queryRule = []; // 或（同时模糊搜索 进程别名、进程名称）
           // 有模糊匹配 和 配置缺失同时存在的情况
           this.searchSelectValue.forEach((item) => {
             if (item.id === 'missing') {
@@ -637,6 +638,10 @@ export default {
                 operator: 'equal',
                 value: item.values.map(option => option.name).join(','),
               });
+            } else { // 无固定类型的query 放入进程别名、进程名称下过滤
+              const rules = ['bk_func_name', 'bk_process_name'].map(field => ({ field, operator: 'equal', value: item.id }));
+              queryRule.push(...rules);
+              blurryRule.push({ condition: 'OR', rules });
             }
           });
           if (type === 'load') {
@@ -660,6 +665,7 @@ export default {
           } else { // 前端搜索条件
             params.undoneRule = undoneRule;
             params.blurryRule = blurryRule;
+            params.queryRule = queryRule;
           }
         }
       }
@@ -825,7 +831,7 @@ export default {
     handlePageChange({ page, limit }) {
       Object.assign(this.pagination, {
         current: page || 1,
-        limit,
+        limit: limit || this.pagination.limit,
       });
       if (this.isTemplateTab) {
         this.tableData = this.forntfilterData();
@@ -933,10 +939,14 @@ export default {
     // 前端筛选 & 分页
     forntfilterData() {
       let data = [...this.sourceTableData];
-      const { page, undoneRule, blurryRule } = this.getParams('front');
+      const { page, undoneRule, blurryRule, queryRule } = this.getParams('front');
       // 且
+      if (queryRule && queryRule.length) {
+        data = data.filter(item => queryRule.some(rule => item[rule.field].includes(rule.value)));
+      }
       if (blurryRule && blurryRule.length) {
-        data = data.filter(item => blurryRule.every(rule => item[rule.field].includes(rule.value)));
+        const filterBlurryRule = blurryRule.filter(rule => rule.field);
+        data = data.filter(item => filterBlurryRule.every(rule => item[rule.field].includes(rule.value)));
       }
       // 或
       if (undoneRule && undoneRule.length) {
