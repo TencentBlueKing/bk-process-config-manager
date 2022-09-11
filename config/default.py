@@ -212,6 +212,8 @@ BK_SAAS_HOST = env.BK_SAAS_HOST
 
 BK_ADMIN_USERNAME = os.getenv("BKAPP_ADMIN_USERNAME", "admin")
 
+BKAPP_DOCS_URL = env.BKAPP_DOCS_URL
+
 # 敏感参数,记录请求参数时需剔除
 SENSITIVE_PARAMS = ["app_code", "app_secret", "bk_app_code", "bk_app_secret", "auth_info"]
 

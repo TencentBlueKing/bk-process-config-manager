@@ -36,6 +36,7 @@ def mysetting(request):
         "APP_CODE": settings.APP_CODE,
         "APP_NAME": settings.APP_NAME,
         "SITE_URL": settings.SITE_URL,
+        "BKAPP_DOCS_URL": settings.BKAPP_DOCS_URL,
         "AJAX_URL_PREFIX": settings.SITE_URL,
         # 远程静态资源url
         "REMOTE_STATIC_URL": settings.REMOTE_STATIC_URL,

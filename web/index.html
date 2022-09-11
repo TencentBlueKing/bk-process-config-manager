@@ -21,6 +21,7 @@
                 const CMDB_URL = '{{CMDB_URL}}' // 配置平台路径
                 const LOGIN_URL = '{{LOGIN_URL}}'
                 const APP_NAME = '{{ APP_NAME }}' // 应用名称
+                const BKAPP_DOCS_URL = '{{ BKAPP_DOCS_URL }}' // 文档链接
 
                 // BK_STATIC_URL 不能以 / 结尾
                 if (BK_STATIC_URL.endsWith('/')) {
@@ -43,7 +44,8 @@
                     TAM_AEGIS_URL: TAM_AEGIS_URL,
                     CMDB_URL: CMDB_URL,
                     LOGIN_URL: LOGIN_URL,
-                    APP_NAME: APP_NAME
+                    APP_NAME: APP_NAME,
+                    BKAPP_DOCS_URL: BKAPP_DOCS_URL
                 }
             })()
         </script>

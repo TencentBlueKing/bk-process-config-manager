@@ -9,4 +9,25 @@ an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express o
 See the License for the specific language governing permissions and limitations under the License.
 """
 
+from apps.utils.env import get_type_env
 from .paas_version_diff import *  # noqa
+
+
+__all__ = [
+    # PaaS 部署环境，标准化为 stag / dev
+    "ENVIRONMENT",
+    # esb 访问地址
+    "BK_COMPONENT_API_URL",
+    # 权限中心 SaaS 地址
+    "BK_IAM_SAAS_HOST",
+    # 提供给权限中心的资源回调地址
+    "BK_IAM_RESOURCE_API_HOST",
+    # SaaS 访问地址
+    "BK_SAAS_HOST",
+    "BKAPP_DOCS_URL",
+]
+
+# 文档地址
+BKAPP_DOCS_URL = get_type_env(
+    key="BKAPP_DOCS_URL", default="https://bk.tencent.com/docs/document/7.0/232/30348", _type=str
+)
