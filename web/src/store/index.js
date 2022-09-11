@@ -156,7 +156,13 @@ store.dispatch = function (_type, _payload, config = {}) {
     return;
   }
 
-  store._actionSubscribers.forEach(sub => sub(action, store.state));
+  store._actionSubscribers.forEach((sub) => {
+    if (typeof sub === 'function') {
+      sub(action, store.state);
+    } else if (sub.after && typeof sub.after === 'function') {
+      sub.after && sub.after(action, store.state);
+    }
+  });
 
   return entry.length > 1
     ? Promise.all(entry.map(handler => handler(payload, config)))
