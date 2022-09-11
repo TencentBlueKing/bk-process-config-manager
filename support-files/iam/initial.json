@@ -248,6 +248,45 @@
                     }
                 ]
             }
+        },
+
+        {
+            "operation": "update_common_actions",
+            "data": [
+                {
+                    "name": "业务运维",
+                    "name_en": "Operator",
+                    "actions": [
+                        {
+                            "id": "view_business"
+                        },
+                        {
+                            "id": "create_config_template"
+                        },
+                        {
+                            "id": "edit_config_template"
+                        },
+                        {
+                            "id": "delete_config_template"
+                        },
+                        {
+                            "id": "operate_config"
+                        },
+                        {
+                            "id": "manage_process"
+                        }
+                    ]
+                },
+                {
+                    "name": "业务只读",
+                    "name_en": "Visitor",
+                    "actions": [
+                        {
+                            "id": "view_business"
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }
