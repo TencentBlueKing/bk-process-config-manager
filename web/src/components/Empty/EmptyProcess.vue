@@ -2,9 +2,10 @@
   <div class="empty-process-container">
     <div class="flex-top"></div>
     <div class="empty-process-content" v-if="isEmptyPage">
-      <p class="empty-title">{{ $t('接入GSEKit进程管理') }}</p>
+      <p class="empty-title">{{ $t('接入GSEKit进程管理', [appName]) }}</p>
       <p class="empty-sub-title">
         <i18n tag="p" path="欢迎使用GSEKit">
+          <span>{{ appName }}</span>
           <bk-button text theme="primary" class="reset-icon-btn" @click="handleClick('document')">
             <span class="flex-content">
               {{ $t('帮助文档') }}<i class="gsekit-icon gsekit-icon-jump-fill"></i>
@@ -48,6 +49,7 @@
 import EmptyBox from './EmptyBox';
 import emptyTopoSrc from '@/assets/images/empty-topo.png';
 import emptyProcessSrc from '@/assets/images/empty-process.png';
+import { mapState } from 'vuex';
 
 export default {
   name: 'EmptyProcess',
@@ -71,6 +73,7 @@ export default {
     };
   },
   computed: {
+    ...mapState(['appName']),
     isEmptyPage() {
       return this.emptyType === 'page';
     },

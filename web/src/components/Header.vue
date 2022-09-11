@@ -3,7 +3,7 @@
     <div class="header-left">
       <div class="logo-container" @click="jumpToHome">
         <img class="logo-image" src="../assets/images/favicon.png" alt="Logo">
-        <span class="title">GSEKit</span>
+        <span class="title">{{ appName }}</span>
       </div>
     </div>
     <div class="header-nav" v-test.common="'headNav'">
@@ -69,7 +69,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['username']),
+    ...mapState(['username', 'appName']),
     showStaticRouter() {
       return this.$store.state.showStaticRouter;
     },

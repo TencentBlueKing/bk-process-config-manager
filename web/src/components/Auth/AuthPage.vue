@@ -35,6 +35,7 @@
       </div>
       <p class="empty-footer">
         <i18n path="快速了解GSEkit">
+          <span>{{ appName }}</span>
           <bk-button text theme="primary" class="reset-icon-btn" @click="handleClick('official')">
             <span class="flex-content">
               {{ $t('白皮书文档') }}<i class="ml6 gsekit-icon gsekit-icon-jump-fill"></i>
@@ -58,7 +59,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['bizId']),
+    ...mapState(['bizId', 'appName']),
   },
   methods: {
     ...mapActions('iam', ['ajaxGetAuthApplyInfo']),

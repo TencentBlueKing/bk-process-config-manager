@@ -33,6 +33,7 @@ export default {
     ...mapState(['mainContentLoading', 'authPage']),
   },
   created() {
+    this.$store.commit('updateAppName', window.PROJECT_CONFIG.APP_NAME);
     const platform = window.navigator.platform.toLowerCase();
     if (platform.indexOf('win') === 0) {
       document.body.style['font-family'] = 'Microsoft Yahei, PingFang SC, Helvetica, Aria';
