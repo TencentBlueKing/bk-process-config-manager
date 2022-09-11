@@ -35,6 +35,7 @@ const store = new Vuex.Store({
   },
   // 公共 store
   state: {
+    appName: '',
     mainContentLoading: true,
     pageHeight: document.documentElement.clientHeight,
     bizList: [],
@@ -49,6 +50,9 @@ const store = new Vuex.Store({
   getters: {},
   // 公共 mutations
   mutations: {
+    updateAppName(state, name) {
+      state.appName = name;
+    },
     setMainContentLoading(state, payload) {
       state.mainContentLoading = payload;
     },

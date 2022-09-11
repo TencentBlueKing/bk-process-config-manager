@@ -237,7 +237,7 @@ export default {
           fixed: false,
           hasUndone: false,
           hasChild: true,
-          tips: this.$t('若要使用Gsekit进行进程管理，需完善此基础控制配置'),
+          tips: this.$t('若要使用Gsekit进行进程管理，需完善此基础控制配置', [window.PROJECT_CONFIG.APP_NAME]),
           child: [
             { label: this.$t('启动用户'), prop: 'user', minWidth: 86, fixed: false },
             { label: this.$t('PID 文件路径'), prop: 'pid_file', minWidth: 200, fixed: false },
