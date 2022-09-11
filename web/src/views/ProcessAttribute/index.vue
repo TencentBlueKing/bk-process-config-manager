@@ -30,7 +30,7 @@
       </section>
 
       <section class="content-right">
-        <EmptyServiceBox v-if="isTemplateTab && isEmtpyTemplate" type="template" @change="handleEmptyLink">
+        <EmptyServiceBox v-if="isTemplateTab && isEmtpyTemplate" type="template" @click-link="handleEmptyLink">
         </EmptyServiceBox>
         <!-- <EmptyServiceBox v-else-if="isShowTopoTree && isEmtpyInstance" type="instance" :info="emptyInstanceInfo">
         </EmptyServiceBox> -->
@@ -973,7 +973,7 @@ export default {
     //   return <span class="text-has-tips" v-bk-tooltips={ this.subHeadMap[column.property] }>{ column.label }</span>
     // },
     handleEmptyLink() {
-      const url = `${window.PROJECT_CONFIG.CMDB_URL}/#/business/${this.$store.state.bizId}/service/operational/template?tab=config`;
+      const url = `${window.PROJECT_CONFIG.CMDB_URL}/#/business/${this.$store.state.bizId}/service/template/create`;
       window.open(url, '_blank');
     },
   },
