@@ -1,5 +1,40 @@
 # Release
 
+## 1.0.20 - 2022-09-13 
+
+### 🚀 Features
+
+- feature: 应用名称话术统一 (closed #202 closed #204)
+
+- feat(front): 页面补充帮助文档链接 (closed #205)
+
+- feature: 权限中心新增「业务运维」推荐权限 (#216)
+
+
+### ✨ Optimizations
+
+- optimization: 权限中心系统名称调整 (closed #201)
+
+- optimize(front): 页面应用名称展示优化 (closed #203)
+
+
+### 🐛 Bugfixes
+
+- bugfix: 修复PaaSV2 admin 页面访问异常的问题 (fixed #211)
+
+- bugfix: 修复仅具备业务访问权限可以操作任务重试的问题 (fixed #209)
+
+- bugfix: 修复配置文件下发中搜索不存在的集群、模块等前端提示系统出现异常的问题 (fixed #208)
+
+- fix(front): 按服务模板中当前业务暂无服务模版无法跳转配置平台 (closed #207)
+
+- fix(front): 进程属性中搜索进程异常 (fixed #206)
+
+
+
+**Full Changelog**: https://github.com/TencentBlueKing/bk-process-config-manager/compare/v1.0.19...v1.0.20
+
+
 ## 1.0.19 - 2022-09-01 
 
 ### 🚀 Features
