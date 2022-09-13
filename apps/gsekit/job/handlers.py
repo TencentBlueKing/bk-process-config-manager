@@ -136,7 +136,7 @@ class JobHandlers(APIModel):
                 continue
             if key in ["bk_set_ids", "bk_module_ids", "bk_process_ids", "bk_process_names"]:
                 if key not in ["bk_process_names"]:
-                    treated_value_list = [value for value in value_list if str(value).isdigit()]
+                    treated_value_list = [int(value) for value in value_list if str(value).isdigit()]
                 else:
                     treated_value_list = value_list
                 obj_id = key.split("_")[1]
