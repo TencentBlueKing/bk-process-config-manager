@@ -228,7 +228,6 @@
                 "description_en": ""
             }
         },
-
         {
             "operation": "upsert_resource_creator_actions",
             "data": {
@@ -248,6 +247,35 @@
                     }
                 ]
             }
+        },
+        {
+            "operation": "upsert_common_actions",
+            "data": [
+                {
+                    "name": "业务运维",
+                    "name_en": "Ops Actions",
+                    "actions": [
+                        {
+                            "id": "view_business"
+                        },
+                        {
+                            "id": "create_config_template"
+                        },
+                        {
+                            "id": "edit_config_template"
+                        },
+                        {
+                            "id": "delete_config_template"
+                        },
+                        {
+                            "id": "operate_config"
+                        },
+                        {
+                            "id": "manage_process"
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }
