@@ -482,12 +482,19 @@ export function performTime(startTime, endTime) {
 }
 
 /**
+ * ios 时间初始化问题
+ */
+export function timeReplace(date) {
+  return typeof date === 'string' ? date.replace(/-/gi, '/') : date;
+}
+
+/**
  * 返回日期格式 2020-04-13 09:15:14
  * @param {Number | String} val
  * @return {String}
  */
 export function formatDate(val, fmt = 'YYYY-mm-dd HH:MM:SS') {
-  const date = new Date(val);
+  const date = new Date(timeReplace(val));
 
   if (isNaN(date.getTime())) {
     console.warn('无效的时间');
