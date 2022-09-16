@@ -37,7 +37,7 @@
                     CSRF_COOKIE_NAME: CSRF_COOKIE_NAME,
                     IS_MOCK: IS_MOCK,
                     SITE_URL: SITE_URL,
-                    BK_STATIC_URL: BK_STATIC_URL,
+                    BK_STATIC_URL: `${window.location.protocol}${BK_STATIC_URL}`,
                     AJAX_URL_PREFIX: AJAX_URL_PREFIX,
                     LOGIN_SERVICE_URL: LOGIN_SERVICE_URL,
                     TAM_AEGIS_KEY: TAM_AEGIS_KEY,
