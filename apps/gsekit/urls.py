@@ -40,28 +40,31 @@ biz_router.register(r"migrate", MigrateViewSet, basename="migrate")
 none_biz_router = routers.DefaultRouter(trailing_slash=True)
 none_biz_router.register(r"meta", operations_view.OperationsViewSet, basename="operations")
 
-
-schema_view = get_schema_view(
-    openapi.Info(
-        title=_("{app_name} API").format(app_name=settings.APP_NAME),
-        default_version="v1",
-        description=_(
-            "{app_name} 是腾讯蓝鲸智云推出的一个专注于进程和配置文件管理的 SaaS 工具。\n"
-            "GitHub 开源，欢迎共建：https://github.com/TencentBlueKing/bk-process-config-manager"
-        ).format(app_name=settings.APP_NAME),
-    ),
-    public=True,
-    permission_classes=(permissions.AllowAny,),
-)
-swagger_format_view = schema_view.without_ui(cache_timeout=0)
-setattr(swagger_format_view, "login_exempt", True)
 urlpatterns = [
     url(r"^$", home.index),
     url(r"^metrics/?$", home.metrics),
     url(r"api/(?P<bk_biz_id>\d+)/", include(biz_router.urls)),
     url(r"^", include(none_biz_router.urls)),
-    url(r"^swagger(?P<format>\.json|\.yaml)$", swagger_format_view, name="schema-json"),
-    url(r"^swagger/$", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
-    url(r"^redoc/$", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
     url(r"^", home.index),
 ]
+
+if settings.ENVIRONMENT not in ["production", "prod"]:
+    schema_view = get_schema_view(
+        openapi.Info(
+            title=_("{app_name} API").format(app_name=settings.APP_NAME),
+            default_version="v1",
+            description=_(
+                "{app_name} 是腾讯蓝鲸智云推出的一个专注于进程和配置文件管理的 SaaS 工具。\n"
+                "GitHub 开源，欢迎共建：https://github.com/TencentBlueKing/bk-process-config-manager"
+            ).format(app_name=settings.APP_NAME),
+        ),
+        public=True,
+        permission_classes=(permissions.IsAdminUser,),
+    )
+    swagger_format_view = schema_view.without_ui(cache_timeout=0)
+    setattr(swagger_format_view, "login_exempt", True)
+    urlpatterns += [
+        url(r"^swagger(?P<format>\.json|\.yaml)$", swagger_format_view, name="schema-json"),
+        url(r"^swagger/$", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
+        url(r"^redoc/$", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
+    ]
