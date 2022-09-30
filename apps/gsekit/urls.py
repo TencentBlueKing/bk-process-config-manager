@@ -45,7 +45,6 @@ urlpatterns = [
     url(r"^metrics/?$", home.metrics),
     url(r"api/(?P<bk_biz_id>\d+)/", include(biz_router.urls)),
     url(r"^", include(none_biz_router.urls)),
-    url(r"^", home.index),
 ]
 
 if settings.ENVIRONMENT not in ["production", "prod"]:
@@ -68,3 +67,5 @@ if settings.ENVIRONMENT not in ["production", "prod"]:
         url(r"^swagger/$", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
         url(r"^redoc/$", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
     ]
+
+urlpatterns.append(url(r"^", home.index))

@@ -18,7 +18,12 @@ from django.db.models import Count
 from apps.gsekit.cmdb.handlers.cmdb import CMDBHandler
 from apps.gsekit.configfile import exceptions
 from apps.gsekit.configfile.exceptions import DuplicateTemplateNameException, ConfigTemplateDraftAlreadyExistException
-from apps.gsekit.configfile.models import ConfigTemplate, ConfigTemplateVersion, ConfigTemplateBindingRelationship
+from apps.gsekit.configfile.models import (
+    ConfigTemplate,
+    ConfigTemplateVersion,
+    ConfigTemplateBindingRelationship,
+    ConfigInstance,
+)
 from apps.gsekit.job.handlers import JobHandlers
 from apps.gsekit.job.models import Job, JobStatus
 from apps.gsekit.process.handlers.process import ProcessHandler
@@ -402,10 +407,17 @@ class ConfigTemplateHandler(APIModel):
             config_version_count["config_template_id"]: config_version_count["config_version_count"]
             for config_version_count in config_version_counts
         }
+
+        has_release_config_tmpl_ids = set(
+            ConfigInstance.objects.filter(config_template_id__in=config_template_ids, is_released=True).values_list(
+                "config_template_id", flat=True
+            )
+        )
         for config_template in config_templates:
             config_template_id = config_template["config_template_id"]
             relation_count = config_template_binding_count_map[config_template_id]
             config_template["relation_count"] = relation_count
             config_template["is_bound"] = bool(sum(relation_count.values()))
+            config_template["has_release"] = config_template_id in has_release_config_tmpl_ids
             config_template["has_version"] = bool(config_template_version_map.get(config_template_id, 0))
         return config_templates

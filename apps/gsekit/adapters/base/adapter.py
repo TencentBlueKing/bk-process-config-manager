@@ -19,6 +19,7 @@ from apps.gsekit.pipeline_plugins.components.collections.configfile import (
     BulkGenerateConfigComponent,
     BulkPushConfigComponent,
     BulkBackupConfigComponent,
+    BulkDiffConfigComponent,
 )
 from apps.gsekit.pipeline_plugins.components.collections.gse import (
     GseOpType,
@@ -155,6 +156,21 @@ class BaseChannelAdapters(object):
 
         def bulk_backup_config(self):
             act = ServiceActivity(component_code=BulkBackupConfigComponent.code)
+            act.component.inputs.job_task_id = Var(type=Var.PLAIN, value=self.job_task_ids[0])
+            act.component.inputs.job_task_ids = Var(type=Var.PLAIN, value=self.job_task_ids)
+            act.component.inputs.bk_username = Var(type=Var.PLAIN, value=self.job.created_by)
+            act.component.inputs.bk_biz_id = Var(type=Var.PLAIN, value=self.job.bk_biz_id)
+            return act
+
+    class BulkDiffConfigActivityManager(BulkBaseActivityManager):
+        def bulk_generate_activities(self, global_pipeline_data: Data = None) -> Dict:
+            return {
+                "activities": [self.bulk_diff_config()],
+                "sub_process_data": None,
+            }
+
+        def bulk_diff_config(self):
+            act = ServiceActivity(component_code=BulkDiffConfigComponent.code)
             act.component.inputs.job_task_id = Var(type=Var.PLAIN, value=self.job_task_ids[0])
             act.component.inputs.job_task_ids = Var(type=Var.PLAIN, value=self.job_task_ids)
             act.component.inputs.bk_username = Var(type=Var.PLAIN, value=self.job.created_by)

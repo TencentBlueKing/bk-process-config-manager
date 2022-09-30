@@ -313,6 +313,40 @@ class ConfigTemplateViews(ModelViewSet):
         )
 
     @swagger_auto_schema(
+        operation_summary="现网配置对比",
+        tags=ConfigTemplateViewTags,
+        request_body=config_template_serializer.ReleaseConfigRequestSerializer(),
+        responses={status.HTTP_200_OK: config_template_serializer.ReleaseConfigResponseSerializer()},
+    )
+    @action(methods=["POST"], detail=False, serializer_class=config_template_serializer.ReleaseConfigRequestSerializer)
+    def diff_config(self, request, bk_biz_id, *args, **kwargs):
+        config_template_id = self.validated_data.get("config_template_id")
+        config_version_ids = self.validated_data.get("config_version_ids", [])
+        return Response(
+            JobHandlers(bk_biz_id=bk_biz_id).create_job(
+                job_object=Job.JobObject.CONFIGFILE,
+                job_action=Job.JobAction.DIFF,
+                created_by=request.user.username,
+                scope=self.validated_data.get("scope"),
+                expression_scope=self.validated_data.get("expression_scope"),
+                extra_data={
+                    "config_template_ids": [config_template_id],
+                    "config_version_ids_map": [
+                        {"config_template_id": config_template_id, "config_version_ids": config_version_ids}
+                    ],
+                    "extra_filter_conditions": {
+                        "bk_host_innerips": self.validated_data.get("bk_host_innerips"),
+                        "bk_cloud_ids": self.validated_data.get("bk_cloud_ids"),
+                        "is_auto_list": self.validated_data.get("is_auto_list"),
+                        "process_status_list": self.validated_data.get("process_status_list"),
+                    },
+                }
+                if config_template_id
+                else None,
+            )
+        )
+
+    @swagger_auto_schema(
         operation_summary="获取配置模板列表",
         tags=ConfigTemplateViewTags,
         request_body=config_template_serializer.ListConfigTemplateV2RequestSerializer(),
