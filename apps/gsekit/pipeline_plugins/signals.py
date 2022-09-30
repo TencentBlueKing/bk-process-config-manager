@@ -23,8 +23,19 @@ from apps.gsekit.utils.notification_maker import JobNotificationMaker, ContentTy
 def pipeline_finished_handler(sender, root_pipeline_id, **kwargs):
     """pipeline结束信号处理"""
     # 设置 Job 和 JobTask 的状态
-    Job.objects.filter(pipeline_id=root_pipeline_id).update(status=JobStatus.SUCCEEDED, end_time=timezone.now())
+
     job = Job.objects.get(pipeline_id=root_pipeline_id)
+    status_counter = JobHandlers.get_task_status_counter(JobTask.objects.filter(job_id=job.id))["status_counter"]
+
+    if status_counter.get(JobStatus.FAILED, 0) != 0:
+        job.status = JobStatus.FAILED
+        job.end_time = timezone.now()
+    else:
+        job.status = JobStatus.SUCCEEDED
+        job.end_time = timezone.now()
+
+    job.save(update_fields=["status", "end_time"])
+
     JobTask.objects.filter(job_id=job.id, err_code__in=(JobErrCode.PENDING, JobErrCode.RUNNING)).update(
         err_code=JobErrCode.SUCCEEDED
     )
@@ -101,7 +112,10 @@ def bamboo_engine_eri_post_set_state_handler(node_id, to_state, version, root_id
     if to_state == states.FAILED:
         activity_failed_handler(root_id, node_id)
 
-    if to_state == states.FINISHED and node_id == root_id:
+    if node_id != root_id:
+        return
+
+    if to_state == states.FINISHED:
         pipeline_finished_handler(None, root_id)
-    elif to_state in [states.FAILED, states.REVOKED, states.FINISHED]:
+    elif to_state in [states.FAILED, states.REVOKED]:
         pipeline_failed_handler(root_id)
