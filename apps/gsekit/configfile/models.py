@@ -280,3 +280,14 @@ class ConfigInstance(models.Model):
         verbose_name = _("配置实例（ConfigInstance）")
         verbose_name_plural = _("配置实例（ConfigInstance）")
         ordering = ["-id"]
+
+
+class ConfigSnapshot(OperateRecordModel):
+    config_instance_id = models.BigIntegerField(_("配置实例 ID"), db_index=True)
+    job_instance_id = models.BigIntegerField(_("作业实例ID"), db_index=True)
+    content = CompressedTextField(_("快照内容"))
+    sha256 = models.CharField(_("SHA256"), max_length=64)
+
+    class Meta:
+        verbose_name = _("现网配置快照（ConfigSnapshot）")
+        verbose_name_plural = _("现网配置快照（ConfigSnapshot）")

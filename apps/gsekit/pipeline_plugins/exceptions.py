@@ -37,3 +37,18 @@ class GsePriorityException(PipelineBaseException):
 class JobApiException(PipelineBaseException):
     ERROR_CODE = "004"
     MESSAGE = _("作业平台接口错误")
+
+
+class ConfigInstanceDoseNotExistException(PipelineBaseException):
+    ERROR_CODE = "005"
+    MESSAGE = _("配置实例不存在")
+
+
+class ConfigSnapshotDoseNotExistException(PipelineBaseException):
+    ERROR_CODE = "006"
+    MESSAGE = _("现网配置不存在")
+
+
+class ConfigChangeException(PipelineBaseException):
+    ERROR_CODE = "007"
+    MESSAGE = _("现网配置异常")

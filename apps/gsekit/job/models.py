@@ -102,6 +102,7 @@ class Job(export_job_prometheus_mixin(), models.Model):
     class JobAction(object):
         GENERATE = "generate"
         RELEASE = "release"
+        DIFF = "diff"
         START = "start"
         STOP = "stop"
         RESTART = "restart"
@@ -113,6 +114,7 @@ class Job(export_job_prometheus_mixin(), models.Model):
     JOB_ACTION_CHOICES = (
         (JobAction.GENERATE, _("生成")),
         (JobAction.RELEASE, _("下发")),
+        (JobAction.DIFF, _("检查")),
         (JobAction.START, _("启动")),
         (JobAction.STOP, _("停止")),
         (JobAction.RESTART, _("重启")),

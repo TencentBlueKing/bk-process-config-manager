@@ -13,7 +13,7 @@ from typing import Dict, List
 from django.db.models import Q, Max
 
 from apps.gsekit.configfile import exceptions
-from apps.gsekit.configfile.models import ConfigInstance, ConfigTemplateVersion, ConfigTemplate
+from apps.gsekit.configfile.models import ConfigInstance, ConfigTemplateVersion, ConfigTemplate, ConfigSnapshot
 from apps.gsekit.process.handlers.process import ProcessHandler
 from apps.gsekit.process.models import ProcessInst
 from apps.utils import APIModel
@@ -52,6 +52,16 @@ class ConfigInstanceHandler(APIModel):
             )
             config_template_info = {}
         config_template_info.update(config_instance_info)
+
+        # 补充配置快照信息
+        try:
+            config_snapshot_info = model_to_dict(
+                ConfigSnapshot.objects.get(config_instance_id=config_instance_info["id"])
+            )
+        except ConfigSnapshot.DoesNotExist:
+            # 没有执行配置对比检查的情况下，配置快照为空
+            config_snapshot_info = {}
+        config_template_info["config_snapshot_info"] = config_snapshot_info
         return config_template_info
 
     @classmethod
@@ -245,4 +255,23 @@ class ConfigInstanceHandler(APIModel):
         ).exists():
             # 当前配置文件模板有更高的版本，is_latest置为False
             result["is_latest"] = False
+
+        # 补充现网配置快照
+        try:
+            config_instance_id: int = result["released_config"]["id"]
+            config_snapshot: ConfigSnapshot = ConfigSnapshot.objects.get(config_instance_id=config_instance_id)
+        except (KeyError, ConfigSnapshot.DoesNotExist):
+            # 已发布配置不存在或者不存在相应的快照
+            result["snapshot"] = None
+            return result
+
+        result["snapshot"] = {
+            "id": config_snapshot.id,
+            "content": config_snapshot.content,
+            "config_instance_id": config_snapshot.config_instance_id,
+            "job_instance_id": config_snapshot.job_instance_id,
+            "create_at": config_snapshot.created_at,
+            "update_at": config_snapshot.updated_at,
+        }
+
         return result

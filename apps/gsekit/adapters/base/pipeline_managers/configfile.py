@@ -9,8 +9,9 @@ an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express o
 See the License for the specific language governing permissions and limitations under the License.
 """
 import copy
+from collections import defaultdict
 from functools import reduce
-from typing import Dict
+from typing import Dict, List
 
 from django.db import transaction
 from django.db.models import QuerySet
@@ -35,6 +36,7 @@ class ConfigFilePipelineManager(BasePipelineManager):
         action_manager_map = {
             Job.JobAction.GENERATE: channel_adapter.BulkGenerateConfigActivityManager,
             Job.JobAction.RELEASE: channel_adapter.ReleaseConfigActivityManager,
+            Job.JobAction.DIFF: channel_adapter.BulkDiffConfigActivityManager,
         }
         job_action = self.job.job_action
         try:
@@ -62,6 +64,7 @@ class ConfigFilePipelineManager(BasePipelineManager):
         to_be_created_job_tasks = []
 
         bk_set_env = self.job.scope["bk_set_env"]
+        process_id__config_tmpl_ids_map: Dict[int, List[int]] = defaultdict(list)
         for process_info in process_related_info:
             # 非指定环境类型集群的进程不操作
             if bk_set_env != process_info["set"]["bk_set_env"]:
@@ -69,27 +72,35 @@ class ConfigFilePipelineManager(BasePipelineManager):
             bk_process_id = process_info["process"]["bk_process_id"]
             process_template_id = process_info["process_template"]["id"]
 
-            has_template = True
-            is_selected_version = True
+            # 用于标记是否指定配置模板
+            is_config_specified: bool = False
             for config_template_id in config_template_ids:
-                # 若指定了配置模板，且进程未绑定配置模板，则不创建任务
-                if (
-                    bk_process_id
-                    not in config_template_relation_mapping[config_template_id][Process.ProcessObjectType.INSTANCE]
-                    and process_template_id
-                    not in config_template_relation_mapping[config_template_id][Process.ProcessObjectType.TEMPLATE]
-                ):
-                    has_template = False
-                    break
+                is_config_specified = True
 
-                if not template_id_version_ids_map.get(config_template_id):
+                if not (
+                    bk_process_id
+                    in config_template_relation_mapping[config_template_id][Process.ProcessObjectType.INSTANCE]
+                    or process_template_id
+                    in config_template_relation_mapping[config_template_id][Process.ProcessObjectType.TEMPLATE]
+                ):
+                    # 指定了配置模板，且进程未绑定配置模板，则不创建任务
                     continue
 
-                # 若指定了配置模板版本，则未选择的版本的进程不创建任务
-                if bk_process_id not in config_template_process_mapping.get(config_template_id, []):
-                    is_selected_version = False
+                # 没有指定版本，视为已选择最新版本
+                if not template_id_version_ids_map.get(config_template_id):
+                    process_id__config_tmpl_ids_map[bk_process_id].append(config_template_id)
+                    continue
 
-            if not (has_template and is_selected_version):
+                # 指定配置模板版本，需要判断进程是否具有该版本的实例
+                if bk_process_id in config_template_process_mapping.get(config_template_id, []):
+                    process_id__config_tmpl_ids_map[bk_process_id].append(config_template_id)
+                    continue
+
+            # 获取进程实例关联的配置模板 ID 列表
+            related_config_template_ids: List[int] = process_id__config_tmpl_ids_map[bk_process_id]
+
+            # 指定配置的情况下，如果配置关联检查不合法，跳过该进程的任务创建
+            if is_config_specified and not related_config_template_ids:
                 continue
 
             for proc_inst in proc_inst_map[bk_process_id]:
@@ -98,9 +109,18 @@ class ConfigFilePipelineManager(BasePipelineManager):
                 job_task_extra_data["process_info"] = process_info
                 job_task_extra_data["inst_id"] = proc_inst["inst_id"]
                 job_task_extra_data["local_inst_id"] = proc_inst["local_inst_id"]
+                # 将配置模板绑定关系写入到进程所关联的任务实例，用于后置过滤
+                job_task_extra_data["related_config_info"] = {
+                    "is_config_specified": is_config_specified,
+                    "related_config_template_ids": related_config_template_ids,
+                }
                 job_task_extra_data["config_instances"] = []
                 to_be_created_job_tasks.append(
-                    JobTask(job_id=self.job.id, bk_process_id=bk_process_id, extra_data=job_task_extra_data,)
+                    JobTask(
+                        job_id=self.job.id,
+                        bk_process_id=bk_process_id,
+                        extra_data=job_task_extra_data,
+                    )
                 )
 
         return {

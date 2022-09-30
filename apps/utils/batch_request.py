@@ -107,12 +107,14 @@ def request_multi_thread(
     get_data=lambda x: x.get("info", []) if x else [],
     get_request_target=lambda x: x.get("params", {}),
     interval: float = 0,
+    extend_result: bool = True,
 ):
     """
     并发请求接口，每次按不同参数请求最后叠加请求结果
     :param func: 请求方法
     :param params_list: 参数列表
     :param get_data: 获取数据函数
+    :param extend_result: 是否展开结果
     :param get_request_target:
     :param interval: 任务提交间隔
     :return: 请求结果累计
@@ -135,6 +137,9 @@ def request_multi_thread(
                 time.sleep(interval)
             tasks.append(ex.submit(func, **params))
     for future in as_completed(tasks):
-        result.extend(get_data(future.result()))
+        if extend_result:
+            result.extend(get_data(future.result()))
+        else:
+            result.append(get_data(future.result()))
     connections.close_all()
     return result
