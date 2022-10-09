@@ -45,9 +45,12 @@ const store = new Vuex.Store({
     authMap: {}, // 动作权限
     username: '',
     showStaticRouter: false,
+    lang: '',
   },
   // 公共 getters
-  getters: {},
+  getters: {
+    enLang: state => state.lang === 'en',
+  },
   // 公共 mutations
   mutations: {
     updateAppName(state, name) {
@@ -82,6 +85,9 @@ const store = new Vuex.Store({
     updateToggleStaticRouter(state, isShow) {
       state.showStaticRouter = isShow;
     },
+    updateLang(state, lang) {
+      state.lang = lang;
+    },
 
     routeConfigTemplateList() { // 配置文件模板 ==> 列表
       router.push('/config-file/template');
@@ -101,6 +107,9 @@ const store = new Vuex.Store({
     },
     routeConfigTemplateGenerate(state, { templateId }) { // 配置文件模板 ==> 配置生成
       router.push(`/config-file/template/${templateId}/generate`);
+    },
+    routeConfigTemplateCheck(state, { templateId }) { // 配置文件模板 ==> 配置检查
+      router.push(`/config-file/template/${templateId}/check`);
     },
 
     routeProcessManageStatus() { // 进程管理进程状态列表

@@ -28,6 +28,7 @@ const ConfigFileTemplateVersionList = () => import(/* webpackChunkName: 'ConfigF
 const ConfigFileTemplateVersionDetail = () => import(/* webpackChunkName: 'ConfigFileTemplateVersion' */'@/views/ConfigFile/Template/Version/Detail').catch(() => window.showDeployTip());
 const ConfigFileTemplateDistribute = () => import(/* webpackChunkName: 'ConfigFileTemplateDistribute' */'@/views/ConfigFile/Template/Distribute').catch(() => window.showDeployTip());
 const ConfigFileTemplateGenerate = () => import(/* webpackChunkName: 'ConfigFileTemplateGenerate' */'@/views/ConfigFile/Template/Generate').catch(() => window.showDeployTip());
+const ConfigFileTemplateCheck = () => import(/* webpackChunkName: 'ConfigFileTemplateCheck' */'@/views/ConfigFile/Template/Check').catch(() => window.showDeployTip());
 
 const TaskHistory = () => import(/* webpackChunkName: 'TaskHistory' */'@/views/TaskHistory').catch(() => window.showDeployTip());
 const TaskHistoryList = () => import(/* webpackChunkName: 'TaskHistoryList' */'@/views/TaskHistory/List').catch(() => window.showDeployTip());
@@ -131,6 +132,11 @@ const routes = [
             path: '/config-file/template/:templateId/generate', // 配置文件模板生成
             name: 'config-file-template-generate',
             component: ConfigFileTemplateGenerate,
+          },
+          {
+            path: '/config-file/template/:templateId/check', // 配置检查
+            name: 'config-file-template-check',
+            component: ConfigFileTemplateCheck,
           },
         ],
       },
