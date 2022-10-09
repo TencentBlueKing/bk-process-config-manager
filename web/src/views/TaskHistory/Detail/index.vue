@@ -170,48 +170,53 @@
           <!-- <bk-table-column :label="$t('操作')" :min-width="jobInfo.job_object !== 'process' ? 145 : 100"> -->
           <bk-table-column v-if="showOperateColumn" :label="$t('操作')" :min-width="100">
             <div slot-scope="{ row }" @click.stop>
-              <!-- <template v-if="jobInfo.job_object !== 'process'"> -->
-              <bk-popover :disabled="!!row.instancesConfig || ['running', 'pending'].includes(row.status)"
-                          :content="$t('没有绑定配置实例，暂无法查看')">
-                <bk-button
-                  :disabled="!row.instancesConfig || ['running', 'pending'].includes(row.status)"
-                  theme="primary"
-                  text
-                  style="margin-right: 6px;"
-                  @click="onCheckConfig(row)">
-                  {{ $t('查看配置') }}
-                </bk-button>
-              </bk-popover>
-              <!-- </template> -->
-              <!-- 暂时隐藏单行重试 -->
-              <!-- <bk-popover
-                :disabled="row.status !== 'failed' || row.extra_data.retryable"
-                ext-cls="failed-tips"
-                placement="bottom"
-                theme="light"
-                :max-width="500">
-                <bk-button
-                    :disabled="row.status !== 'failed' || !row.extra_data.retryable"
+              <bk-button v-if="showDiffBtn" theme="primary" text @click="compareConfiguration(row)">
+                {{ $t('配置对比') }}
+              </bk-button>
+              <template v-else>
+                <!-- <template v-if="jobInfo.job_object !== 'process'"> -->
+                <bk-popover :disabled="!!row.instancesConfig || ['running', 'pending'].includes(row.status)"
+                            :content="$t('没有绑定配置实例，暂无法查看')">
+                  <bk-button
+                    :disabled="!row.instancesConfig || ['running', 'pending'].includes(row.status)"
                     theme="primary"
                     text
-                    @click="onRetry(row)">
-                    {{ $t('重试') }}</bk-button>
-                <template slot="content">
-                    <div class="failed-message">
-                        <div class="message-text">{{ '失败信息：' }}</div>
-                        <div v-html="row.extra_data.failed_reason || '--'"></div>
-                    </div>
-                    <div class="resolve-message" v-if="row.extra_data.solutions && row.extra_data.solutions.length">
-                        <div class="message-text">{{ '解决方案：' }}</div>
-                        <div v-for="(soluteItem, index) in row.extra_data.solutions" :key="index">
-                            <div class="solute-item">
-                            <span class="solute-item-order">{{ index + 1 + '.' }}</span>
-                            <div class="solute-item-content" v-html="soluteItem.html"></div>
-                            </div>
-                        </div>
-                    </div>
-                </template>
-              </bk-popover> -->
+                    style="margin-right: 6px;"
+                    @click="onCheckConfig(row)">
+                    {{ $t('查看配置') }}
+                  </bk-button>
+                </bk-popover>
+                <!-- </template> -->
+                <!-- 暂时隐藏单行重试 -->
+                <!-- <bk-popover
+                  :disabled="row.status !== 'failed' || row.extra_data.retryable"
+                  ext-cls="failed-tips"
+                  placement="bottom"
+                  theme="light"
+                  :max-width="500">
+                  <bk-button
+                      :disabled="row.status !== 'failed' || !row.extra_data.retryable"
+                      theme="primary"
+                      text
+                      @click="onRetry(row)">
+                      {{ $t('重试') }}</bk-button>
+                  <template slot="content">
+                      <div class="failed-message">
+                          <div class="message-text">{{ '失败信息：' }}</div>
+                          <div v-html="row.extra_data.failed_reason || '--'"></div>
+                      </div>
+                      <div class="resolve-message" v-if="row.extra_data.solutions && row.extra_data.solutions.length">
+                          <div class="message-text">{{ '解决方案：' }}</div>
+                          <div v-for="(soluteItem, index) in row.extra_data.solutions" :key="index">
+                              <div class="solute-item">
+                              <span class="solute-item-order">{{ index + 1 + '.' }}</span>
+                              <div class="solute-item-content" v-html="soluteItem.html"></div>
+                              </div>
+                          </div>
+                      </div>
+                  </template>
+                </bk-popover> -->
+              </template>
             </div>
           </bk-table-column>
         </bk-table>
@@ -221,6 +226,32 @@
       :instances-config="instancesConfig"
       @onCloseSide="onCloseSide">
     </ViewConfig>
+    <!-- 配置对比 -->
+    <bk-sideslider
+      :is-show.sync="sliderData.isShow"
+      :quick-close="true"
+      :width="1200"
+      @hidden="handleCloseSlider">
+      <div class="config-contrast-header" slot="header">
+        <span>{{ $t('配置对比') }}</span>
+        <span class="divide-line">{{ '-' }}</span>
+        <span class="template-name">
+          {{ sliderData.instancesConfig.name + '(' + sliderData.instancesConfig.label + ')' }}
+        </span>
+      </div>
+      <div v-bkloading="{ isLoading: sliderData.isLoading }" style="height: calc(100vh - 60px);" slot="content">
+        <SidesliderDiff v-if="sliderData.oldData" :old-data="sliderData.oldData" :new-data="sliderData.newData">
+          <template slot="leftTitle">
+            <div class="status-flag">{{ $t('最后下发') }}</div>
+            <div class="create-time">{{ $t('下发时间') + $t('：') + (formatDate(sliderData.oldData.time) || '--') }}</div>
+          </template>
+          <template slot="rightTitle">
+            <div class="status-flag">{{ $t('现网配置') }}</div>
+            <div class="create-time">{{ $t('检查时间') + $t('：') + (formatDate(sliderData.newData.time) || '--') }}</div>
+          </template>
+        </SidesliderDiff>
+      </div>
+    </bk-sideslider>
   </div>
 </template>
 
@@ -228,14 +259,17 @@
 import DetailList from './DetailList';
 import tableHeaderMixins from '@/components/FilterHeader/table-header-mixins';
 import ViewConfig from '@/components/ViewConfig';
-import { performTime, modifyFormatDate, copyText } from '@/common/util';
+import { performTime, modifyFormatDate, copyText, formatDate } from '@/common/util';
 import GenerateFailed from '@/components/GenerateFailed';
+import SidesliderDiff from '@/components/SidesliderDiff';
+
 export default {
   name: 'HistoryDetail',
   components: {
     ViewConfig,
     DetailList,
     GenerateFailed,
+    SidesliderDiff,
   },
   mixins: [tableHeaderMixins],
   props: {
@@ -288,11 +322,24 @@ export default {
         { name: this.$t('成功IP'), key: 'succeeded' },
       ],
       isShowCopy: false,
+      activeVersion: {},
+      sliderData: {
+        isShow: false,
+        isLoading: false,
+        instancesConfig: {},
+        oldData: null, // 配置对比数据
+        newData: null, // 配置对比数据
+      },
+      templateId: null, // 记录上一次拉取版本信息的id, 不做重复拉取
+      formatDate,
     };
   },
   computed: {
     showOperateColumn() {
       return this.jobInfo.job_object !== 'process';
+    },
+    showDiffBtn() {
+      return this.selectedTabCode === 4103007;
     },
   },
   watch: {
@@ -599,6 +646,61 @@ export default {
       this.pagination.current = 1;
       this.pagination.limit = limit;
       this.getTaskHistoryDetail();
+    },
+    // 配置对比 - 获取版本信息
+    async getActiveVersion() {
+      try {
+        const versionRes = await this.$store.dispatch('configTemplate/ajaxGetConfigVersionList', {
+          templateId: this.templateId,
+        });
+        this.activeVersion = versionRes.data.find(item => item.is_active);
+      } catch (e) {
+        console.warn(e);
+      }
+    },
+    // 配置对比
+    async compareConfiguration(row) {
+      try {
+        this.sliderData.isShow = true;
+        this.sliderData.isLoading = true;
+        this.sliderData.instancesConfig = row.instancesConfig[0] || {};
+        const templateId = row.extra_data.config_template_ids[0];
+        const isIdenticalTemp = templateId === this.templateId;
+        const promiseList = [
+          this.$store.dispatch('configInstance/ajaxGetConfigInstanceDetail', { instanceId: this.sliderData.instancesConfig.id }),
+        ];
+        if (!isIdenticalTemp) {
+          this.templateId = templateId;
+          // 获取版本信息 - 拿到配置的language
+          promiseList.push(this.$store.dispatch('configTemplate/ajaxGetConfigVersionList', { templateId }));
+        }
+        const [instanceRes, versionRes] = await Promise.all(promiseList);
+        if (!isIdenticalTemp) {
+          this.activeVersion = versionRes.data.find(item => item.is_active) || {};
+        }
+        const language = this.activeVersion.file_format;
+        // config_snapshot_info快照 实例的实际配置
+        const { content, created_at, config_snapshot_info: snapshot = {} } = instanceRes.data;
+        this.sliderData.newData = {
+          content: snapshot.content,
+          language,
+          time: snapshot.created_at,
+        };
+        this.sliderData.oldData = {
+          content,
+          language,
+          time: created_at,
+        };
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        this.sliderData.isLoading = false;
+      }
+    },
+    // 关闭配置对比后清除数据
+    handleCloseSlider() {
+      this.sliderData.oldData = null;
+      this.sliderData.newData = null;
     },
   },
 };

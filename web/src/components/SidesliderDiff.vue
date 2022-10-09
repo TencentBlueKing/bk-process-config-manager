@@ -95,6 +95,18 @@ export default {
         &:first-child {
           border-right: 1px solid $newBlackColor2;
         }
+        .status-flag {
+          flex-shrink: 0;
+          padding: 0 10px;
+          text-align: center;
+          min-width: 60px;
+          line-height: 52px;
+          color: $newBlackColor3;
+          background: #424242;
+        }
+        .create-time {
+          padding-left: 8px;
+        }
       }
     }
   }

@@ -24,6 +24,7 @@ export default {
       stop: this.$t('停止'),
       restart: this.$t('重启'),
       release: this.$t('下发'),
+      diff: this.$t('检查'),
       reload: this.$t('重载'),
       force_stop: this.$t('强制停止'),
       set_auto: this.$t('托管'),

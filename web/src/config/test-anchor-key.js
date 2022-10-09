@@ -41,6 +41,10 @@ export const testAnchorMap = {
     generateAll: 'btn_generateAll',
     generateFailAll: 'btn_generateFailAll',
   },
+  // 配置检查
+  configCheck: {
+    execute: 'checkExecute',
+  },
   processManage: {
     processManage: 'wrapper_processManage',
     processStatus: 'wrapper_processStatus',
@@ -65,6 +69,7 @@ export const testAnchorMap = {
     release: 'btn_release',
     numConnect: 'btn_numConnect',
     connectProcess: 'btn_connectProcess',
+    configCheck: 'btn_configCheck',
     release: 'btn_release',
     tempForm: 'form_tempForm',
     tempInput: 'input_tempInput',

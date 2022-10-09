@@ -4,14 +4,18 @@
       <div class="header-left">
         <div class="bk-icon icon-down-shape" :class="!showTable && 'close'" @click="showTable = !showTable"></div>
         <div class="config-name">{{ configTemplate.template_name + ' / ' + configTemplate.file_name }}</div>
-        <div class="version-to-dis" v-if="versionList.length">
-          {{ $t('（') + ('即将下发') }}
+        <i18n
+          class="version-to-dis"
+          v-if="versionList.length"
+          tag="div"
+          :path="isConfigCheck ? '最后一次下发版本' : '即将下发版本'">
           <span class="blue" v-bk-tooltips="activeTippy">#{{ activeVersion.config_version_id }}</span>
-          {{ $t('版本') + $t('）') }}
-        </div>
+        </i18n>
       </div>
       <div v-if="curStep === 1" class="header-right-1">
-        <template v-if="selectedVersionIds.length">
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <span v-if="isConfigCheck" v-html="$t('已选x个', { x: totalCount })"></span>
+        <template v-else-if="selectedVersionIds.length">
           <div class="version-selector selected" @click="toggleVersionList">
             <div class="gsekit-icon gsekit-icon-filter-fill blue"></div>
             {{ $t('已选x个版本', { x: `${selectedVersionIds.length}/${usedVersionList.length}` }) }}
@@ -99,7 +103,12 @@
         </bk-table-column>
         <bk-table-column :label="$t('操作')" min-width="10" key="compareConfiguration">
           <template slot-scope="{ row }">
-            <bk-button theme="primary" text @click="compareConfiguration(row)">{{ $t('配置对比') }}</bk-button>
+            <bk-button v-if="isConfigCheck" theme="primary" text @click="handleViewConfig(row)">
+              {{ $t('查看配置') }}
+            </bk-button>
+            <bk-button v-else theme="primary" text @click="compareConfiguration(row)">
+              {{ $t('配置对比') }}
+            </bk-button>
           </template>
         </bk-table-column>
       </template>
@@ -187,6 +196,10 @@ export default {
     GenerateFailed,
   },
   props: {
+    action: {
+      type: String,
+      default: '',
+    },
     curStep: {
       type: Number,
       default: 1,
@@ -263,6 +276,9 @@ export default {
   computed: {
     templateId() {
       return Number(this.configTemplate.config_template_id);
+    },
+    isConfigCheck() {
+      return this.action === 'configCheck';
     },
     // 版本有在使用的版本列表
     usedVersionList() {
@@ -699,13 +715,19 @@ export default {
     distributeConfig() {
       return new Promise(async (resolve) => {
         try {
-          const res = await this.$store.dispatch('configTemplate/ajaxSetReleaseConfig', {
-            data: {
-              config_template_id: this.templateId,
+          const actionMethod = `configTemplate/${this.isConfigCheck ? 'ajaxSetDiffConfig' : 'ajaxSetReleaseConfig'}`;
+          const data = {
+            config_template_id: this.templateId,
+          };
+          if (this.isConfigCheck) {
+            data.scope = this.selectedScope;
+          } else {
+            Object.assign(data, {
               [this.isDropdownMode ? 'scope' : 'expression_scope']: this.selectedScope,
               config_version_ids: this.selectedVersionIds,
-            },
-          });
+            });
+          }
+          const res = await this.$store.dispatch(actionMethod, { data });
           resolve({ jobId: res.data.job_id });
         } catch (e) {
           console.warn(e);
