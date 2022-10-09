@@ -53,6 +53,7 @@ export default {
     window.bus.$on('show-permission-modal', (data) => {
       this.$refs.authModal.show(data);
     });
+    this.$store.commit('updateLang', window.language);
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.resizeListener);
@@ -308,6 +309,10 @@ export default {
   .bk-table .table-operation-container {
     display: flex;
     align-items: center;
+
+    .bk-button-text + .bk-button-text {
+      margin-left: 12px;
+    }
 
     .dot-menu-trigger {
       display: flex;

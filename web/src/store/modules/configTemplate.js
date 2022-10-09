@@ -76,6 +76,11 @@ export default {
       const url = `api/${rootState.bizId}/config_template/release_config/`;
       return http.post(url, data);
     },
+    // 配置文件检查
+    ajaxSetDiffConfig({ rootState }, { data }) {
+      const url = `api/${rootState.bizId}/config_template/diff_config/`;
+      return http.post(url, data);
+    },
 
     // 同步配置生成
     ajaxSyncGenerateConfig({ rootState }, { templateId, data }) {

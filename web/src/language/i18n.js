@@ -22,5 +22,6 @@ const i18n = new VueI18n({
   silentTranslationWarn: false,
 });
 locale.i18n((key, value) => i18n.t(key, value));
+window.language = localLanguage;
 
 export default i18n;

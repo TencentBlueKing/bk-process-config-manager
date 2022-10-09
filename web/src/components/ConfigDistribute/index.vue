@@ -65,6 +65,7 @@
           <InstanceTable
             :key="temp.config_template_id"
             :ref="`tableRef_${temp.config_template_id}`"
+            :action="action"
             :cur-step="curStep"
             :origin-list="instanceTotalList[temp.config_template_id]"
             :is-tasking.sync="isTasking"
@@ -79,33 +80,43 @@
       <!-- 第一步(下一步，取消)，第二步(立即下发,上一步，取消) -->
       <div class="buttons-below" v-show="!basicLoading">
         <bk-button
-          v-show="curStep === 1"
-          v-test.common="'stepNext'"
+          v-if="isConfigCheck"
+          v-test.configCheck="'execute'"
           theme="primary"
           style="min-width: 120px;margin-right: 10px;"
-          :disabled="!canNextStep"
-          @click="handleNext">
-          {{ $t('下一步') }}
+          @click="handleDistribute">
+          {{ $t('立即执行') }}
         </bk-button>
-        <div v-show="curStep === 2" v-bk-tooltips="{ content: $t('所有配置生成成功方能下发'), disabled: isAllGeneratedSuccess }">
+        <template v-else>
           <bk-button
+            v-show="curStep === 1"
+            v-test.common="'stepNext'"
             theme="primary"
             style="min-width: 120px;margin-right: 10px;"
-            v-test.form="'submit'"
-            :loading="distributeLoading"
-            :disabled="isTasking || !isAllGeneratedSuccess"
-            @click="handleDistribute">
-            {{ $t('立即下发') }}
+            :disabled="!canNextStep"
+            @click="handleNext">
+            {{ $t('下一步') }}
           </bk-button>
-        </div>
-        <bk-button
-          v-show="curStep === 2"
-          v-test.common="'stepPrev'"
-          style="min-width: 86px;margin-right: 10px;"
-          :disabled="isTasking"
-          @click="handlePrevious">
-          {{ $t('上一步') }}
-        </bk-button>
+          <div v-show="curStep === 2" v-bk-tooltips="{ content: $t('所有配置生成成功方能下发'), disabled: isAllGeneratedSuccess }">
+            <bk-button
+              theme="primary"
+              style="min-width: 120px;margin-right: 10px;"
+              v-test.form="'submit'"
+              :loading="distributeLoading"
+              :disabled="isTasking || !isAllGeneratedSuccess"
+              @click="handleDistribute">
+              {{ $t('立即下发') }}
+            </bk-button>
+          </div>
+          <bk-button
+            v-show="curStep === 2"
+            v-test.common="'stepPrev'"
+            style="min-width: 86px;margin-right: 10px;"
+            :disabled="isTasking"
+            @click="handlePrevious">
+            {{ $t('上一步') }}
+          </bk-button>
+        </template>
         <bk-button style="min-width: 86px;" @click="handleCancel">
           {{ $t('取消') }}
         </bk-button>
@@ -125,6 +136,10 @@ export default {
     InstanceTable,
   },
   props: {
+    action: {
+      type: String,
+      default: '',
+    },
     selectedConfig: { // 配置文件入口，单个配置
       type: Object,
       default: null,
@@ -165,6 +180,11 @@ export default {
       isTasking: false, // 是否有配置正在生成或下发
       isAllGeneratedSuccess: false, // 是否所有配置生成成功
     };
+  },
+  computed: {
+    isConfigCheck() {
+      return this.action === 'configCheck';
+    },
   },
   watch: {
     curStep(val) {
@@ -366,6 +386,17 @@ export default {
     async handleDistribute() {
       this.isTasking = true;
       this.distributeLoading = true;
+      if (this.isConfigCheck) {
+        const validTableRefs = [];
+        this.selectedTemplateIds.forEach((id) => {
+          const componentInstance = this.$refs[`tableRef_${id}`][0];
+          if (componentInstance.filterInstanceList.length > 0) {
+            componentInstance.initTableData();
+            validTableRefs.push(componentInstance);
+          }
+        });
+        this.validTableRefs = validTableRefs;
+      }
       const promiseList = this.validTableRefs.map(vm => vm.distributeConfig());
       const result = await Promise.all(promiseList);
       if (result.length === 1) {

@@ -46,15 +46,6 @@ export default {
   },
   mounted() {
     this.initEditor();
-    // monacoEditor.onDidChangeMarkers(([uri]) => {
-    //   const markers = monacoEditor.getModelMarkers({ resource: uri });
-    //   this.$emit('markers',  markers.map(({ owner, code, message, startLineNumber, startColumn, endLineNumber, endColumn }) => ({
-    //     owner,
-    //     message,
-    //     code,
-    //     lineRange: `${startLineNumber}:${startColumn}-${endLineNumber}:${endColumn}`,
-    //   })));
-    // });
     this.setEditorBackground();
     window.bus.$on('resize', this.layoutEditor);
     window.bus.$on('navigation-toggle', this.onNavigationToggle);
