@@ -111,6 +111,7 @@ def bamboo_engine_eri_post_set_state_handler(node_id, to_state, version, root_id
     # 适配bamboo_engine信号
     if to_state == states.FAILED:
         activity_failed_handler(root_id, node_id)
+        pipeline_failed_handler(root_id)
 
     if node_id != root_id:
         return

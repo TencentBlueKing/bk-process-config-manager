@@ -260,7 +260,7 @@ class ConfigInstanceHandler(APIModel):
         try:
             config_instance_id: int = result["released_config"]["id"]
             config_snapshot: ConfigSnapshot = ConfigSnapshot.objects.get(config_instance_id=config_instance_id)
-        except (KeyError, ConfigSnapshot.DoesNotExist):
+        except (KeyError, TypeError, ConfigSnapshot.DoesNotExist):
             # 已发布配置不存在或者不存在相应的快照
             result["snapshot"] = None
             return result
