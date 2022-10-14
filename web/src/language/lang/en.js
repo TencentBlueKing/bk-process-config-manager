@@ -155,6 +155,7 @@ export default {
   '没有可用版本，无法进行配置下发': 'No version available, unable to distribute config',
   '未关联进程，无法进行配置下发': 'Has not associated with any process, unable to distribute config',
   '未关联进程，无法进行配置下发，点击关联': 'Has not associated with any process. Config distribute is unavailable. Click to associate.',
+  '没有可用版本，无法进行配置生成': 'No version available, configuration generation is not possible',
   检查: 'Checking',
   配置检查: 'Check config',
   '未下发配置，无法进行配置检查': 'The configuration cannot be checked because the configuration has not been delivered.',

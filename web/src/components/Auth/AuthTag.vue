@@ -1,6 +1,6 @@
 <template>
   <component
-    :class="['auth-box', extCls, { 'auth-box-diabled': !authorized }]"
+    :class="['auth-box', extCls, { 'auth-box-disabled': !authorized }]"
     :is="tag"
     v-cursor="{
       active: !authorized
@@ -77,7 +77,7 @@ export default {
     display: inline-block;
   }
 
-  .auth-box-diabled {
+  .auth-box-disabled {
     color: #dcdee5;
   }
 </style>
