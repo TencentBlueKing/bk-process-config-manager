@@ -118,7 +118,7 @@ export default {
             font-size: 16px;
             cursor: pointer;
 
-            &:not(.auth-box-diabled):hover {
+            &:not(.auth-box-disabled):hover {
               color: $newMainColor;
             }
           }

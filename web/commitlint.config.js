@@ -18,6 +18,7 @@ module.exports = {
             [
                 'style', // '样式更新'
                 'feat', // '新增功能'
+                'sprintfix', // 已经提交的功能新增一些小需求
                 'fix', // '缺陷修复'
                 'perf', // '性能优化'
                 'optimize', // '功能优化'

@@ -135,12 +135,20 @@
             <ul class="dot-menu-list" slot="content">
               <AuthTag
                 tag="li"
-                class="dot-menu-item"
+                :class="['dot-menu-item cover', { 'disabled': !row.has_version }]"
                 v-test.common="'moreItem'"
                 action="operate_config"
                 :authorized="authMap.operate_config"
-                @click="operateGenerate(row)">
-                {{ $t('配置生成') }}
+                @click="row.has_version && operateGenerate(row)">
+                <div
+                  style="padding: 0 16px;"
+                  slot-scope="{ disabled }"
+                  v-bk-tooltips="{
+                    content: $t('没有可用版本，无法进行配置生成'),
+                    disabled: disabled || row.has_version
+                  }">
+                  {{ $t('配置生成') }}
+                </div>
               </AuthTag>
               <AuthTag
                 tag="li"
