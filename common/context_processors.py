@@ -42,7 +42,7 @@ def mysetting(request):
         "REMOTE_STATIC_URL": settings.REMOTE_STATIC_URL,
         # 静态资源
         "STATIC_URL": settings.STATIC_URL,
-        "BK_STATIC_URL": f"{settings.STATIC_URL}dist",
+        "BK_STATIC_URL": f"{settings.BKAPP_STATIC_PROTOCOL_PREFIX}{settings.STATIC_URL}dist",
         "STATIC_VERSION": settings.STATIC_VERSION,
         # 登录跳转链接
         "LOGIN_URL": ConfFixture.LOGIN_URL,

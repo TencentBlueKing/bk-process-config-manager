@@ -25,9 +25,13 @@ __all__ = [
     # SaaS 访问地址
     "BK_SAAS_HOST",
     "BKAPP_DOCS_URL",
+    "BKAPP_STATIC_PROTOCOL_PREFIX",
 ]
 
 # 文档地址
 BKAPP_DOCS_URL = get_type_env(
     key="BKAPP_DOCS_URL", default="https://bk.tencent.com/docs/document/7.0/232/30348", _type=str
 )
+
+# 站点协议前缀，用于静态文件访问链接异常的场景
+BKAPP_STATIC_PROTOCOL_PREFIX = get_type_env("BKAPP_STATIC_PROTOCOL_PREFIX", default="", _type=str)
