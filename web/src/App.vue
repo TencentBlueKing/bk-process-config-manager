@@ -355,14 +355,21 @@ export default {
         color: $newBlackColor2;
         line-height: 32px;
         cursor: pointer;
+        &.cover {
+          padding: 0;
+        }
 
         &:hover {
           background-color: #e5efff;
           color: $newMainColor;
         }
 
-        &.auth-box-diabled {
+        &.auth-box-disabled {
           color: #dcdee5;
+        }
+        &.disabled {
+          color: #dcdee5;
+          cursor: not-allowed;
         }
       }
 
