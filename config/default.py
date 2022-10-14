@@ -230,6 +230,8 @@ CONCURRENT_NUMBER = int(os.getenv("BKAPP_CONCURRENT_NUMBER", 50))
 # 适配类型
 ADAPTER_TYPE = os.getenv("BKAPP_ADAPTER_TYPE", "base")
 
+BKAPP_STATIC_PROTOCOL_PREFIX = env.BKAPP_STATIC_PROTOCOL_PREFIX
+
 # ==============================================================================
 # IAM
 # ==============================================================================
