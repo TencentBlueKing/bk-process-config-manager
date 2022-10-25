@@ -65,7 +65,7 @@
     </div>
     <bk-table
       class="king-table"
-      :max-height="464"
+      :max-height="maxHeight"
       :data="tableLoadedList"
       :empty-text="$t('当前指定范围未能匹配到实例，请确认所选范围是否有误，或对应范围是否存在主机')"
       v-show="showTable"
@@ -103,9 +103,18 @@
         </bk-table-column>
         <bk-table-column :label="$t('操作')" min-width="10" key="compareConfiguration">
           <template slot-scope="{ row }">
-            <bk-button v-if="isConfigCheck" theme="primary" text @click="handleViewConfig(row)">
-              {{ $t('查看配置') }}
-            </bk-button>
+            <bk-popover
+              v-if="isConfigCheck"
+              :disabled="row.status === 'generated' && row.config_instance_id"
+              :content="row.status === 'not_generated' ? $t('未生成配置，请先生成并下发配置再进行配置检查 ') : $t('请先下发配置再进行配置检查')">        
+              <bk-button
+                theme="primary"
+                text
+                :disabled="row.status === 'not_generated' || !row.config_instance_id"
+                @click="handleViewConfig(row)">
+                {{ $t('查看配置') }}
+              </bk-button>
+            </bk-popover>
             <bk-button v-else theme="primary" text @click="compareConfiguration(row)">
               {{ $t('配置对比') }}
             </bk-button>
@@ -224,6 +233,10 @@ export default {
       type: Object,
       required: true,
     },
+    maxHeight: {
+      type: Number,
+      default: 464
+    }
   },
   data() {
     return {
