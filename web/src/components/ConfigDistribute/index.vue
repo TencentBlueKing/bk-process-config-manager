@@ -3,7 +3,7 @@
        v-test.release="'release'" v-bkloading="{ isLoading: fakeLoading }">
     <div class="distribute-above">
       <!-- 步骤显示 -->
-      <div class="steps-container">
+      <div class="steps-container" v-if="!isConfigCheck" >
         <bk-steps class="king-steps" :cur-step="curStep" :steps="steps"></bk-steps>
       </div>
       <!-- 第一步选择范围 -->
@@ -72,6 +72,7 @@
             :is-dropdown-mode="isDropdownMode"
             :selected-scope="selectedScope"
             :config-template="temp"
+            :max-height="maxHeight" 
             @update-version="updateInstanceVersion" />
         </template>
       </div>
@@ -184,6 +185,9 @@ export default {
   computed: {
     isConfigCheck() {
       return this.action === 'configCheck';
+    },
+    maxHeight() {
+      return this.isConfigCheck ? this.$store.state.pageHeight - 317 : 464;
     },
   },
   watch: {
