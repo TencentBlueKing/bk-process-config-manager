@@ -9,7 +9,7 @@ introduction_en: Process&config manager
 description: 进程配置管理是腾讯蓝鲸智云推出的一个专注于进程和配置文件管理的 SaaS 工具。
 description_en: Process&config manager is a SaaS tool launched by Tencent BlueKing
   that focuses on process and configuration file management.
-version: 1.0.22
+version: 1.0.23
 category: 运维工具
 language_support: 英语,中文
 desktop:
