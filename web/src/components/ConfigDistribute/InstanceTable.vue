@@ -106,7 +106,7 @@
             <bk-popover
               v-if="isConfigCheck"
               :disabled="row.status === 'generated' && row.config_instance_id"
-              :content="row.status === 'not_generated' ? $t('未生成配置，请先生成并下发配置再进行配置检查 ') : $t('请先下发配置再进行配置检查')">        
+              :content="row.status === 'not_generated' ? $t('未生成配置，请先生成并下发配置再进行配置检查 ') : $t('请先下发配置再进行配置检查')">
               <bk-button
                 theme="primary"
                 text
@@ -235,8 +235,8 @@ export default {
     },
     maxHeight: {
       type: Number,
-      default: 464
-    }
+      default: 464,
+    },
   },
   data() {
     return {
@@ -731,14 +731,10 @@ export default {
           const actionMethod = `configTemplate/${this.isConfigCheck ? 'ajaxSetDiffConfig' : 'ajaxSetReleaseConfig'}`;
           const data = {
             config_template_id: this.templateId,
+            [this.isDropdownMode ? 'scope' : 'expression_scope']: this.selectedScope,
           };
-          if (this.isConfigCheck) {
-            data.scope = this.selectedScope;
-          } else {
-            Object.assign(data, {
-              [this.isDropdownMode ? 'scope' : 'expression_scope']: this.selectedScope,
-              config_version_ids: this.selectedVersionIds,
-            });
+          if (!this.isConfigCheck) {
+            data.config_version_ids = this.selectedVersionIds;
           }
           const res = await this.$store.dispatch(actionMethod, { data });
           resolve({ jobId: res.data.job_id });
