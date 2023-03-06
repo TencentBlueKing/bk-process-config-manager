@@ -39,6 +39,7 @@
       <bk-table-column
         prop="job_object"
         :label="$t('任务对象')"
+        :min-width="columnMinWidth['job_object']"
         :render-header="renderFilterHeader">
         <template slot-scope="props">
           <span>{{ jobObject[props.row.job_object] }}</span>
@@ -46,33 +47,46 @@
       <bk-table-column
         prop="job_action"
         :label="$t('动作')"
+        :min-width="columnMinWidth['job_action']"
         :render-header="renderFilterHeader">
         <template slot-scope="props">
           <span>{{ jobAction[props.row.job_action] }}</span>
         </template></bk-table-column>
-      <bk-table-column prop="job_object" :label="$t('环境类型')">
+      <bk-table-column prop="job_env" :label="$t('环境类型')" :min-width="columnMinWidth['job_env']">
         <template slot-scope="{ row }">
           <span>{{ setEnv[row.expression_scope.bk_set_env] || '--' }}</span>
         </template></bk-table-column>
-      <bk-table-column prop="expression" :label="$t('操作范围')" width="180">
+      <bk-table-column prop="expression" :label="$t('操作范围')" :min-width="columnMinWidth['expression']">
         <div v-bk-overflow-tips slot-scope="{ row }">
           {{ row.expression }}
         </div>
       </bk-table-column>
-      <bk-table-column prop="created_by"
-                       :label="$t('执行账户')"
-                       :render-header="renderFilterHeader"></bk-table-column>
-      <bk-table-column prop="start_time" :label="$t('开始时间')" sortable="custom" min-width="120">
+      <bk-table-column
+        prop="created_by"
+        :label="$t('执行账户')"
+        show-overflow-tooltip
+        :min-width="columnMinWidth['created_by']"
+        :render-header="renderFilterHeader" />
+      <bk-table-column
+        prop="start_time"
+        :label="$t('开始时间')"
+        sortable="custom"
+        :min-width="columnMinWidth['start_time']">
         <template slot-scope="props">
           <div v-bk-overflow-tips>{{ props.row.start_time || '--' }}</div>
         </template>
       </bk-table-column>
-      <bk-table-column prop="end_time" :label="$t('结束时间')" sortable="custom" min-width="120">
+      <bk-table-column
+        prop="end_time"
+        :label="$t('结束时间')"
+        sortable="custom"
+        :min-width="columnMinWidth['end_time']">
         <template slot-scope="props">
           <div v-bk-overflow-tips>{{ props.row.end_time || '--' }}</div>
         </template>
       </bk-table-column>
-      <bk-table-column prop="timeout" :label="$t('执行耗时')" width="100">
+      <bk-table-column prop="timeout" :label="$t('执行耗时')"
+                       :min-width="columnMinWidth['timeout']">
         <template slot-scope="props">
           <span>{{ props.row.timeout || '--' }}</span>
         </template>
@@ -80,7 +94,8 @@
       <bk-table-column
         prop="status"
         :label="$t('执行状态')"
-        :render-header="renderFilterHeader">
+        :render-header="renderFilterHeader"
+        :min-width="columnMinWidth['status']">
         <template slot-scope="{ row }">
           <!-- 执行状态 -->
           <StatusView v-if="row.status === 'succeeded'" type="success" :text="$t('执行成功')" />
@@ -89,7 +104,7 @@
           <StatusView v-else type="loading" :text="$t('等待中')" />
         </template>
       </bk-table-column>
-      <bk-table-column :label="$t('操作')" min-width="60">
+      <bk-table-column :label="$t('操作')" :min-width="columnMinWidth['operate']">
         <div slot-scope="props" @click.stop>
           <bk-button
             v-test="'taskRetry'"
@@ -100,6 +115,11 @@
             {{ $t('重试') }}</bk-button>
         </div>
       </bk-table-column>
+      <TableException
+        slot="empty"
+        :delay="isLoading"
+        :type="tableEmptyType"
+        @empty-clear="emptySearchClear" />
     </bk-table>
   </div>
 </template>
@@ -107,6 +127,8 @@
 <script>
 import { performTime, modifyFormatDate, formatDate } from '@/common/util';
 import tableHeaderMixins from '@/components/FilterHeader/table-header-mixins';
+import { debounce } from 'lodash';
+
 export default {
   name: 'HistoryList',
   mixins: [tableHeaderMixins],
@@ -170,12 +192,35 @@ export default {
       runningList: [], // 列表正在执行中id
       selectedIdList: [],
       historyListTimer: null,
+      getTaskHistoryList: () => {},
+      columnList: [
+        { id: 'job_object', label: this.$t('任务对象'), sortable: false, filter: true },
+        { id: 'job_action', label: this.$t('动作'), sortable: false, filter: true },
+        { id: 'job_env', label: this.$t('环境类型'), sortable: false, filter: false },
+        { id: 'expression', label: this.$t('操作范围'), sortable: false, filter: false },
+        { id: 'created_by', label: this.$t('执行账户'), sortable: false, filter: true },
+        { id: 'start_time', label: this.$t('开始时间'), sortable: true, filter: false },
+        { id: 'end_time', label: this.$t('结束时间'), sortable: true, filter: false },
+        { id: 'timeout', label: this.$t('执行耗时'), sortable: false, filter: false },
+        { id: 'status', label: this.$t('执行状态'), sortable: false, filter: true },
+        { id: 'operate', label: this.$t('操作'), sortable: false, filter: false },
+      ],
+      columnMinWidth: {},
     };
+  },
+  computed: {
+    tableEmptyType() {
+      return (this.initDateTimeRange.some(date => !!date) || this.searchSelectValue.length)
+        ? 'search-empty'
+        : 'empty';
+    },
   },
   beforeDestroy() {
     clearTimeout(this.historyListTimer);
   },
   created() {
+    this.computedColumnWidth();
+    this.getTaskHistoryList = debounce(this.getTaskHistoryListSource, 300);
     const highlightIds = sessionStorage.getItem('taskHistoryHighlightIds');
     if (highlightIds) {
       this.selectedIdList = highlightIds.split(',').map(item => Number(item));
@@ -186,7 +231,7 @@ export default {
   },
   methods: {
     // 获取配置文件列表
-    async getTaskHistoryList() {
+    async getTaskHistoryListSource() {
       try {
         this.isLoading = true;
         const query = this.getSearchParams();
@@ -357,6 +402,20 @@ export default {
       this.runningList = [];
       this.pagination.current = page;
       this.getTaskHistoryList();
+    },
+    computedColumnWidth() {
+      const widthMap = {};
+      this.columnList.reduce((obj, item) => {
+        obj[item.id] = this.$textTool.getHeadWidth(item.label, item);
+        return obj;
+      }, widthMap);
+      this.columnMinWidth = widthMap;
+    },
+    emptySearchClear() {
+      this.isLoading = true;
+      this.handleClearDate();
+      this.searchSelectValue = [];
+      this.handleSearchSelectChange(this.searchSelectValue);
     },
   },
 };

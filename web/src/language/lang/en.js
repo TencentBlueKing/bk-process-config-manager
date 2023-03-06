@@ -446,6 +446,12 @@ export default {
   无拓扑提示: 'Define business modules and create service instances in {0}',
   完善进程信息提示: 'Complete process information in {0}',
   暂无服务实例: '(No service instance yet)',
+  可以尝试调整关键词或清空筛选条件: 'You can try to adjust keywords or {0}',
+  清空筛选条件: 'Clear filter',
+  搜索结果为空: 'Search result is empty',
+  获取数据异常: 'Get data exception',
+  获取数据异常: 'Get data exception',
+  刷新: 'To refresh',
 
   // 进程属性
   进程总数: 'Process ({0} in total)',

@@ -26,7 +26,10 @@
         <bk-table-column
           v-if="parent.isExpandable && !parent.isExpand"
           align="center"
-          :prop="parent.key"
+          v-bind="{
+            ...parent,
+            prop: parent.key
+          }"
           :render-header="headRenderStatus">
           <template slot-scope="{ row }">
             <img class="status-img" :src="getGroupStatus(row, parent.child)">
@@ -74,6 +77,7 @@
                 </div>
                 <div
                   v-else
+                  v-bk-overflow-tips
                   :class="['text-content', { 'disabled': row.disabled }]"
                   @click="handleEditfocus(head.prop, row, $index)">
                   <bk-popover :disabled="!row.disabled" placement="top" theme="light">
@@ -104,6 +108,12 @@
       <bk-table-column v-if="rightShadow" fixed="right" :width="1">
         <bk-table-column fixed="right" :width="1" />
       </bk-table-column>
+
+      <TableException
+        slot="empty"
+        :delay="loading"
+        :type="emptyType"
+        @empty-clear="emptySearchClear" />
     </bk-table>
   </div>
 </template>
@@ -153,6 +163,10 @@ export default {
     emptyText: {
       type: String,
       default: '',
+    },
+    emptyType: {
+      type: String,
+      default: 'empty',
     },
   },
   data() {
