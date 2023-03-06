@@ -102,27 +102,32 @@
           :pagination="pagination"
           @page-change="handlePageChange"
           @page-limit-change="handlePageLimitChange">
-          <bk-table-column :label="$t('集群')" prop="set_name" :render-header="renderFilterHeader">
+          <bk-table-column :label="$t('集群')" prop="set_name" :render-header="renderFilterHeader" show-overflow-tooltip>
             <template slot-scope="{ row }">
               <span>{{ row.bk_set_name || '--' }}</span>
             </template>
           </bk-table-column>
-          <bk-table-column :label="$t('模块')" prop="template_name" :render-header="renderFilterHeader">
+          <bk-table-column
+            :label="$t('模块')" prop="template_name" :render-header="renderFilterHeader" show-overflow-tooltip>
             <template slot-scope="{ row }">
               <span>{{ row.bk_module_name || '--' }}</span>
             </template>
           </bk-table-column>
-          <bk-table-column :label="$t('服务实例')" min-width="180" prop="server_instance">
+          <bk-table-column :label="$t('服务实例')" min-width="180" prop="server_instance" show-overflow-tooltip>
             <template slot-scope="{ row }">
               <span>{{ row.name || '--' }}</span>
             </template>
           </bk-table-column>
-          <bk-table-column :label="$t('进程别名')" prop="process_name" :render-header="renderFilterHeader">
+          <bk-table-column
+            :label="$t('进程别名')"
+            prop="process_name"
+            show-overflow-tooltip
+            :render-header="renderFilterHeader">
             <template slot-scope="{ row }">
               <span>{{ row.bk_process_name || '--' }}</span>
             </template>
           </bk-table-column>
-          <bk-table-column label="process_id" prop="bk_process_id">
+          <bk-table-column label="process_id" prop="bk_process_id" show-overflow-tooltip>
             <template slot-scope="{ row }">
               <span>{{ row.bk_process_id || '--' }}</span>
             </template>
@@ -142,7 +147,7 @@
               <span>{{ row.bk_host_innerip || '--' }}</span>
             </template>
           </bk-table-column>
-          <bk-table-column :label="$t('执行耗时')" prop="timeout" width="100">
+          <bk-table-column :label="$t('执行耗时')" prop="timeout" width="100" show-overflow-tooltip>
             <template slot-scope="{ row }">
               <span>{{ row.timeout || '--' }}</span>
             </template>
@@ -219,6 +224,11 @@
               </template>
             </div>
           </bk-table-column>
+          <TableException
+            slot="empty"
+            :delay="isTableLoading"
+            :type="tableEmptyType"
+            @empty-clear="emptySearchClear" />
         </bk-table>
       </section>
     </template>
@@ -340,6 +350,9 @@ export default {
     },
     showDiffBtn() {
       return this.selectedTabCode === 4103007;
+    },
+    tableEmptyType() {
+      return this.searchSelectValue.length ? 'search-empty' : 'empty';
     },
   },
   watch: {
@@ -701,6 +714,11 @@ export default {
     handleCloseSlider() {
       this.sliderData.oldData = null;
       this.sliderData.newData = null;
+    },
+    emptySearchClear() {
+      this.isTableLoading = true;
+      this.searchSelectValue = [];
+      this.handleSearchSelectChange(this.searchSelectValue);
     },
   },
 };

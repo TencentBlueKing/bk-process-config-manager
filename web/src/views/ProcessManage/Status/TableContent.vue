@@ -70,6 +70,7 @@
           :key="item.id"
           :label="item.label"
           :prop="item.id"
+          :min-width="columnMinWidth[item.id]"
           :sortable="item.sortable ? 'custom' : ''">
           <div slot-scope="{ row }" v-bk-overflow-tips>
             <!-- 配置文件数 -->
@@ -99,6 +100,7 @@
           :label="item.label"
           :prop="item.id"
           :key="item.id"
+          :min-width="columnMinWidth[item.id]"
           sortable="custom"
           :render-header="renderProcessHeader">
           <template slot-scope="{ row }">
@@ -111,6 +113,7 @@
           :label="item.label"
           :prop="item.id"
           :key="item.id"
+          :min-width="columnMinWidth[item.id]"
           :render-header="renderFilterHeader">
           <template slot-scope="{ row }">
             <StatusView v-if="row.process_status === 0" type="origin" :is-solid="true" :text="$t('未运行')" />
@@ -124,6 +127,7 @@
           :label="item.label"
           :prop="item.id"
           :key="item.id"
+          :min-width="columnMinWidth[item.id]"
           :render-header="renderFilterHeader">
           <template slot-scope="{ row }">
             <span
@@ -212,6 +216,11 @@
           @setting-change="handleSettingChange">
         </bk-table-setting-content>
       </bk-table-column>
+      <TableException
+        slot="empty"
+        :delay="loading"
+        :type="tableEmptyType"
+        @empty-clear="emptySearchClear" />
     </bk-table>
   </div>
 </template>
@@ -258,6 +267,14 @@ export default {
     ordering: {
       type: String,
       default: '',
+    },
+    tableEmptyType: {
+      type: String,
+      default: 'empty',
+    },
+    loading: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -319,6 +336,7 @@ export default {
       isSelectedAllPages: false,
       checkLoading: false,
       expandRow: [], // 展开行
+      columnMinWidth: {},
     };
   },
   computed: {
@@ -380,6 +398,7 @@ export default {
         const defaultColumn = fields;
         this.setting.size = size;
         this.setting.selectedFields = this.fields.slice(0).filter(m => defaultColumn.includes(m.id));
+        this.computedColumnWidth()
       }
     },
     handleSortChange({ prop, order }) {
@@ -470,6 +489,7 @@ export default {
         fields: fieldIds,
         size,
       }));
+      this.computedColumnWidth()
     },
     // 切换页
     handlePageChange(page) {
@@ -533,6 +553,14 @@ export default {
     onBeforeExpandChange({ row }) {
       this.toggleExpansion(row);
     },
+    computedColumnWidth() {
+      const widthMap = {};
+      this.setting.selectedFields.reduce((obj, item) => {
+        obj[item.id] = this.$textTool.getHeadWidth(item.label, item);
+        return obj;
+      }, widthMap);
+      this.columnMinWidth = widthMap;
+    }
   },
 };
 </script>

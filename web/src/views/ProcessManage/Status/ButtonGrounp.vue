@@ -171,11 +171,11 @@ export default {
 
     .bk-button {
       margin-right: 5px;
-      width: 76px;
+      min-width: 76px;
     }
 
     .king-btn {
-      width: 86px;
+      min-width: 86px;
     }
 
     .synchronous-btn {

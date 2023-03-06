@@ -18,7 +18,8 @@
             @format-tree="handleUpdateTree"
             @tree-selected="handleTargetSelected"
             @temp-selected="handleTargetSelected"
-            @tab-change="handleTabChange">
+            @tab-change="handleTabChange"
+            @empty-clear="emptySearchClear">
           </ProcessTarget>
         </div>
         <div class="drag-box">
@@ -40,8 +41,8 @@
             <p class="title"><span class="tag">{{ $t('模版') }}</span>{{ selectedTemp.name }}</p>
           </section>
           <section class="topo-head" v-else>
-            <p class="topo-path">{{ topoProcessTitle }}</p>
-            <h2 class="topo-name mt10">{{ selectedNode.topoName }}</h2>
+            <p class="topo-path text-overflow-row" v-bk-overflow-tips>{{ topoProcessTitle }}</p>
+            <h2 class="topo-name text-overflow-row mt10" v-bk-overflow-tips>{{ selectedNode.topoName }}</h2>
           </section>
           <div class="head-tips" v-if="isTemplateTab && showSyncTip">
             <i class="gsekit-icon gsekit-icon-swither-small tips-icon"></i>
@@ -71,6 +72,7 @@
             v-bkloading="{ isLoading: !loading && tableLoading }">
             <ProcessTable
               v-if="!tableLoading"
+              :loading="!loading && tableLoading"
               :is-biz-process="!isTemplateTab"
               :static-total="pagination.count"
               :static-incomplete="staticIncomplete"
@@ -82,12 +84,14 @@
               :selected-node="isTemplateTab ? selectedTemp : selectedNode"
               :edit-rules="editRules"
               :is-search="!!searchSelectValue.length"
+              :empty-type="tableEmptyType"
               @cell-edit="handleCellEdit"
               @eidt-disabled="handleEidtDisabled"
               @sub-head-filter="handSubHeadFilter"
               @change-filters="handleFiltersChange"
               @page-change="handlePageChange"
-              @selection-change="handleTableSelected">
+              @selection-change="handleTableSelected"
+              @empty-clear="emptySearchClear">
             </ProcessTable>
           </section>
 
@@ -116,7 +120,7 @@ import ProcessTable from './ProcessTable';
 import EmptyProcess from '@/components/Empty/EmptyProcess';
 import EmptyServiceBox from '@/components/Empty/EmptyServiceBox';
 // import ProcessSliderEidt from './ProcessSliderEdit'
-import rules from '@/views/ProcessManage/Manage/attributeEditRule';
+import rules from './attributeEditRule';
 import { sortByCustom } from '@/common/util';
 import { Drag } from './drag';
 
@@ -202,14 +206,15 @@ export default {
           props: 'base',
           key: '',
           fixed: true,
-          width: 120, // 组件宽度计算不准确，人肉计算已固定fixed宽度总和
+          computed: true,
+          // width: 120, // 组件宽度计算不准确，人肉计算已固定fixed宽度总和
           isExpandable: false, // 是否可展开
           isExpand: true, // 是否展开
           hasUndone: false,
           hasChild: true,
           headerAlign: 'center',
           child: [
-            { label: this.$t('进程别名'), prop: 'bk_process_name', width: 120, slotNameStr: 'alias', fixed: true },
+            { label: this.$t('进程别名'), prop: 'bk_process_name', computed: true, slotNameStr: 'alias', fixed: true, showOverflowTooltip: true },
           ],
         },
         {
@@ -222,10 +227,10 @@ export default {
           hasChild: true,
           headerAlign: 'center',
           child: [
-            { label: this.$t('进程名称'), prop: 'bk_func_name', fixed: false, minWidth: 86 },
+            { label: this.$t('进程名称'), prop: 'bk_func_name', fixed: false, computed: true, showOverflowTooltip: true },
             { label: this.$t('所属拓扑'), prop: 'topoPath', fixed: false, slotNameStr: 'topo', minWidth: 200, showOverflowTooltip: true },
-            { label: this.$t('进程启动参数'), prop: 'bk_start_param_regex', minWidth: 200, fixed: false }, // renderHeader: this.tipsRenderHeader },
-            { label: this.$t('进程备注'), prop: 'description', fixed: false, minWidth: 100 }, // ,  renderHeader: this.tipsRenderHeader }
+            { label: this.$t('进程启动参数'), prop: 'bk_start_param_regex', minWidth: 200, fixed: false, showOverflowTooltip: true }, // renderHeader: this.tipsRenderHeader },
+            { label: this.$t('进程备注'), prop: 'description', fixed: false, computed: true, showOverflowTooltip: true }, // ,  renderHeader: this.tipsRenderHeader }
           ],
         },
         {
@@ -235,29 +240,30 @@ export default {
           isExpandable: true,
           isExpand: true,
           fixed: false,
+          computed: true,
           hasUndone: false,
           hasChild: true,
           tips: this.$t('若要使用Gsekit进行进程管理，需完善此基础控制配置', [window.PROJECT_CONFIG.APP_NAME]),
           child: [
-            { label: this.$t('启动用户'), prop: 'user', minWidth: 86, fixed: false },
-            { label: this.$t('PID 文件路径'), prop: 'pid_file', minWidth: 200, fixed: false },
-            { label: this.$t('工作路径'), prop: 'work_path', minWidth: 160, fixed: false },
-            { label: this.$t('操作超时时长th'), prop: 'timeout', type: 'number', minWidth: 120, fixed: false },
-            { label: this.$t('启动优先级'), prop: 'priority', type: 'number', minWidth: 100, fixed: false },
+            { label: this.$t('启动用户'), prop: 'user', computed: true, fixed: false, showOverflowTooltip: true },
+            { label: this.$t('PID 文件路径'), prop: 'pid_file', minWidth: 200, fixed: false, showOverflowTooltip: true },
+            { label: this.$t('工作路径'), prop: 'work_path', minWidth: 160, fixed: false, showOverflowTooltip: true },
+            { label: this.$t('操作超时时长th'), prop: 'timeout', type: 'number', minWidth: 120, fixed: false, showOverflowTooltip: true },
+            { label: this.$t('启动优先级'), prop: 'priority', computed: true, minWidth: 100, fixed: false },
           ],
         },
         {
           label: this.$t('启动配置'),
           props: '',
           key: 'startConfig',
-          width: 'auto',
+          minWidth: 100,
           isExpandable: true,
           isExpand: true,
           fixed: false,
           hasUndone: false,
           hasChild: true,
           child: [
-            { label: this.$t('启动命令'), prop: 'start_cmd', minWidth: 120, fixed: false },
+            { label: this.$t('启动命令'), prop: 'start_cmd', minWidth: 140, fixed: false, showOverflowTooltip: true, showOverflowTooltip: true },
             { label: this.$t('启动等待时长th'), prop: 'bk_start_check_secs', type: 'number', minWidth: 130, fixed: false },
             { label: this.$t('启动数量'), prop: 'proc_num', type: 'number', minWidth: 100, fixed: false },
           ],
@@ -266,42 +272,42 @@ export default {
           label: this.$t('停止配置'),
           props: '',
           key: 'stopConfig',
-          width: 'auto',
+          computed: true,
           isExpandable: true,
           isExpand: true,
           fixed: false,
           hasUndone: false,
           hasChild: true,
           child: [
-            { label: this.$t('停止命令'), prop: 'stop_cmd', minWidth: 120, fixed: false },
+            { label: this.$t('停止命令'), prop: 'stop_cmd', computed: true, fixed: false, showoverflowtooltip: true, showOverflowTooltip: true },
           ],
         },
         {
           label: this.$t('重启配置'),
           props: '',
           key: 'restartConfig',
-          width: 'auto',
+          computed: true,
           isExpandable: true,
           isExpand: true,
           fixed: false,
           hasUndone: 0,
           hasChild: true,
           child: [
-            { label: this.$t('重启命令'), prop: 'restart_cmd', minWidth: 120, fixed: false },
+            { label: this.$t('重启命令'), prop: 'restart_cmd', computed: true, fixed: false, showOverflowTooltip: true },
           ],
         },
         {
           label: this.$t('重载配置'),
           props: '',
           key: 'reloadConfig',
-          width: 'auto',
           isExpandable: true,
           isExpand: true,
+          computed: true,
           fixed: false,
           hasUndone: false,
           hasChild: true,
           child: [
-            { label: this.$t('重载命令'), prop: 'reload_cmd', minWidth: 120, fixed: false },
+            { label: this.$t('重载命令'), prop: 'reload_cmd', computed: true, fixed: false, showOverflowTooltip: true },
           ],
         },
         {
@@ -313,9 +319,10 @@ export default {
           isExpand: true,
           fixed: false,
           hasUndone: false,
+          computed: true,
           hasChild: true,
           child: [
-            { label: this.$t('强制停止命令'), prop: 'face_stop_cmd', minWidth: 120, fixed: false },
+            { label: this.$t('强制停止命令'), prop: 'face_stop_cmd', computed: true,  fixed: false, showOverflowTooltip: true },
           ],
         },
       ],
@@ -351,6 +358,9 @@ export default {
       const ids = this.searchSelectValue.map(item => item.id);
       return this.searchSelectData.filter(item => !ids.includes(item.id));
     },
+    tableEmptyType() {
+      return !!this.searchSelectValue.length ? 'search-empty' : 'empty';
+    },
   },
   watch: {
     $route: {
@@ -375,6 +385,7 @@ export default {
     },
   },
   created() {
+    this.computedColumnsWidth();
     this.initTopoAndRouter();
   },
   mounted() {
@@ -776,6 +787,12 @@ export default {
     handleSearchSelectChange() {
       this.handlePageChange({ page: 1 });
     },
+    emptySearchClear() {
+      this.topoLoading = true;
+      this.searchSelectValue = [];
+      this.handleSearchSelectChange();
+      this.topoLoading = false;
+    },
     async handleCellEdit({ row, prop, value }) {
       try {
         let filedList = [];
@@ -912,8 +929,10 @@ export default {
     // 设置 进程
     setTableHead() {
       const isTemplate = this.type === 'template';
-      this.tableHead[0].width = isTemplate ? 120 : 190;
-      this.tableHead[0].child[0].width = isTemplate ? 120 : 190;
+      let fixedWidth = this.$textTool.getHeadWidth(this.tableHead[0].child[0].label);
+      fixedWidth += isTemplate ? 0 : 70;
+      this.tableHead[0].width = fixedWidth;
+      this.tableHead[0].child[0].width = fixedWidth;
       // template 不需要 所属topo 硬编码
       const { prop } = this.tableHead[1].child[1];
       if (isTemplate && prop === 'topoPath') {
@@ -985,6 +1004,17 @@ export default {
     handleEmptyLink() {
       const url = `${window.PROJECT_CONFIG.CMDB_URL}/#/business/${this.$store.state.bizId}/service/template/create`;
       window.open(url, '_blank');
+    },
+    computedColumnsWidth(columns, parent) {
+      const list = columns || this.tableHead;
+      list.forEach((item) => {
+        if (item.computed) {
+          item.minWidth = Math.max(parent?.minWidth || 0, this.$textTool.getHeadWidth(item.label));
+        }
+        if (item.child?.length) {
+          this.computedColumnsWidth(item.child, item);
+        }
+      });
     },
   },
 };
@@ -1091,6 +1121,7 @@ export default {
     display: flex;
     flex-direction: column;
     padding: 16px 24px;
+    overflow-x: hidden;
     overflow-y: auto;
 
     .topo-head {

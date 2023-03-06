@@ -6,17 +6,9 @@ import store from '@/store';
 
 Vue.use(VueRouter);
 
-// const Home = () => import(/* webpackChunkName: 'Home' */'@/views/Home')
-
 const ProcessManage = () => import(/* webpackChunkName: 'ProcessManage' */'@/views/ProcessManage').catch(() => window.showDeployTip());
 const ProcessManageStatus = () => import(/* webpackChunkName: 'ProcessManageStatus' */'@/views/ProcessManage/Status').catch(() => window.showDeployTip());
 const ProcessManageReleaseConfig = () => import(/* webpackChunkName: 'ProcessManageReleaseConfig' */'@/views/ProcessManage/ReleaseConfig').catch(() => window.showDeployTip());
-/* eslint-disable */
-// const ProcessManageManage = () => import(/* webpackChunkName: 'ProcessManageManage' */'@/views/ProcessManage/Manage').catch(() => window.showDeployTip())
-// const ProcessManageInitial = () => import(/* webpackChunkName: 'ProcessManageInitial' */'@/views/ProcessManage/Manage/InitialPage').catch(() => window.showDeployTip())
-// const ProcessManageConfigInformation = () => import(/* webpackChunkName: 'ProcessManageConfigInformation' */'@/views/ProcessManage/Manage/ConfigInformation').catch(() => window.showDeployTip())
-// const ProcessManageConfigInformationInstance = () => import(/* webpackChunkName: 'ProcessManageConfigInformationInstance' */'@/views/ProcessManage/Manage/InstanceInfoBox').catch(() => window.showDeployTip())
-/* eslint-enable */
 
 const ProcessAttribute = () => import(/* webpackChunkName: 'ProcessAttribute' */'@/views/ProcessAttribute').catch(() => window.showDeployTip());
 
@@ -42,10 +34,6 @@ const routes = [
   {
     path: '/',
     redirect: '/process-manage/status',
-    // }, {
-    //     path: '/home',
-    //     name: 'home',
-    //     component: Home
   },
   {
     path: '/process-manage',
@@ -63,27 +51,6 @@ const routes = [
         name: 'process-manage-release',
         component: ProcessManageReleaseConfig,
       },
-      // {
-      //   path: '/process-manage/manage',
-      //   component: ProcessManageManage,
-      //   children: [
-      //     {
-      //       path: '',
-      //       name: 'process-manage-initial',
-      //       component: ProcessManageInitial,
-      //     }, {
-      //       path: '/process-manage/manage/:type/service/:serviceId',
-      //       name: 'process-manage-config-information',
-      //       component: ProcessManageConfigInformation,
-      //       children: [{
-      //         path: '/process-manage/manage/:type/service/:serviceId/process/:processId?',
-      //         name: 'process-manage-config-information-instance',
-      //         component: ProcessManageConfigInformationInstance,
-      //       },
-      //       ],
-      //     },
-      //   ],
-      // },
     ],
   },
   {

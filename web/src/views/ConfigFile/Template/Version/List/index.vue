@@ -27,12 +27,12 @@
         :data="searchedVersionList"
         :max-height="$store.state.pageHeight - 280"
         @row-click="handleRowClick">
-        <bk-table-column :label="$t('版本ID')" min-width="10">
+        <bk-table-column :label="$t('版本ID')" min-width="150">
           <template slot-scope="{ row }">
             <bk-button v-test="'viewVersion'" theme="primary" text>{{ row.config_version_id }}</bk-button>
           </template>
         </bk-table-column>
-        <bk-table-column :label="$t('版本描述')" min-width="20">
+        <bk-table-column :label="$t('版本描述')" min-width="300">
           <div class="version-description" slot-scope="{ row }">
             <span v-bk-overflow-tips
                   :class="{ 'lighten-text': !row.is_draft && !row.is_active, 'text-overflow-row': true }">
@@ -44,7 +44,7 @@
         </bk-table-column>
         <bk-table-column
           :label="$t('更新人')"
-          min-width="10"
+          min-width="150"
           :filters="updatePersonFilters"
           :filter-method="commonFilterMethod"
           :filter-multiple="true">
@@ -52,12 +52,17 @@
             <div :class="{ 'lighten-text': !row.is_draft && !row.is_active }">{{ row.updated_by }}</div>
           </template>
         </bk-table-column>
-        <bk-table-column :label="$t('更新时间')" min-width="15" sortable :sort-method="sortByDate('updated_at')">
+        <bk-table-column
+          :label="$t('更新时间')"
+          min-width="220"
+          sortable
+          :sort-method="sortByDate('updated_at')"
+          v-bk-overflow-tips>
           <template slot-scope="{ row }">
             <div :class="{ 'lighten-text': !row.is_draft && !row.is_active }">{{ formatDate(row.updated_at) }}</div>
           </template>
         </bk-table-column>
-        <bk-table-column :label="$t('操作')" min-width="10">
+        <bk-table-column :label="$t('操作')" min-width="200">
           <template slot-scope="{ row }">
             <div class="button-container">
               <span class="button-text">{{ row.is_draft ? $t('编辑') : $t('查看') }}</span>

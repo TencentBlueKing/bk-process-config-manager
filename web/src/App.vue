@@ -549,4 +549,16 @@ export default {
   .monaco-aria-container {
     margin: -1px;
   }
+  .exception-box {
+    .bk-exception-img {
+        overflow: hidden;
+        .exception-image {
+            width: 324px;
+            height: 162px;
+        }
+    }
+    .bk-exception-text  {
+        margin-top: 14px;
+    }
+  }
 </style>

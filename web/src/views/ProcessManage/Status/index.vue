@@ -23,6 +23,7 @@
         <SelectInstance
           ref="selectInstanceRef"
           :show-button="false"
+          @update:isExisted="(value) => isExisted = value"
           @valueChange="valueChange">
         </SelectInstance>
         <div class="search-select-input-container">
@@ -58,6 +59,8 @@
         :search-select-data="filterData"
         :search-select-value="searchSelectValue"
         :ordering="ordering"
+        :loading="isDataLoading"
+        :table-empty-type="tableEmptyType"
         @handleSortChange="handleSortChange"
         @handleFilterHeaderReset="handleFilterHeaderReset"
         @handleFilterHeaderConfirm="handleFilterHeaderConfirm"
@@ -66,7 +69,8 @@
         @selectedAllPages="onSelectedAllPages"
         @handlePageLimitChange="handlePageLimitChange"
         @handlePageChange="handlePageChange"
-        @showSideSlider="showSideSlider">
+        @showSideSlider="showSideSlider"
+        @empty-clear="handleTableClear">
       </TableContent>
       <!-- 配置下发侧滑面板 -->
       <ConfigDistribute
@@ -104,6 +108,8 @@ import ConfigDistribute from './ConfigDistribute';
 import SelectInstance from '@/components/SelectInstance';
 import ButtonGrounp from './ButtonGrounp';
 import EmptyProcess from '@/components/Empty/EmptyProcess';
+import { bus } from '@/common/bus';
+import { debounce } from 'lodash';
 
 export default {
   name: 'ProcessStatus',
@@ -185,6 +191,8 @@ export default {
       },
       prevListLength: 0,
       isMatch: true,
+      isExisted: false,
+      getTemplateList: () => {},
     };
   },
   computed: {
@@ -210,6 +218,9 @@ export default {
       const result = this.tableData.some(item => this.processIdList.includes(item.bk_process_id)
         && item.process_status !== 2);
       return this.isSelectedAllPages ? !this.isSelectedAllPages : !result;
+    },
+    tableEmptyType() {
+      return (this.isExisted || this.searchSelectValue.length) ? 'search-empty' : 'empty';
     },
   },
   watch: {
@@ -262,6 +273,7 @@ export default {
     },
   },
   created() {
+    this.getTemplateList = debounce(this.getTemplateListSource, 200);
     /**
      * 检查流程： 遍历环境,检查是否有进程状态
      * 1、第一次检查，如果不存在进程，则检查module_list（只检查一次），反之结束；
@@ -278,7 +290,7 @@ export default {
     this.checkProcessCount();
   },
   methods: {
-    async getTemplateList() {
+    async getTemplateListSource() {
       let result = false;
       try {
         this.isDataLoading = true;
@@ -784,6 +796,12 @@ export default {
         }
       }
       this.checkedEnvList = list.concat(commonOrderlist);
+    },
+    handleTableClear() {
+      this.isDataLoading = true;
+      bus.$emit('clear-select-filter');
+      this.searchSelectValue = [];
+      this.handleSearchSelectChange([]);
     },
   },
 };

@@ -70,38 +70,38 @@
       :empty-text="$t('当前指定范围未能匹配到实例，请确认所选范围是否有误，或对应范围是否存在主机')"
       v-show="showTable"
       v-bkloading="{ isLoading: tableLoading, zIndex: 0 }">
-      <bk-table-column :label="$t('进程别名')" min-width="10">
+      <bk-table-column :label="$t('进程别名')" min-width="140">
         <div v-bk-overflow-tips class="table-ceil-overflow" slot-scope="{ row }">
           <span>{{ row.bk_process_name }}</span>
         </div>
       </bk-table-column>
-      <bk-table-column :label="$t('所属拓扑')" min-width="30">
+      <bk-table-column :label="$t('所属拓扑')" min-width="400">
         <div v-bk-overflow-tips class="table-ceil-overflow" slot-scope="{ row }">
           <span>{{ row.bk_set_name }} / {{ row.bk_module_name }} / {{ row.bk_service_name }}</span>
         </div>
       </bk-table-column>
-      <bk-table-column label="process_id" min-width="10">
+      <bk-table-column label="process_id" min-width="140">
         <div v-bk-overflow-tips class="table-ceil-overflow" slot-scope="{ row }">
           <span>{{ row.bk_process_id }}</span>
         </div>
       </bk-table-column>
-      <bk-table-column label="inst_id" min-width="8">
+      <bk-table-column label="inst_id" min-width="110">
         <div v-bk-overflow-tips class="table-ceil-overflow" slot-scope="{ row }">
           <span>{{ row.inst_id }}</span>
         </div>
       </bk-table-column>
       <template v-if="curStep === 1">
-        <bk-table-column :label="$t('版本号')" min-width="10" key="configVersionId">
+        <bk-table-column :label="$t('版本号')" min-width="140" key="configVersionId">
           <div v-bk-overflow-tips class="table-ceil-overflow" slot-scope="{ row }">
             <span>#{{ row.config_version_id }}</span>
           </div>
         </bk-table-column>
-        <bk-table-column :label="$t('版本描述')" min-width="10" key="configVersionDescription">
+        <bk-table-column :label="$t('版本描述')" min-width="140" key="configVersionDescription">
           <div v-bk-overflow-tips class="table-ceil-overflow" slot-scope="{ row }">
             <span>{{ row.configVersionDescription }}</span>
           </div>
         </bk-table-column>
-        <bk-table-column :label="$t('操作')" min-width="10" key="compareConfiguration">
+        <bk-table-column :label="$t('操作')" min-width="140" key="compareConfiguration">
           <template slot-scope="{ row }">
             <bk-popover
               v-if="isConfigCheck"

@@ -42,6 +42,7 @@
         "axios": "0.21.4",
         "bk-magic-vue": "2.2.14",
         "cookie": "0.4.0",
+        "lodash": "~4.17.21",
         "monaco-editor": "0.22.3",
         "query-string": "6.5.0",
         "url-parse": "1.5.3",
