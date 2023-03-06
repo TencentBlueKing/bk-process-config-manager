@@ -53,6 +53,7 @@
 // 3. init，组件初始化，参数为(是否为筛选下拉模式，当前模式已选数据)
 import DropdownSelector from './DropdownSelector';
 import ExpressionInput from './ExpressionInput';
+import { bus } from '@/common/bus';
 
 export default {
   components: {
@@ -122,13 +123,15 @@ export default {
   },
   computed: {
     isClearDisabled() { // 如果已选值为空则不显示清空按钮
-      if (this.isDropdownMode) {
-        return Object.values(this.dropdownSelectedData).every(item => item.length === 0);
-      }
-      return Object.values(this.expressionSelectedData).every(item => item === '*');
+      const isEmptied = this.isDropdownMode
+        ? Object.values(this.dropdownSelectedData).every(item => item.length === 0)
+        : Object.values(this.expressionSelectedData).every(item => item === '*');
+      this.$emit('update:isExisted', !isEmptied);
+      return isEmptied;
     },
   },
   created() {
+    bus.$on('clear-select-filter', this.clearSelect);
     this.bizId = this.$store.state.bizId;
     this.bizEnvMap = JSON.parse(window.localStorage.getItem('BK_SET_ENV_MAP') || '{}');
     this.setEnv = this.bizEnvMap[this.bizId] || '3';
@@ -152,6 +155,9 @@ export default {
     if (this.isDropdownMode) {
       this.$refs.dropdownSelectorRef.setValue(this.sourceDropdownSelected, { silent: true });
     }
+  },
+  beforeDestroy() {
+    bus.$off('clear-select-filter', this.clearSelect);
   },
   methods: {
     // 初始化、环境改变时获取所有下拉列表

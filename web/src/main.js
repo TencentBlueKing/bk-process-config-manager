@@ -10,8 +10,11 @@ import '@/common/bkmagic';
 import '@/common/directives';
 import '@icon-cool/bk-icon-gsekit';
 import '@/common/svg';
+import '@/common/text-tool';
 import { injectCSRFTokenToHeaders } from '@/api';
+import '@/mixins/emptyMixin.js';
 import StatusView from '@/components/StatusView';
+import TableException from '@/components/Empty/TableException';
 
 try {
   const id = window.PROJECT_CONFIG.TAM_AEGIS_KEY;
@@ -33,6 +36,7 @@ try {
 
 Vue.config.devtools = true;
 Vue.component('StatusView', StatusView);
+Vue.component('TableException', TableException);
 
 injectCSRFTokenToHeaders();
 getUserInfo().then(() => {

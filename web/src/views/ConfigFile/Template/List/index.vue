@@ -86,7 +86,7 @@
         :filter-method="commonFilterMethod"
         :filter-multiple="true"
       ></bk-table-column>
-      <bk-table-column :label="$t('更新时间')" prop="updated_at" sortable="custom">
+      <bk-table-column :label="$t('更新时间')" prop="updated_at" sortable="custom" show-overflow-tooltip>
         <template slot-scope="{ row }">
           {{ formatDate(row.updated_at) }}
         </template>
@@ -164,6 +164,11 @@
           </bk-popover>
         </div>
       </bk-table-column>
+      <TableException
+        slot="empty"
+        :delay="templateLoading"
+        :type="tableEmptyType"
+        @empty-clear="emptySearchClear" />
     </bk-table>
     <CreateTemplateDialog :show-create.sync="showCreate" @created="handleCreated" />
     <BindProcessDialog
@@ -211,6 +216,9 @@ export default {
     operateColWidth() {
       return this.enLang ? 340 : 240;
     },
+    tableEmptyType() {
+      return !!this.searchedWord ? 'search-empty' : 'empty';
+    },
   },
   created() {
     this.getTemplateList();
@@ -254,6 +262,11 @@ export default {
       } finally {
         this.templateLoading = false;
       }
+    },
+    emptySearchClear() {
+      this.templateLoading = true;
+      this.searchWord = '';
+      this.handleSearch();
     },
     handleSearch() {
       if (this.searchWord !== this.searchedWord) {

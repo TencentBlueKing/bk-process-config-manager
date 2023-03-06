@@ -17,20 +17,22 @@
       row-key="id"
       ext-cls="edit-table"
       :table-head="tableHead"
+      :loading="loading"
       :data="tableData"
       :edit-rules="editRules"
       :pagination="pagination"
       :row-class-name="setRowClassName"
       :cell-class-name="setCellClassName"
       :header-cell-class-name="getellClassName"
-      :empty-text="$t('搜索结果不存在')"
+      :empty-type="emptyType"
       @rowCheck="handleRowCheck"
       @cell-edit="handleCellEdit"
       @eidt-disabled="handleEidtDisabled"
       @page-change="handlePageChange"
       @sub-head-click="handFilterUndone"
       @page-limit-change="handlePageLimitChange"
-      @selection-change="handleSelectionChange">
+      @selection-change="handleSelectionChange"
+      @empty-clear="emptySearchClear">
       <!-- <div class="selection-tips" v-if="selections.length" slot="prepend">
         <div>
           {{ $t('已选') }}
@@ -95,6 +97,10 @@ export default {
     EmptyServiceBox,
   },
   props: {
+    loading: {
+      type: Boolean,
+      default: false,
+    },
     isBizProcess: {
       type: Boolean,
       default: true,
@@ -138,6 +144,10 @@ export default {
     isSearch: {
       type: Boolean,
       default: false,
+    },
+    emptyType: {
+      type: String,
+      default: 'empty',
     },
   },
   data() {
