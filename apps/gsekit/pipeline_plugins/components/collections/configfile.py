@@ -20,7 +20,7 @@ from asyncio import sleep
 from collections import defaultdict
 from typing import List, Dict, Any, Optional, Set
 
-from django.db import OperationalError
+from django.db import OperationalError, transaction
 from django.db.models import Max
 from django.utils.translation import ugettext as _
 
@@ -987,13 +987,16 @@ class BulkDiffConfigService(BulkExecuteJobPlatformService):
             config_inst_ids: List[int] = config_inst_ids_gby_job_task_id.get(job_task.id)
             config_inst_id: int = config_inst_ids[0]
             target_config_instance: Optional[Dict[str, Any]] = None
-            for config_instance in job_task.extra_data.get("config_instances") or []:
+            target_config_instance_index: Optional[int] = None
+            for index, config_instance in enumerate(job_task.extra_data.get("config_instances") or []):
                 if config_instance["id"] == config_inst_id:
+                    target_config_instance_index = index
                     target_config_instance = config_instance
                     break
 
             if not target_config_instance:
-                job_task.set_status(
+                JobTask.set_status_by_id(
+                    job_task.id,
                     JobStatus.FAILED,
                     extra_data={
                         "err_code": exceptions.ConfigInstanceDoseNotExistException().code,
@@ -1004,16 +1007,17 @@ class BulkDiffConfigService(BulkExecuteJobPlatformService):
 
             config_snapshot_content = job_instance_ip_log["log_content"]
             if config_snapshot_content == "GSEKIT-404":
-                job_task.set_status(
-                    JobStatus.FAILED,
-                    extra_data={
+                with transaction.atomic():
+                    newest_job_task: JobTask = JobTask.objects.get(id=job_task.id)
+                    err = {
                         "err_code": exceptions.ConfigSnapshotDoseNotExistException().code,
                         "failed_reason": _("现网配置不存在：{path}").format(
                             path=f"{target_config_instance['path']}/{target_config_instance['file_name']}"
                         ),
-                    },
-                )
-                continue
+                    }
+                    newest_job_task.extra_data["config_instances"][target_config_instance_index]["err"] = err
+                    newest_job_task.set_status(JobStatus.FAILED, extra_data=err)
+                    continue
 
             sha256 = hashlib.sha256()
             sha256.update(config_snapshot_content.encode())
@@ -1039,16 +1043,20 @@ class BulkDiffConfigService(BulkExecuteJobPlatformService):
                 "config_instance_id": config_inst_id,
             }
 
-            if target_config_instance["sha256"] != sha256sum:
-                job_task.set_status(
-                    JobStatus.FAILED,
-                    extra_data={
+            # 配置检查为并行逻辑，且会对 extra 更新，从而有可能存在检查不同配置写入结果时相互覆盖的风险
+            # 通过事务 + 查取最新快照后再进行更新，避免以上风险
+            with transaction.atomic():
+                newest_job_task: JobTask = JobTask.objects.get(id=job_task.id)
+                newest_job_task.extra_data["config_instances"][target_config_instance_index] = target_config_instance
+                if target_config_instance["sha256"] != sha256sum:
+                    err = {
                         "err_code": exceptions.ConfigChangeException().code,
                         "failed_reason": _("现网配置与最近一次下发的配置不一致"),
-                    },
-                )
-            else:
-                job_task.save(update_fields=["extra_data"])
+                    }
+                    newest_job_task.extra_data["config_instances"][target_config_instance_index]["err"] = err
+                    newest_job_task.set_status(JobStatus.FAILED, extra_data=err)
+                else:
+                    newest_job_task.save(update_fields=["extra_data"])
 
         ConfigSnapshot.objects.bulk_create(to_be_created_config_snapshots)
         ConfigSnapshot.objects.bulk_update(
