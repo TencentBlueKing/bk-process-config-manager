@@ -13,7 +13,7 @@ from collections import defaultdict
 from typing import List, Dict
 
 from django.conf import settings
-from django.db import models
+from django.db import models, transaction
 from django.db.models import QuerySet, Q
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
@@ -169,6 +169,12 @@ class JobTask(models.Model):
     end_time = models.DateTimeField(_("结束时间"), null=True)
     pipeline_id = models.CharField(_("PIPELINE ID"), max_length=33, db_index=True)
     extra_data = models.JSONField(_("额外数据"), default=dict)
+
+    @classmethod
+    def set_status_by_id(cls, job_task_id: int, status, extra_data=None):
+        with transaction.atomic():
+            job_task = cls.objects.get(id=job_task_id)
+            job_task.set_status(status, extra_data)
 
     def set_status(self, status, extra_data=None):
         if extra_data is None:
