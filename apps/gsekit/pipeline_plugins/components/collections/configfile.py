@@ -529,7 +529,7 @@ class BulkExecuteJobPlatformService(MultiJobTaskBaseService):
                         "config_template_id": config_instance.config_template_id,
                         "template_name": config_template.template_name,
                         "user": config_template.owner,
-                        "file_name": config_template.file_name,
+                        "file_name": config_instance.name,
                         "inst_id": config_instance.inst_id,
                         "path": config_instance.path,
                         "os_type": JOB_TASK_OS_TYPE["linux"]
