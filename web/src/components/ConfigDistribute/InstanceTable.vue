@@ -122,7 +122,7 @@
         </bk-table-column>
       </template>
       <template v-if="curStep === 2">
-        <bk-table-column :label="$t('状态')" prop="taskStatus" min-width="8" key="taskStatus">
+        <bk-table-column :label="$t('状态')" prop="taskStatus" min-width="110" key="taskStatus">
           <div slot-scope="{ row }">
             <StatusView
               v-if="row.taskStatus === 'pending' || row.taskStatus === 'running'"
@@ -135,12 +135,12 @@
               :solutions="row.solutions" />
           </div>
         </bk-table-column>
-        <bk-table-column :label="$t('生成时间')" min-width="12" key="generatedTime">
+        <bk-table-column :label="$t('生成时间')" min-width="170" key="generatedTime">
           <div v-bk-overflow-tips class="table-ceil-overflow" slot-scope="{ row }">
             <span>{{ row.generatedTime || '--' }}</span>
           </div>
         </bk-table-column>
-        <bk-table-column :label="$t('操作')" min-width="10" key="regenerate">
+        <bk-table-column :label="$t('操作')" min-width="140" key="regenerate">
           <template slot-scope="{ row }">
             <bk-button
               theme="primary" text style="margin-right: 6px;"
