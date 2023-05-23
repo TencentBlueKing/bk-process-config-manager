@@ -16,8 +16,11 @@ from apps.gsekit.job.models import Job
 from apps.gsekit.periodic_tasks.utils import calculate_countdown
 from apps.gsekit.process.handlers.process import ProcessHandler
 from common.log import logger
+from apps.utils import translate
 
 
+# TODO: GUOJIHUA
+@translate.RespectsLanguage()
 @task(ignore_result=True)
 def sync_biz_process_task(bk_biz_id):
     ProcessHandler(bk_biz_id=bk_biz_id).sync_biz_process()

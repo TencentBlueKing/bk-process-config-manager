@@ -10,6 +10,7 @@ See the License for the specific language governing permissions and limitations 
 """
 import functools
 import traceback
+from django.utils.translation import ugettext_lazy as _
 
 from django.db import models
 
@@ -17,13 +18,13 @@ from apps.exceptions import AppBaseException
 
 
 class GsekitProcessToCCProcessTemplateMap(models.Model):
-    bk_biz_id = models.IntegerField("业务ID")
-    gsekit_process_id = models.IntegerField("金枪鱼进程ID")
-    cc_process_template_id = models.IntegerField("CC3.0进程模板ID")
+    bk_biz_id = models.IntegerField(_("业务ID"))
+    gsekit_process_id = models.IntegerField(_("金枪鱼进程ID"))
+    cc_process_template_id = models.IntegerField(_("CC3.0进程模板ID"))
 
     class Meta:
-        verbose_name = "金枪鱼进程映射表"
-        verbose_name_plural = "金枪鱼进程映射表"
+        verbose_name = _("金枪鱼进程映射表")
+        verbose_name_plural = _("金枪鱼进程映射表")
 
 
 class MigrationStatus(models.Model):
@@ -35,16 +36,16 @@ class MigrationStatus(models.Model):
         IAM = "iam"
 
     MIGRATE_OBJECT_CHOICES = (
-        (MigrateObject.PROCESS, "进程"),
-        (MigrateObject.CONFIG, "配置文件"),
-        (MigrateObject.RELATION, "绑定关系"),
-        (MigrateObject.PROCESS_INST, "进程实例"),
-        (MigrateObject.IAM, "权限"),
+        (MigrateObject.PROCESS, _("进程")),
+        (MigrateObject.CONFIG, _("配置文件")),
+        (MigrateObject.RELATION, _("绑定关系")),
+        (MigrateObject.PROCESS_INST, _("进程实例")),
+        (MigrateObject.IAM, _("权限")),
     )
 
-    bk_biz_id = models.IntegerField("业务ID")
-    migrate_obj = models.CharField("迁移对象", max_length=16, choices=MIGRATE_OBJECT_CHOICES)
-    is_migrated = models.BooleanField("是否已迁移", default=False)
+    bk_biz_id = models.IntegerField(_("业务ID"))
+    migrate_obj = models.CharField(_("迁移对象"), max_length=16, choices=MIGRATE_OBJECT_CHOICES)
+    is_migrated = models.BooleanField(_("是否已迁移"), default=False)
 
     def complete_migration(self):
         self.is_migrated = True
@@ -77,5 +78,5 @@ class MigrationStatus(models.Model):
         return migrate_status_deco
 
     class Meta:
-        verbose_name = "迁移状态"
-        verbose_name_plural = "迁移状态"
+        verbose_name = _("迁移状态")
+        verbose_name_plural = _("迁移状态")

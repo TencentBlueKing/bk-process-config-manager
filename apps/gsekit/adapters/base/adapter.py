@@ -26,12 +26,29 @@ from apps.gsekit.pipeline_plugins.components.collections.gse import (
     BulkGseOperateProcessComponent,
     BulkGseCheckProcessComponent,
 )
+from pipeline import builder
+from django.utils.translation import get_language
 
 
 class BaseActivityManager(object):
     def __init__(self, job: Job, job_task: JobTask, *args, **kwargs):
         self.job = job
         self.job_task = job_task
+
+    def inject_vars_to_global_data(self, global_pipeline_data: builder.Data, meta: Dict[str, Any]):
+        """
+        注入流程公共变量
+        参考：https://github.com/TencentBlueKing/bamboo-engine/blob/master/docs/user_guide/flow_orchestration.md
+        增加公共变量后，在相应的 manager ServiceActivity 基类添加相关的变量引用
+        :param global_pipeline_data: 全局pipeline公共变量
+        :param meta: 任务元数据
+        :return:
+        """
+        # locale
+        blueking_language = get_language()
+        global_pipeline_data.inputs["${blueking_language}"] = builder.Var(
+            type=builder.Var.PLAIN, value=blueking_language
+        )
 
     def generate_activities(self, global_pipeline_data: Data = None) -> Dict[str, Any]:
         """生成Pipeline执行流程步骤原子，返回构建子流程的相关参数

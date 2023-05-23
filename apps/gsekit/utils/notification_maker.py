@@ -91,7 +91,7 @@ class BaseNotificationMaker(object):
 
 
 class JobNotificationMaker(BaseNotificationMaker):
-    TITLE_TEMPLATE = "{app_name}-任务执行结果通知"
+    TITLE_TEMPLATE = _("{app_name}-任务执行结果通知")
 
     CONTENT_TEMPLATE = {
         ContentType.HTML: """

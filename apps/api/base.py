@@ -255,7 +255,8 @@ class DataAPI(object):
                 response_result = raw_response.json()
             except AttributeError:
                 error_message = "data api response not json format url->[{}] content->[{}]".format(
-                    self.url, raw_response.text,
+                    self.url,
+                    raw_response.text,
                 )
                 logger.exception(error_message)
 
@@ -422,7 +423,7 @@ class DataAPI(object):
                     method=self.method, url=url, data=params, files=file_data, verify=False, timeout=self.timeout
                 )
         else:
-            raise ApiRequestError("异常请求方式，{method}".format(method=self.method))
+            raise ApiRequestError(_("异常请求方式，{method}").format(method=self.method))
 
         return result
 
@@ -586,7 +587,7 @@ class DataDRFAPISet(object):
             url, url_keys = self.to_url(key, self.custom_config[key], is_standard=True)
 
         if action is None:
-            raise Exception("请求方法%s不存在" % key)
+            raise Exception(_("请求方法 {key} 不存在").format(key=key))
 
         method = action.method
 

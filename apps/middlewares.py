@@ -18,6 +18,9 @@ import traceback
 from blueapps.core.exceptions.base import BlueException
 
 from common.log import logger
+from django.utils import translation
+from django.middleware.locale import LocaleMiddleware as GenericLocaleMiddleware
+
 
 try:
     from greenlet import getcurrent as get_ident
@@ -163,7 +166,10 @@ class CommonMid(MiddlewareMixin):
         # 处理 Data APP 自定义异常
         if isinstance(exception, AppBaseException):
             _msg = _("【APP 自定义异常】{message}, code={code}, args={args}").format(
-                message=exception.message, code=exception.code, args=exception.args, data=exception.data,
+                message=exception.message,
+                code=exception.code,
+                args=exception.args,
+                data=exception.data,
             )
             logger.exception(_msg)
             return JsonResponse(
@@ -174,7 +180,12 @@ class CommonMid(MiddlewareMixin):
         if isinstance(exception, BlueException):
             logger.exception(
                 ("""捕获主动抛出异常, 具体异常堆栈->[%s] status_code->[%s] & """ """client_message->[%s] & args->[%s] """)
-                % (traceback.format_exc(), exception.error_code, exception.message, exception.args,)
+                % (
+                    traceback.format_exc(),
+                    exception.error_code,
+                    exception.message,
+                    exception.args,
+                )
             )
 
             response = JsonResponse(
@@ -200,7 +211,25 @@ class CommonMid(MiddlewareMixin):
         if settings.DEBUG:
             return None
 
-        response = JsonResponse({"code": 50000, "message": "系统异常,请联系管理员处理", "data": "", "result": False})
+        response = JsonResponse({"code": 50000, "message": _("系统异常,请联系管理员处理"), "data": "", "result": False})
         response.status_code = 500
 
         return response
+
+
+class LocaleMiddleware(GenericLocaleMiddleware):
+    def process_request(self, request):
+        # trans_real 仅在 USE_I18N 启用时生效
+        if not settings.USE_I18N:
+            return super(LocaleMiddleware, self).process_request(request)
+
+        from django.utils.translation import trans_real as trans
+
+        # f"HTTP_{settings.LANGUAGE_COOKIE_NAME}".upper() 源于 HTTP Headers 中的 blueking-language
+        # 若上述值被设置，优先取该值
+        lang_code = request.META.get(f"HTTP_{settings.LANGUAGE_COOKIE_NAME}".upper())
+        if lang_code is not None and lang_code in trans.get_languages() and trans.check_for_language(lang_code):
+            translation.activate(lang_code)
+            request.LANGUAGE_CODE = translation.get_language()
+            return
+        return super(LocaleMiddleware, self).process_request(request)

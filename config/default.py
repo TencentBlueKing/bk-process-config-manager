@@ -63,6 +63,13 @@ MIDDLEWARE = (
     + ("django_prometheus.middleware.PrometheusAfterMiddleware",)
 )
 
+if "django.middleware.locale.LocaleMiddleware" not in MIDDLEWARE:
+    MIDDLEWARE = ("apps.middlewares.LocaleMiddleware",) + MIDDLEWARE
+
+if "django.middleware.locale.LocaleMiddleware" in MIDDLEWARE:
+    MIDDLEWARE = tuple([i for i in MIDDLEWARE if i != "django.middleware.locale.LocaleMiddleware"])
+    MIDDLEWARE = ("apps.middlewares.LocaleMiddleware",) + MIDDLEWARE
+
 # open telemetry
 ENABLE_OTEL_TRACE = get_type_env("ENABLE_OTEL_TRACE", _type=bool, default=False)
 OTLP_GRPC_HOST = get_type_env("OTLP_GRPC_HOST", _type=str, default="")

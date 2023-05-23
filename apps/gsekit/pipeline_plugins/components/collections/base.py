@@ -10,6 +10,7 @@ See the License for the specific language governing permissions and limitations 
 """
 import logging
 import traceback
+from apps.utils import translate
 from typing import Dict, List
 
 from django.db.models import QuerySet
@@ -24,6 +25,7 @@ from apps.gsekit.process import exceptions as process_exceptions
 from apps.gsekit.utils import solution_maker
 from pipeline.core.data.base import DataObject
 from pipeline.core.flow.activity import Service
+import typing
 from dataclasses import dataclass
 from apps.core.gray.tools import GrayTools
 
@@ -40,6 +42,16 @@ class ActivityType:
     HEAD = 0
     TAIL = 1
     HEAD_TAIL = 2
+
+
+def get_language_func(
+    wrapped: typing.Callable, instance: "Service", args: typing.Tuple[typing.Any], kwargs: typing.Dict[str, typing.Any]
+) -> typing.Optional[str]:
+    if args:
+        data = args[0]
+    else:
+        data = kwargs["data"]
+    return data.get_one_of_inputs("blueking_language")
 
 
 @dataclass
@@ -168,6 +180,7 @@ class JobTaskBaseService(Service):
 
         return extra_data
 
+    @translate.RespectsLanguage(get_language_func=get_language_func)
     def execute(self, data, parent_data):
         job_task_id = data.get_one_of_inputs("job_task_id")
         common_data: CommonData = self.get_common_data(data)
@@ -199,6 +212,7 @@ class JobTaskBaseService(Service):
         self.judge_act_tail_and_set_succeeded(data, job_task)
         return True
 
+    @translate.RespectsLanguage(get_language_func=get_language_func)
     def schedule(self, data, parent_data, callback_data=None):
         job_task = data.get_one_of_inputs("job_task")
         common_data: CommonData = self.get_common_data(data)

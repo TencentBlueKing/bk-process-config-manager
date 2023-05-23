@@ -13,6 +13,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import serializers
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from django.utils.translation import ugettext_lazy as _
 
 from apps.generic import APIViewSet
 from apps.gsekit.migrate.handlers import MigrateHandlers
@@ -25,10 +26,10 @@ MigrateViewTags = ["migrate"]
 
 
 class MigrateIamRequestSerializer(serializers.Serializer):
-    perm_gainer = serializers.CharField(help_text="权限获得者，不填则默认是配置模板创建者", required=False)
+    perm_gainer = serializers.CharField(help_text=_("权限获得者，不填则默认是配置模板创建者"), required=False)
 
     class Meta:
-        swagger_schema_fields = {"example": {"perm_gainer": "权限获得者，不填则默认是配置模板创建者"}}
+        swagger_schema_fields = {"example": {"perm_gainer": _("权限获得者，不填则默认是配置模板创建者")}}
 
 
 class MigrateViewSet(APIViewSet):
@@ -37,14 +38,16 @@ class MigrateViewSet(APIViewSet):
         return []
 
     @swagger_auto_schema(
-        operation_summary="迁移进程信息预览", tags=MigrateViewTags,
+        operation_summary="迁移进程信息预览",
+        tags=MigrateViewTags,
     )
     @action(methods=["GET"], detail=False)
     def migrate_process_preview(self, request, bk_biz_id, *args, **kwargs):
         return Response(MigrateHandlers(bk_biz_id=bk_biz_id, request=request).diff_biz_process())
 
     @swagger_auto_schema(
-        operation_summary="迁移进程信息预览（可读版）", tags=MigrateViewTags,
+        operation_summary="迁移进程信息预览（可读版）",
+        tags=MigrateViewTags,
     )
     @action(methods=["GET"], detail=False)
     def migrate_process_preview_brief(self, request, bk_biz_id, *args, **kwargs):
@@ -52,11 +55,11 @@ class MigrateViewSet(APIViewSet):
         return Response(
             [
                 {
-                    "action": "【不迁移的runshell】",
+                    "action": _("【不迁移的runshell】"),
                     "processes": [f'{runshell_proc["FuncName"]}' for runshell_proc in processes["runshell_processes"]],
                 },
                 {
-                    "action": "【新增的进程模板】",
+                    "action": _("【新增的进程模板】"),
                     "processes": [
                         f'将在【{service_template["ModuleName"]}】模块（服务模板）下新增'
                         f'【{proc_tmpl["ProcName"]}-{proc_tmpl["FuncName"]}-{proc_tmpl["FuncID"]}】进程模板'
@@ -70,42 +73,48 @@ class MigrateViewSet(APIViewSet):
         )
 
     @swagger_auto_schema(
-        operation_summary="迁移进程信息", tags=MigrateViewTags,
+        operation_summary="迁移进程信息",
+        tags=MigrateViewTags,
     )
     @action(methods=["POST"], detail=False)
     def migrate_process(self, request, bk_biz_id, *args, **kwargs):
         return Response(MigrateHandlers(bk_biz_id=bk_biz_id, request=request).migrate_process())
 
     @swagger_auto_schema(
-        operation_summary="迁移配置模板预览", tags=MigrateViewTags,
+        operation_summary="迁移配置模板预览",
+        tags=MigrateViewTags,
     )
     @action(methods=["GET"], detail=False)
     def migrate_config_template_preview(self, request, bk_biz_id, *args, **kwargs):
         return Response(MigrateHandlers(bk_biz_id=bk_biz_id, request=request).migrate_config_file_preview())
 
     @swagger_auto_schema(
-        operation_summary="迁移配置模板", tags=MigrateViewTags,
+        operation_summary="迁移配置模板",
+        tags=MigrateViewTags,
     )
     @action(methods=["POST"], detail=False)
     def migrate_config_template(self, request, bk_biz_id, *args, **kwargs):
         return Response(MigrateHandlers(bk_biz_id=bk_biz_id, request=request).migrate_config_file())
 
     @swagger_auto_schema(
-        operation_summary="迁移绑定关系", tags=MigrateViewTags,
+        operation_summary="迁移绑定关系",
+        tags=MigrateViewTags,
     )
     @action(methods=["POST"], detail=False)
     def migrate_binding_relation(self, request, bk_biz_id, *args, **kwargs):
         return Response(MigrateHandlers(bk_biz_id=bk_biz_id, request=request).migrate_binding_relation())
 
     @swagger_auto_schema(
-        operation_summary="迁移进程实例", tags=MigrateViewTags,
+        operation_summary="迁移进程实例",
+        tags=MigrateViewTags,
     )
     @action(methods=["POST"], detail=False)
     def migrate_process_instance(self, request, bk_biz_id, *args, **kwargs):
         return Response(MigrateHandlers(bk_biz_id=bk_biz_id, request=request).migrate_process_instance())
 
     @swagger_auto_schema(
-        operation_summary="迁移权限", tags=MigrateViewTags,
+        operation_summary="迁移权限",
+        tags=MigrateViewTags,
     )
     @action(methods=["POST"], detail=False, serializer_class=MigrateIamRequestSerializer)
     def migrate_iam(self, request, bk_biz_id, *args, **kwargs):

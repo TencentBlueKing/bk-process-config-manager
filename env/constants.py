@@ -11,6 +11,7 @@ See the License for the specific language governing permissions and limitations 
 
 from enum import Enum
 from typing import Dict
+from django.utils.translation import ugettext_lazy as _
 
 from apps.utils.enum import EnhanceEnum
 
@@ -21,7 +22,7 @@ class BkPaaSVersion(EnhanceEnum):
 
     @classmethod
     def _get_member__alias_map(cls) -> Dict[Enum, str]:
-        return {cls.V2: "V2", cls.V3: "V3具备容器及二进制配置差异"}
+        return {cls.V2: "V2", cls.V3: _("V3具备容器及二进制配置差异")}
 
 
 class GseVersion(EnhanceEnum):
