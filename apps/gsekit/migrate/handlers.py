@@ -12,6 +12,7 @@ See the License for the specific language governing permissions and limitations 
 # 老版金枪鱼地址
 import os
 from collections import defaultdict
+from django.utils.translation import ugettext_lazy as _
 
 import requests
 from django.db import transaction
@@ -36,20 +37,20 @@ DIRECT_OLD_GSEKIT_ROOT = os.getenv("DIRECT_OLD_GSEKIT_ROOT", "http://apps.****.c
 
 class MigrateHandlers(object):
     LEGACY_PROCESS_FIELD_MAP = {
-        "StartCmd": {"field": "start_cmd", "description": "启动命令"},
-        "StopCmd": {"field": "stop_cmd", "description": "停止命令"},
-        "ReloadCmd": {"field": "reload_cmd", "description": "重载命令"},
-        "ReStartCmd": {"field": "restart_cmd", "description": "重启命令"},
-        "KillCmd": {"field": "face_stop_cmd", "description": "强制停止命令"},
-        "OpTimeout": {"field": "timeout", "description": "操作超时时长"},
-        "WorkPath": {"field": "work_path", "description": "工作路径"},
-        "Seq": {"field": "priority", "description": "启动优先级"},
-        "User": {"field": "user", "description": "启动用户"},
-        "StartCheckBeginTime": {"field": "bk_start_check_secs", "description": "启动等待时长"},
-        "PidFile": {"field": "pid_file", "description": "PID路径"},
-        "ProcNum": {"field": "proc_num", "description": "启动数量"},
-        "FuncID": {"field": "bk_process_name", "description": "进程别名"},
-        "FuncName": {"field": "description", "description": "备注"},
+        "StartCmd": {"field": "start_cmd", "description": _("启动命令")},
+        "StopCmd": {"field": "stop_cmd", "description": _("停止命令")},
+        "ReloadCmd": {"field": "reload_cmd", "description": _("重载命令")},
+        "ReStartCmd": {"field": "restart_cmd", "description": _("重启命令")},
+        "KillCmd": {"field": "face_stop_cmd", "description": _("强制停止命令")},
+        "OpTimeout": {"field": "timeout", "description": _("操作超时时长")},
+        "WorkPath": {"field": "work_path", "description": _("工作路径")},
+        "Seq": {"field": "priority", "description": _("启动优先级")},
+        "User": {"field": "user", "description": _("启动用户")},
+        "StartCheckBeginTime": {"field": "bk_start_check_secs", "description": _("启动等待时长")},
+        "PidFile": {"field": "pid_file", "description": _("PID路径")},
+        "ProcNum": {"field": "proc_num", "description": _("启动数量")},
+        "FuncID": {"field": "bk_process_name", "description": _("进程别名")},
+        "FuncName": {"field": "description", "description": _("备注")},
     }
 
     def __init__(self, bk_biz_id: int, request: Request):

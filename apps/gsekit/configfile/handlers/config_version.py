@@ -253,11 +253,13 @@ class ConfigVersionHandler(APIModel):
                 content = content.replace(include_line, latest_config_version.content)
             except ConfigTemplate.DoesNotExist:
                 raise ConfigTemplateDoseNotExistException(
-                    "依赖模板[{template_name}]不存在，请注意Ginclude的是模板名称，不是文件名称".format(template_name=dependence_template_name)
+                    _("依赖模板[{template_name}]不存在，请注意Ginclude的是模板名称，不是文件名称").format(
+                        template_name=dependence_template_name
+                    )
                 )
             except ConfigTemplate.MultipleObjectsReturned:
                 raise ConfigTemplateDoseNotExistException(
-                    "依赖模板[{template_name}]不唯一，请重命名依赖".format(template_name=dependence_template_name)
+                    _("依赖模板[{template_name}]不唯一，请重命名依赖").format(template_name=dependence_template_name)
                 )
             else:
                 # 递归继续寻找依赖

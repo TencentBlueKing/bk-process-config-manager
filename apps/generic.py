@@ -65,7 +65,7 @@ class ApiMixin(GenericViewSet):
                 except (KeyError, AttributeError):
                     pass
 
-            return self.finalize_response(request, Response("该接口暂未配置swagger mock数据"), *args, **kwargs)
+            return self.finalize_response(request, Response(_("该接口暂未配置swagger mock数据")), *args, **kwargs)
 
         return super().dispatch(request, *args, **kwargs)
 
@@ -168,7 +168,9 @@ class ModelViewSet(ApiMixin, ValidationMixin, DRFModelViewSet):
         if isinstance(self.serializer_class, GeneralSerializer) or self.serializer_class is None:
             self.serializer_meta.ref_name = self.model.__name__
             return type(
-                "GeneralSerializer{}".format(self.model.__name__), (GeneralSerializer,), {"Meta": self.serializer_meta},
+                "GeneralSerializer{}".format(self.model.__name__),
+                (GeneralSerializer,),
+                {"Meta": self.serializer_meta},
             )
         else:
             return self.serializer_class
@@ -182,7 +184,11 @@ def custom_exception_handler(exc, context):
     request = context["request"]
     logger.error(
         """捕获未处理异常, 请求URL->[%s], 请求方法->[%s] 请求参数->[%s]"""
-        % (request.path, request.method, json.dumps(request.query_params if request.method == "GET" else request.data),)
+        % (
+            request.path,
+            request.method,
+            json.dumps(request.query_params if request.method == "GET" else request.data),
+        )
     )
     # 专门处理 404 异常，直接返回前端，前端处理
     if isinstance(exc, Http404):
@@ -203,7 +209,11 @@ def custom_exception_handler(exc, context):
     # 处理 Data APP 自定义异常
     if isinstance(exc, AppBaseException):
         _msg = _("【APP 自定义异常】{message}, code={code}, args={args}").format(
-            message=exc.message, code=exc.code, args=exc.args, data=exc.data, errors=exc.errors,
+            message=exc.message,
+            code=exc.code,
+            args=exc.args,
+            data=exc.data,
+            errors=exc.errors,
         )
         logger.exception(_msg)
         return JsonResponse(_error(exc.code, exc.message, exc.data, exc.errors))
@@ -213,7 +223,11 @@ def custom_exception_handler(exc, context):
     request = context["request"]
     logger.error(
         """捕获未处理异常, 请求URL->[%s], 请求方法->[%s] 请求参数->[%s]"""
-        % (request.path, request.method, json.dumps(request.query_params if request.method == "GET" else request.data),)
+        % (
+            request.path,
+            request.method,
+            json.dumps(request.query_params if request.method == "GET" else request.data),
+        )
     )
 
     # 判断是否在debug模式中,

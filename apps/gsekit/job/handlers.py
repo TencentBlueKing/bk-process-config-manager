@@ -11,6 +11,7 @@ See the License for the specific language governing permissions and limitations 
 from collections import Counter
 from itertools import groupby
 from typing import Dict, List
+from apps.utils import translate
 
 from celery.task import task
 from django.conf import settings
@@ -58,7 +59,9 @@ class JobHandlers(APIModel):
         return super().data
 
     @staticmethod
+    @translate.RespectsLanguage()
     @task
+    # TODO: 国际化
     def create_job_task(job_id, extra_data):
         job = Job.objects.get(id=job_id)
         manager = channel_adapter.PIPELINE_MANAGER_FACTORY.get_manager(job)

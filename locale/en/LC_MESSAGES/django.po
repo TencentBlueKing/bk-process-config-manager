@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-10 14:34+0800\n"
+"POT-Creation-Date: 2023-05-23 17:38+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,1571 +18,1970 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: blueapps_example/app_control/models.py:36
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/models.py:36
-msgid "功能code"
-msgstr "Func code"
-
-#: blueapps_example/app_control/models.py:37
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/models.py:37
-msgid "功能名称"
-msgstr "Func name"
-
-#: blueapps_example/app_control/models.py:38
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/models.py:38
-msgid "是否开启该功能"
-msgstr "Whether to enable the Func"
-
-#: blueapps_example/app_control/models.py:38
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/models.py:38
-msgid "控制功能是否对外开放，若选择，则该功能将对外开放"
+#: apps/api/base.py:153
+#, python-brace-format
+msgid "请求已达到最大重试次数{max_retry_times}"
 msgstr ""
-"Controls whether the func is open to the public. If selected, the func will "
-"be open"
+"The request has reached the maximum number of retries {max_retry_times}"
 
-#: blueapps_example/app_control/models.py:39
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/models.py:39
-msgid "创建时间"
-msgstr "creation time"
+#: apps/api/base.py:202
+#, python-brace-format
+msgid "[{module}]API请求异常：({error_message})"
+msgstr "[{module}] API request exception: ({error_message})"
 
-#: blueapps_example/app_control/models.py:40
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/models.py:40
-msgid "功能开发者"
-msgstr "func developer"
-
-#: blueapps_example/app_control/models.py:40
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/models.py:40
-msgid "多个开发者以分号分隔"
-msgstr "Multiple developers separated by semicolons"
-
-#: blueapps_example/app_control/models.py:48
-#: blueapps_example/app_control/models.py:49
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/models.py:48
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/models.py:49
-msgid "功能控制器"
-msgstr "func controller"
-
-#: blueapps_example/app_control/templates/app_control/func_check_failed.html:6
-#: blueapps_example/app_control/utils.py:16
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/templates/app_control/func_check_failed.html:6
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/utils.py:16
-msgid "功能未开启"
-msgstr "Func is turned off"
-
-#: blueapps_example/app_control/templates/app_control/func_check_failed.html:13
-#: blueapps_example/app_control/templates/app_control/home.html:87
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/templates/app_control/func_check_failed.html:13
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/templates/app_control/home.html:87
-msgid "该功能尚未对外开放！"
-msgstr "This feature is not open to the public!"
-
-#: blueapps_example/app_control/templates/app_control/func_check_failed.html:15
-#: blueapps_example/app_control/templates/app_control/home.html:89
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/templates/app_control/func_check_failed.html:15
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/templates/app_control/home.html:89
-msgid "可能原因："
-msgstr "Possible causes："
-
-#: blueapps_example/app_control/templates/app_control/func_check_failed.html:16
-#: blueapps_example/app_control/templates/app_control/home.html:90
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/templates/app_control/func_check_failed.html:16
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/templates/app_control/home.html:90
-msgid "1、该管理员关闭了该功能,如有需要请联系管理员；"
+#: apps/api/base.py:262
+msgid "返回数据格式不正确，结果格式非json."
 msgstr ""
-"1. The administrator has disabled this function, please contact the "
-"administrator if necessary."
-
-#: blueapps_example/app_control/templates/app_control/func_check_failed.html:17
-#: blueapps_example/app_control/templates/app_control/home.html:91
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/templates/app_control/func_check_failed.html:17
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/templates/app_control/home.html:91
-msgid "2、系统异常，请联系管理员检查func_code。"
-msgstr ""
-"2. The system is abnormal. Please contact the administrator to check the "
-"func_code."
-
-#: blueapps_example/app_control/templates/app_control/home.html:7
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/templates/app_control/home.html:7
-msgid "功能开关"
-msgstr "Func switch"
-
-#: blueapps_example/app_control/templates/app_control/home.html:10
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/templates/app_control/home.html:10
-msgid "功能开关："
-msgstr "Func switch："
-
-#: blueapps_example/app_control/templates/app_control/home.html:12
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/templates/app_control/home.html:12
-msgid "开启"
-msgstr "open"
-
-#: blueapps_example/app_control/templates/app_control/home.html:12
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/templates/app_control/home.html:12
-msgid "关闭"
-msgstr "close"
-
-#: blueapps_example/app_control/templates/app_control/home.html:22
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/templates/app_control/home.html:22
-msgid "功能："
-msgstr "Feature："
-
-#: blueapps_example/app_control/templates/app_control/home.html:24
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/templates/app_control/home.html:24
-msgid "运行"
-msgstr "run"
-
-#: blueapps_example/app_control/templates/app_control/home.html:30
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/templates/app_control/home.html:30
-msgid "基于短信验证码的二步验证"
-msgstr "Two-step verification based on SMS code"
-
-#: blueapps_example/app_control/templates/app_control/home.html:33
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/templates/app_control/home.html:33
-msgid "发送验证码："
-msgstr "Send sms code："
-
-#: blueapps_example/app_control/templates/app_control/home.html:39
-#: blueapps_example/app_control/templates/app_control/home.html:123
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/templates/app_control/home.html:39
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/templates/app_control/home.html:123
-msgid "发送"
-msgstr "send"
-
-#: blueapps_example/app_control/templates/app_control/home.html:44
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/templates/app_control/home.html:44
-msgid "输入验证码："
-msgstr "Enter sms code："
-
-#: blueapps_example/app_control/templates/app_control/home.html:49
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/templates/app_control/home.html:49
-msgid "验证"
-msgstr "verify"
-
-#: blueapps_example/app_control/templates/app_control/home.html:73
-#: blueapps_example/app_control/templates/app_control/home.html:81
-#: blueapps_example/test_celery/templates/test_celery/periodic_task.html:114
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/templates/app_control/home.html:73
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/templates/app_control/home.html:81
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task.html:114
-#, fuzzy
-#| msgid "温馨提示:"
-msgid "提示"
-msgstr "tips"
-
-#: blueapps_example/app_control/templates/app_control/home.html:109
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/templates/app_control/home.html:109
-msgid "验证码已发出"
-msgstr "Verification code issued"
-
-#: blueapps_example/app_control/templates/app_control/home.html:118
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/templates/app_control/home.html:118
-msgid "秒后可重发)"
-msgstr "s to resend)"
-
-#: blueapps_example/app_control/utils.py:16
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/utils.py:16
-msgid "功能已开启"
-msgstr "feature is on"
-
-#: blueapps_example/app_control/views.py:35
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/views.py:35
-msgid "这是一个功能开发样例"
-msgstr "This is a function development example."
-
-#: blueapps_example/app_control/views.py:52
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/views.py:52
-msgid "短信验证码错误，二步验证失败"
-msgstr ""
-"The SMS verification code is wrong, and the two-step verification failed."
-
-#: blueapps_example/app_control/views.py:55
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/views.py:55
-msgid "二步验证通过"
-msgstr "Two-step verification passed"
-
-#: blueapps_example/config/__init__.py:18
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/config/__init__.py:18
-#, python-format
-msgid "Settings object has no attribute %s"
-msgstr "Settings object has no attribute %s"
-
-#: blueapps_example/config/default_settings.py:16
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/config/default_settings.py:16
-msgid "运维人员"
-msgstr "operation and maintenance personnel"
-
-#: blueapps_example/config/default_settings.py:17
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/config/default_settings.py:17
-msgid "产品人员"
-msgstr "product staff"
-
-#: blueapps_example/config/default_settings.py:18
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/config/default_settings.py:18
-msgid "开发人员"
-msgstr "developer"
-
-#: blueapps_example/config/default_settings.py:19
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/config/default_settings.py:19
-msgid "测试人员"
-msgstr "testers"
-
-#: blueapps_example/test_app_tags/templates/test_app_tags/index.html:13
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_app_tags/templates/test_app_tags/index.html:13
-msgid "业务选择下拉框用法示例"
-msgstr "example of biz selection drop-down box usage"
-
-#: blueapps_example/test_app_tags/templates/test_app_tags/index.html:17
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_app_tags/templates/test_app_tags/index.html:17
-msgid "业务："
-msgstr "biz："
-
-#: blueapps_example/test_app_tags/templates/test_app_tags/index.html:23
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_app_tags/templates/test_app_tags/index.html:23
-msgid "用法详解："
-msgstr "Detailed Usage："
-
-#: blueapps_example/test_app_tags/templates/test_app_tags/index.html:24
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_app_tags/templates/test_app_tags/index.html:24
-msgid "业务下拉框"
-msgstr "biz drop-down box"
-
-#: blueapps_example/test_app_tags/templates/test_app_tags/index.html:25
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_app_tags/templates/test_app_tags/index.html:25
-msgid "在模板页面加入： "
-msgstr "Add in the template page："
-
-#: blueapps_example/test_app_tags/templates/test_app_tags/index.html:26
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_app_tags/templates/test_app_tags/index.html:26
-msgid "配置前端参数："
-msgstr "Configure front-end parameters："
-
-#: blueapps_example/test_app_tags/templates/test_app_tags/index.html:26
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_app_tags/templates/test_app_tags/index.html:26
-msgid "params = {'px': 200} // px为选择器宽度参数"
-msgstr "params = {'px': 200} // px is the selector width parameter"
-
-#: blueapps_example/test_app_tags/templates/test_app_tags/index.html:27
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_app_tags/templates/test_app_tags/index.html:27
-msgid "通过js异步请求数据："
-msgstr "Request data asynchronously via js："
-
-#: blueapps_example/test_app_tags/templates/test_app_tags/index.html:27
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_app_tags/templates/test_app_tags/index.html:27
-msgid ""
-"$.get('url', params, function(res) { //处理请求结果 } // url为后台接口地址"
-msgstr ""
-"$.get('url', params, function (res) {// Process the request result} // url "
-"is the background interface address"
-
-#: blueapps_example/test_app_tags/templates/test_app_tags/index.html:28
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_app_tags/templates/test_app_tags/index.html:28
-msgid "将数据添加为对应选项： "
-msgstr "Add data as corresponding options："
-
-#: blueapps_example/test_app_tags/templates/test_app_tags/index.html:28
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_app_tags/templates/test_app_tags/index.html:28
-msgid ""
-"$('#selector').append('&lt;option value='app.id'&gt;app.text&lt;/"
-"option&gt;') // app.id 和 app.text 为对应业务的标识和描述"
-msgstr ""
-"$('#selector').append('&lt;option value='app.id'&gt;app.text&lt;/"
-"option&gt;') // app.id and app.text are the ID and description of the "
-"corresponding biz"
-
-#: blueapps_example/test_app_tags/templates/test_app_tags/index.html:29
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_app_tags/templates/test_app_tags/index.html:29
-msgid "通过请求数据设置宽度px: "
-msgstr "Set width px by request data: "
-
-#: blueapps_example/test_app_tags/templates/test_app_tags/index.html:29
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_app_tags/templates/test_app_tags/index.html:29
-msgid ""
-"$('.cc_app_select2').width(res.width_px) // res.width_px为后端范围数据的字段"
-"值"
-msgstr ""
-"$('.cc_app_select2').width(res.width_px) // res.width_px is the field value "
-"of the backend range data"
-
-#: blueapps_example/test_app_tags/templates/test_app_tags/index.html:43
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_app_tags/templates/test_app_tags/index.html:43
-msgid "请选择业务"
-msgstr "Please select biz"
-
-#: blueapps_example/test_celery/models.py:10
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/models.py:10
-#: templates/admin/login.html:12 templates/admin/login.html:14
-msgid "用户"
-msgstr "user"
-
-#: blueapps_example/test_celery/models.py:11
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/models.py:11
-msgid "消息标题"
-msgstr "message title"
-
-#: blueapps_example/test_celery/models.py:12
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/models.py:12
-msgid "消息内容"
-msgstr "message content"
-
-#: blueapps_example/test_celery/models.py:13
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/models.py:13
-msgid "任务创建时间"
-msgstr "task creation time"
-
-#: blueapps_example/test_celery/models.py:14
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:64
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/models.py:14
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:64
-msgid "执行时间"
-msgstr "execution time"
-
-#: blueapps_example/test_celery/models.py:15
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/models.py:15
-msgid "是否执行"
-msgstr "whether to execute"
-
-#: blueapps_example/test_celery/models.py:21
-#: blueapps_example/test_celery/models.py:22
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/models.py:21
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/models.py:22
-msgid "定时任务执行记录"
-msgstr "scheduled task execution records"
-
-#: blueapps_example/test_celery/models.py:29
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/models.py:29
-msgid "任务执行参数"
-msgstr "task execution parameters"
-
-#: blueapps_example/test_celery/models.py:30
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/models.py:30
-msgid "任务执行结果"
-msgstr "task execution results"
-
-#: blueapps_example/test_celery/models.py:31
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/models.py:31
-msgid "任务执行时间"
-msgstr "task execution time"
-
-#: blueapps_example/test_celery/models.py:32
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/models.py:32
-msgid "周期性任务的id"
-msgstr "id of periodic task"
-
-#: blueapps_example/test_celery/models.py:38
-#: blueapps_example/test_celery/models.py:39
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/models.py:38
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/models.py:39
-msgid "周期性任务执行记录"
-msgstr "periodic task execution records"
-
-#: blueapps_example/test_celery/templates/test_celery/index.html:11
-#: blueapps_example/test_celery/templates/test_celery/periodic_task.html:17
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:11
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:27
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/index.html:11
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task.html:17
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:11
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:27
-msgid "后台任务"
-msgstr "Backend task"
-
-#: blueapps_example/test_celery/templates/test_celery/index.html:14
-#: blueapps_example/test_celery/templates/test_celery/periodic_task.html:20
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:14
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:30
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/index.html:14
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task.html:20
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:14
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:30
-msgid "周期任务"
-msgstr "Periodic task"
-
-#: blueapps_example/test_celery/templates/test_celery/index.html:21
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/index.html:21
-msgid "消息："
-msgstr "Message："
-
-#: blueapps_example/test_celery/templates/test_celery/index.html:23
-#: blueapps_example/test_celery/templates/test_celery/index.html:89
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/index.html:23
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/index.html:89
-msgid "请填写消息"
-msgstr "Please fill in the message"
-
-#: blueapps_example/test_celery/templates/test_celery/index.html:27
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/index.html:27
-msgid "定时执行："
-msgstr "Timed execution："
-
-#: blueapps_example/test_celery/templates/test_celery/index.html:35
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/index.html:35
-msgid "定时时间："
-msgstr "timing："
-
-#: blueapps_example/test_celery/templates/test_celery/index.html:37
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/index.html:37
-msgid "选择时间"
-msgstr "Selection period"
-
-#: blueapps_example/test_celery/templates/test_celery/index.html:43
-#: blueapps_example/test_celery/templates/test_celery/index.html:114
-#: blueapps_example/test_celery/templates/test_celery/index.html:117
-#: blueapps_example/test_celery/templates/test_celery/index.html:148
-#: blueapps_example/test_celery/templates/test_celery/index.html:152
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/index.html:43
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/index.html:114
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/index.html:117
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/index.html:148
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/index.html:152
-msgid "提交任务"
-msgstr "Submit task"
-
-#: blueapps_example/test_celery/templates/test_celery/index.html:101
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/index.html:101
-msgid "天 "
-msgstr "day "
-
-#: blueapps_example/test_celery/templates/test_celery/index.html:101
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/index.html:101
-msgid "小时 "
-msgstr "hours "
-
-#: blueapps_example/test_celery/templates/test_celery/index.html:101
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/index.html:101
-msgid "分钟 "
-msgstr "minutes "
-
-#: blueapps_example/test_celery/templates/test_celery/index.html:101
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/index.html:101
-msgid "秒"
-msgstr "seconds "
-
-#: blueapps_example/test_celery/templates/test_celery/index.html:113
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/index.html:113
-msgid "查询任务状态失败"
-msgstr "Query task status failed"
-
-#: blueapps_example/test_celery/templates/test_celery/index.html:129
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/index.html:129
-msgid "正在提交"
-msgstr "submission"
-
-#: blueapps_example/test_celery/templates/test_celery/index.html:140
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/index.html:140
-msgid "任务创建成功，正在后台执行"
-msgstr "Task created successfully, executing in background"
-
-#: blueapps_example/test_celery/templates/test_celery/index.html:141
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/index.html:141
-msgid "提交成功"
-msgstr "Submit successfully"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task.html:28
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task.html:28
-msgid "新建周期任务"
-msgstr "New periodic task"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task.html:33
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:41
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task.html:33
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:41
-msgid "任务"
-msgstr "Task"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task.html:34
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task.html:34
-msgid "参数(args)"
-msgstr "Arguments (args)"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task.html:35
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task.html:35
-msgid "参数(kwargs)"
-msgstr "Parameters (kwargs)"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task.html:36
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task.html:36
-msgid "Crontab策略"
-msgstr "Crontab strategy"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task.html:37
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task.html:37
-msgid "操作"
-msgstr "Operating"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task.html:54
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:83
-#: blueapps_example/test_component/templates/test_component/index.html:34
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task.html:54
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:83
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_component/templates/test_component/index.html:34
-#, fuzzy
-#| msgid "月："
-msgid "搜索："
-msgstr "month："
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task.html:55
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:84
-#: blueapps_example/test_component/templates/test_component/index.html:35
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task.html:55
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:84
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_component/templates/test_component/index.html:35
-msgid "每页显示 _MENU_ 记录"
-msgstr "Display _MENU_ record per page"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task.html:56
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:85
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task.html:56
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:85
-msgid "没找到相应的数据！"
-msgstr "No corresponding data found!"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task.html:57
-#: blueapps_example/test_component/templates/test_component/index.html:38
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task.html:57
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_component/templates/test_component/index.html:38
-msgid "分页 _PAGE_ / _PAGES_"
-msgstr "paging _PAGE_ / _PAGES_"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task.html:58
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:87
-#: blueapps_example/test_component/templates/test_component/index.html:39
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task.html:58
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:87
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_component/templates/test_component/index.html:39
-msgid "暂无数据！"
-msgstr "No data yet!"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task.html:59
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:88
-#: blueapps_example/test_component/templates/test_component/index.html:40
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task.html:59
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:88
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_component/templates/test_component/index.html:40
-msgid "(从 _MAX_ 条数据中搜索)"
-msgstr "(search from _MAX_ data)"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task.html:61
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:90
-#: blueapps_example/test_component/templates/test_component/index.html:42
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task.html:61
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:90
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_component/templates/test_component/index.html:42
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/templates/base.html:67
-#: templates/base.html:67
-msgid "首页"
-msgstr "Home"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task.html:62
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:91
-#: blueapps_example/test_component/templates/test_component/index.html:43
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task.html:62
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:91
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_component/templates/test_component/index.html:43
-msgid "尾页"
-msgstr "Tail"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task.html:63
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:92
-#: blueapps_example/test_component/templates/test_component/index.html:44
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task.html:63
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:92
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_component/templates/test_component/index.html:44
-msgid "上一页"
-msgstr "Previous"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task.html:64
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:93
-#: blueapps_example/test_component/templates/test_component/index.html:45
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task.html:64
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:93
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_component/templates/test_component/index.html:45
-msgid "下一页"
-msgstr "Next"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task.html:100
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task.html:100
-msgid "修改"
-msgstr "Modify task"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task.html:101
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task.html:101
-msgid "删除"
-msgstr "Delete"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task.html:102
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task.html:102
-msgid "执行记录"
-msgstr "Task execution record"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task.html:111
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task.html:111
-msgid "确定删除该任务"
-msgstr "OK to delete the task"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task.html:129
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task.html:129
-msgid "确定"
-msgstr "Ok"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task.html:131
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task.html:131
-msgid "取消"
-msgstr "Cancel"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:20
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:36
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:20
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:36
-msgid "返回"
-msgstr "Return"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:27
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:27
-msgid "任务："
-msgstr "Task："
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:33
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:33
-msgid "任务参数："
-msgstr "Task parameters："
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:42
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:42
-msgid "Crontab 策略："
-msgstr "Crontab strategy："
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:44
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:44
-msgid "分："
-msgstr "minute："
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:50
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:50
-msgid "时："
-msgstr "hour："
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:56
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:56
-msgid "日："
-msgstr "day："
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:62
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:62
-msgid "月："
-msgstr "month："
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:68
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:68
-msgid "周："
-msgstr "week："
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:74
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:74
-msgid "周期参数的输入与 crontab 语法一致"
-msgstr "The input of period parameters is consistent with the crontab syntax"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:79
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:79
-msgid "温馨提示:"
-msgstr "Tips:"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:80
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:80
-msgid "1.新建、修改任务的 执行参数 和 crontab策略，也可以通过"
-msgstr "1. Create and modify task execution parameters and crontab policies."
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:80
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:80
-msgid "页面，直接操作"
-msgstr "page, direct operation"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:80
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:80
-msgid "表来完成"
-msgstr "table to complete"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:81
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:81
-msgid ""
-"2.相同任务，相同参数的周期任务只允许有一条记录；相同任务，相同参数、不同调度"
-"策略的任务可以通过"
-msgstr ""
-"2. Periodic tasks of the same task and the same parameters can only have one "
-"record; tasks of the same task, the same parameters, and different "
-"scheduling strategies can pass"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:81
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:81
-msgid "crontab策略"
-msgstr "crontab strategy"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:81
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:81
-msgid "的配置合并为一个任务"
-msgstr "the configurations into one task"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:85
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:222
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:85
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:222
-msgid "新建任务并运行"
-msgstr "New task and run"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:87
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:224
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:87
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:224
-msgid "修改任务"
-msgstr "Modify task"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:121
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:121
-msgid "不能为空"
-msgstr "Can't be empty"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:128
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:128
-msgid "Crontab 策略的分输入不合法"
-msgstr "Illegal minutes of crontab policy"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:135
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:135
-msgid "Crontab 策略的时输入不合法"
-msgstr "Illegal hours of crontab policy"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:142
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:142
-msgid "Crontab 策略的日输入不合法"
-msgstr "Illegal days of crontab policy"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:149
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:149
-msgid "Crontab 策略的月输入不合法"
-msgstr "Illegal mouths of crontab policy"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:156
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:156
-msgid "Crontab 策略的周输入不合法"
-msgstr "Illegal weeks of crontab policy"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:239
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_edit.html:239
-msgid "任务保存成功"
-msgstr "Task saved"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:42
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:42
-msgid "任务参数(args)"
-msgstr "Task parameters (args)"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:43
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:43
-msgid "任务参数(kwargs)"
-msgstr "Task parameters (kwargs)"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:44
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:44
-msgid "Crontab 策略"
-msgstr "Crontab strategy"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:60
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:60
-msgid "任务执行记录"
-msgstr "Task execution record"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:65
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:65
-msgid "执行参数"
-msgstr "Execution parameter"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:66
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:66
-msgid "执行结果"
-msgstr "Results of the execution"
-
-#: blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:86
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/templates/test_celery/periodic_task_record.html:86
-msgid "分页 _PAGE_ / _PAGES_ 共条"
-msgstr "_PAGE_ / _PAGES_ pages in total"
-
-#: blueapps_example/test_celery/views.py:51
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/views.py:51
-msgid "蓝鲸开发样例——定时任务"
-msgstr "BlueKing development example-scheduled Task"
-
-#: blueapps_example/test_celery/views.py:51
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/views.py:51
-msgid "蓝鲸开发样例——普通后台任务"
-msgstr "BlueKing development example-common background tasks"
-
-#: blueapps_example/test_celery/views.py:77
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/views.py:77
-msgid "未执行定时任务"
-msgstr "Timed tasks are not executed"
-
-#: blueapps_example/test_celery/views.py:82
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/views.py:82
-msgid "轮询定时任务状态出错"
-msgstr "Polling timing task status error"
-
-#: blueapps_example/test_celery/views.py:171
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/views.py:171
-#, python-format
-msgid ""
-"任务名为：%s\n"
-"任务参数为：X:%s,Y:%s\n"
-"的周期任务已存在！"
-msgstr ""
-"The task is named：%s\n"
-"task parameters are：X:%s,Y:%s\n"
-"periodic task already exists！"
-
-#: blueapps_example/test_celery/views.py:230
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_celery/views.py:230
-msgid "任务删除成功"
-msgstr "Task deleted successfully"
-
-#: blueapps_example/test_component/templates/test_component/index.html:17
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_component/templates/test_component/index.html:17
-msgid "业务ID"
-msgstr "biz ID"
-
-#: blueapps_example/test_component/templates/test_component/index.html:18
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_component/templates/test_component/index.html:18
-msgid "业务名称"
-msgstr "biz name"
-
-#: blueapps_example/test_component/templates/test_component/index.html:19
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_component/templates/test_component/index.html:19
-msgid "创建者"
-msgstr "creator"
-
-#: blueapps_example/test_component/templates/test_component/index.html:20
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_component/templates/test_component/index.html:20
-msgid "业务负责人"
-msgstr "biz owners"
-
-#: blueapps_example/test_component/templates/test_component/index.html:21
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_component/templates/test_component/index.html:21
-msgid "产品负责人"
-msgstr "product owners"
-
-#: blueapps_example/test_component/templates/test_component/index.html:36
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_component/templates/test_component/index.html:36
-msgid "数据未加载！"
-msgstr "Data not loaded!"
-
-#: blueapps_example/test_component/templates/test_component/index.html:37
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/test_component/templates/test_component/index.html:37
-msgid "加载无数据！"
-msgstr "No data loaded!"
-
-#: config/default.py:115
-msgid "English"
-msgstr "English"
-
-#: config/default.py:116
-msgid "简体中文"
-msgstr "Simplified Chinese"
-
-#: home_application/templates/home_application/contact.html:4
-#: home_application/templates/home_application/dev_guide.html:4
-#: home_application/templates/home_application/index_home.html:4
-msgid "蓝鲸开发框架"
-msgstr "BlueKing Development Framework"
-
-#: home_application/templates/home_application/contact.html:24
-msgid "关注我们"
-msgstr "Follow us at wechat"
-
-#: home_application/templates/home_application/contact.html:31
-msgid "深圳市南山区腾讯大厦"
-msgstr "Tencent Building, Nanshan District, Shenzhen"
-
-#: home_application/templates/home_application/contact.html:37
-msgid "企业QQ：800802001"
-msgstr "Ent QQ: 800802001"
-
-#: home_application/templates/home_application/contact.html:43
-msgid "邮箱：contactus_bk@tencent.com"
-msgstr "Email：contactus_bk@tencent.com"
-
-#: home_application/templates/home_application/dev_guide.html:12
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/templates/base.html:72
-#: templates/base.html:72
-msgid "开发指引"
-msgstr "Dev Guide"
-
-#: home_application/templates/home_application/dev_guide.html:13
-msgid "了解蓝鲸开发框架，从这里开始"
-msgstr "Learn about the blueking dev framework and start here."
-
-#: home_application/templates/home_application/dev_guide.html:22
-msgid "本地开发环境安装"
-msgstr "Local development environment installation"
-
-#: home_application/templates/home_application/dev_guide.html:24
-msgid "安装指南"
-msgstr "installation guide"
-
-#: home_application/templates/home_application/dev_guide.html:26
-msgid "注意：应用测试、正式部署时会自动安装运行环境，并部署应用"
-msgstr ""
-"Note：When the application is tested and officially deployed, the running "
-"environment is automatically installed."
-
-#: home_application/templates/home_application/dev_guide.html:35
-msgid "开发项目"
-msgstr "Dev project"
-
-#: home_application/templates/home_application/dev_guide.html:37
-msgid "1.配置修改"
-msgstr "1. Modify configuration"
-
-#: home_application/templates/home_application/dev_guide.html:38
-msgid ""
-"（1）config/__init__.py 文件：APP_CODE \\ SECRET_KEY （对应 蓝鲸智云开发者中"
-"心 -&gt; 点击应用ID -&gt; 基本信息 中的应用ID和应用TOKEN）"
-msgstr ""
-"（1）config/__init__.py file：APP_CODE \\ SECRET_KEY (developer center -> "
-"Application ID -> App ID and App Token in basic info)."
-
-#: home_application/templates/home_application/dev_guide.html:39
-msgid ""
-"（2）config/__init__.py 文件：BK_URL（蓝鲸智云开发者中心的域名，形如：http://"
-"paas.bking.com）"
-msgstr ""
-"（2）config/__init__.py file：BK_URL(The domain of the blueking developer "
-"center is as follows：http://paas.bking.com)."
-
-#: home_application/templates/home_application/dev_guide.html:40
-msgid ""
-"（3）config/dev.py 文件：DATABASES（请创建本地开发数据库，并修改配置信息）"
-msgstr ""
-"（3）config/dev.py file：DATABASES(Please create a local development "
-"database and modify the configuration information)."
-
-#: home_application/templates/home_application/dev_guide.html:41
-msgid "（4）config/stag.py 文件：DATABASES（请创建测试数据库，并修改配置信息）"
-msgstr ""
-"（4）config/stag.py file：DATABASES(Please create a test database and modify "
-"the configuration information)."
-
-#: home_application/templates/home_application/dev_guide.html:42
-msgid "（5）config/prod.py 文件：DATABASES（请创建正式数据库，并修改配置信息）"
-msgstr ""
-"（5）config/prod.py file：DATABASES(Please create a formal database and "
-"modify the configuration information)."
-
-#: home_application/templates/home_application/dev_guide.html:43
-msgid "注意：测试环境 和 正式环境 的数据库需要对 AppServer 授权"
-msgstr ""
-"Note：The database of the test environment and production environment needs "
-"to authorize appserver."
-
-#: home_application/templates/home_application/dev_guide.html:44
-msgid "2.celery 配置"
-msgstr "2.Celery configuration"
-
-#: home_application/templates/home_application/dev_guide.html:45
-msgid "若需要使用 celery，请修改以下配置：（"
-msgstr "To use Celery, modify the following configuration：("
-
-#: home_application/templates/home_application/dev_guide.html:45
-msgid "celery 开发指引"
-msgstr "Celery development guide"
-
-#: home_application/templates/home_application/dev_guide.html:46
-msgid "（1）config/default.py 文件：IS_USE_CELERY 的值设置为: "
-msgstr "（1）config/default.py file：The value of IS_USE_CELERY is set to: "
-
-#: home_application/templates/home_application/dev_guide.html:47
-msgid ""
-"（2）config/dev.py 文件：BROKER_URL（请创建本地开发的 celery消息队列，并修改"
-"配置信息，推荐使用 redis）"
-msgstr ""
-"（2）config/dev.py file：BROKER_URL (Please create a locally developed "
-"celery message queue and modify the conf information. Redis is recommended.)"
-
-#: home_application/templates/home_application/dev_guide.html:48
-msgid "（3）config/default.py 文件：CELERY_IMPORTS（添加celery任务模块）"
-msgstr "（3）config/default.py file：CELERY_IMPORTS (Add celery task module)."
-
-#: home_application/templates/home_application/dev_guide.html:50
-msgid "3.数据库操作"
-msgstr "3. Database operations"
-
-#: home_application/templates/home_application/dev_guide.html:51
-msgid "Django Migration的使用方法如下:"
-msgstr "The usage of Django Migration is as follows:"
-
-#: home_application/templates/home_application/dev_guide.html:52
-msgid "（1）执行 manage.py migrate（Django默认表创建）。"
-msgstr "（1）Execute manage.py migrate (Django default table creation)."
-
-#: home_application/templates/home_application/dev_guide.html:53
-msgid ""
-"（2）执行 manage.py startapp yourappname、添加yourappname到config/default.py"
-"文件的\"INSTALLED_APPS\"变量中。"
-msgstr ""
-"（2）Run manage.py startapp yourappname and add yourappname to the variable "
-"\"INSTALLED_APPS\" in config/default.py file."
-
-#: home_application/templates/home_application/dev_guide.html:54
-msgid ""
-"（3）在Application的models.py中建立数据库模型，执行manage.py makemigrations "
-"yourappname。"
-msgstr ""
-"（3）Create a database model in Application's models.py and execute manage."
-"py makemigrations yourappname."
-
-#: home_application/templates/home_application/dev_guide.html:55
-msgid "（4）执行manage.py migrate yourappname。"
-msgstr "（4）Execute manage.py migrate yourappname."
-
-#: home_application/templates/home_application/dev_guide.html:63
-msgid "部署项目"
-msgstr "Deployment project"
-
-#: home_application/templates/home_application/dev_guide.html:65
-msgid ""
-"通过蓝鲸智云开发者中心提供的“测试部署”、“正式部署”服务将应用部署到测试\\正式"
-"环境中。"
-msgstr ""
-"Deploy the application to the test or prod environment through the “test "
-"deployment“ and “officially deployment“."
-
-#: home_application/templates/home_application/dev_guide.html:66
-msgid "操作入口：蓝鲸智云开发者中心 -&gt; 点击应用名称 -&gt; 应用部署。 "
-msgstr ""
-"Operation entrance：Developer center -> Click on the application name -"
-"> deployment."
-
-#: home_application/templates/home_application/dev_guide.html:67
-msgid ""
-"（1）测试部署：将应用代码在测试环境上进行部署，部署成功后就可以在测试环境中使"
-"用您的应用。"
-msgstr ""
-"（1）Test deployment：Deploy the application code on the test environment. "
-"After the deployment is successful, you can use your application."
-
-#: home_application/templates/home_application/dev_guide.html:68
-msgid ""
-"（2）正式部署：将应用代码在正式环境上进行部署，部署成功后就可以在正式环境中使"
-"用您的应用。"
-msgstr ""
-"（2）Official deployment：Deploy the application code on the product "
-"environment. After the deployment is successful, you can use your "
-"application."
-
-#: home_application/templates/home_application/dev_guide.html:69
-msgid ""
-"（3）下架操作：系统将应用代码从您选择的环境上撤销部署，届时用户将无法访问该应"
-"用，但是该应用的数据库依然保留。"
-msgstr ""
-"（3）Delisting operation：The system will undeploy the application code from "
-"the environment of your choice, but the database of the application is "
-"reserved."
-
-#: home_application/templates/home_application/index_home.html:14
-msgid "欢迎使用蓝鲸智云PaaS平台"
-msgstr "Welcome to blueking cloud paas platform."
-
-#: home_application/templates/home_application/index_home.html:17
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/templates/base.html:52
-#: templates/base.html:52
-msgid "蓝鲸智云开发框架"
-msgstr "Blueking dev framework"
-
-#: home_application/templates/home_application/index_home.html:17
-msgid "助力你的自动化"
-msgstr "power your automation"
-
-#: home_application/templates/home_application/index_home.html:21
-msgid ""
-"您现在打开的应用是由蓝鲸智云示例代码生成的，该示例代码称为“SaaS开发框架”。"
-msgstr ""
-"The application you are opening is generated by the blueking cloud example "
-"code, which is called the “saas dev framework“."
-
-#: home_application/templates/home_application/index_home.html:22
-msgid ""
-"蓝鲸智云PaaS平台提供了完善的前后台开发框架、调度引擎、公共组件等模块，帮助业"
-"务的产品和技术人员快速构建低成本、免运维的支撑工具和运营系统。"
-msgstr ""
-"The blueking cloud paas platform provides a complete frontend and backend "
-"development framework, scheduling engine, public components and other "
-"modules to help business products and technicians to quickly build low-cost, "
-"maintenance-free support tools and operation systems."
-
-#: home_application/templates/home_application/index_home.html:23
-msgid "若想体验快速开发应用的功能，请前往"
-msgstr "To experience the power of rapid application development, go to"
-
-#: home_application/templates/home_application/index_home.html:23
-msgid "“开发者中心”"
-msgstr "“Developer Center“"
-
-#: home_application/templates/home_application/index_home.html:23
-msgid "。"
-msgstr "."
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/admin.py:13
-msgid "Personal info"
-msgstr "Personal info"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/admin.py:14
-msgid "Permissions"
-msgstr "Permissions"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/admin.py:16
-msgid "Important dates"
-msgstr "Important dates"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/apps.py:9
-msgid "account"
-msgstr "account"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/components/bk_jwt/backends.py:81
-msgid "bkoauth暂不支持JWT协议"
-msgstr "bkoauth does not support the JWT protocol"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/components/bk_jwt/backends.py:86
-#, python-format
-msgid "jwt_invalid: %s"
-msgstr "jwt_invalid: %s"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/components/bk_jwt/backends.py:92
-msgid "APP鉴权失败"
-msgstr "APP authentication failed"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/components/bk_jwt/backends.py:104
-msgid "用户鉴权失败且不支持ESB白名单"
-msgstr "user authentication failed and ESB whitelist is not supported"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/components/bk_jwt/backends.py:111
-msgid "用户或来源为空"
-msgstr "user or source is empty"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/components/rio/backends.py:85
-msgid "[RIO]login exception"
-msgstr "[RIO] login exception"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/components/rio/backends.py:91
-msgid "[RIO]login time expire"
-msgstr "[RIO] login time expire"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/components/rio/backends.py:97
-msgid "[RIO] App access must use a separate domain"
-msgstr "[RIO] App access must use a separate domain"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/components/rio/backends.py:103
-msgid "[RIO] login token limit"
-msgstr "[RIO] login token limit"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/components/rio/backends.py:115
-msgid "[RIO]login signature error"
-msgstr "[RIO] login signature error"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/conf.py:48
-msgid "您正在蓝鲸应用上执行敏感操作，验证码：{}"
-msgstr ""
-"You are performing a sensitive operation on the blueking app, verification code：{}"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/handlers/response.py:124
-msgid "您的登陆请求无法经智能网关正常检测，请与管理人员联系"
-msgstr ""
-"Your login request could not be detected normally by the smart gateway, "
-"please contact the administrator"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/handlers/response.py:135
-msgid "您的登陆请求无法经BK JWT检测，请与管理人员联系"
-msgstr ""
-"Your login request cannot be detected by BK JWT, please contact the "
-"administrator"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/models.py:36
-msgid "The given username must be set"
-msgstr "必须设置给定的username"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/models.py:56
-msgid "username"
-msgstr "username"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/models.py:59
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/models.py:221
-msgid "Required. 64 characters or fewer. Letters, digits and underlined only."
-msgstr "Required. 64 characters or fewer. Letters, digits and underlined only."
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/models.py:63
-msgid ""
-"Enter a valid openid. This value may contain only letters, numbers and "
-"underlined characters."
-msgstr ""
-"Enter a valid openid. This value may contain only letters, numbers and "
-"underlined characters."
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/models.py:69
-msgid "A user with that openid already exists."
-msgstr "A user with that openid already exists."
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/models.py:74
-msgid "nick name"
-msgstr "nick name"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/models.py:77
-msgid "Required. 64 characters or fewer."
-msgstr "Required. 64 characters or fewer."
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/models.py:80
-msgid "staff status"
-msgstr "staff status"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/models.py:82
-msgid "Designates whether the user can log into this admin site."
-msgstr "Designates whether the user can log into this admin site."
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/models.py:86
-msgid "active"
-msgstr "active"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/models.py:88
-msgid ""
-"Designates whether this user should be treated as active. Unselect this "
-"instead of deleting accounts."
-msgstr ""
-"Designates whether this user should be treated as active. Unselect this "
-"instead of deleting accounts."
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/models.py:92
-msgid "date joined"
-msgstr "date joined"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/models.py:102
-msgid "user"
-msgstr "user"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/models.py:103
-msgid "users"
-msgstr "users"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/models.py:145
-msgid "ESB发送短信接口错误，可能由权限问题导致"
-msgstr "ESB send SMS interface error, which may be caused by permission problem."
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/models.py:163
-msgid "初始化验证码，发送成功"
-msgstr "Initialization of verification code, sending succeeded."
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/models.py:177
-msgid "已生成的验证码，重发成功"
-msgstr "Generated verification code, resend succeeded."
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/models.py:180
-msgid "暂不能重发验证码，请稍等"
-msgstr "We can't resend the verification code at this time. Please wait."
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/models.py:188
-msgid "重新生成验证码，发送成功"
-msgstr "Regenerate the verification code and send it successfully."
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/models.py:193
-msgid "数据库中的验证码异常"
-msgstr "Verification code exception in database."
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/models.py:225
-msgid ""
-"Enter a valid key. This value may contain only letters, numbers and "
-"underlined characters."
-msgstr ""
-"Enter a valid key. This value may contain only letters, numbers and "
-"underlined characters."
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/models.py:234
-msgid "user property"
-msgstr "user property"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/models.py:235
-msgid "user properties"
-msgstr "user properties"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/templates/account/login_page.html:5
-msgid "即将转入蓝鲸登录..."
-msgstr "Coming to blueking Login ..."
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/templates/account/login_page.html:13
-msgid "您需要登录蓝鲸"
-msgstr "You need to log in to blueking"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/templates/account/login_page.html:14
-msgid "看起来："
-msgstr "Looks："
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/templates/account/login_page.html:15
-msgid "1.您还没有登录蓝鲸"
-msgstr "1. You are not logged in to the blueking"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/templates/account/login_page.html:16
-msgid "2.您之前的登录已经失效了"
-msgstr "2. Your previous login has expired"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/templates/account/login_page.html:17
-msgid "立即登录"
-msgstr "log in immediately"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/templates/account/login_success.html:5
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/templates/account/login_success.html:14
-msgid "登录成功"
-msgstr "login successful"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/utils/http.py:44
-#, python-format
-msgid "异常请求方式，%s"
-msgstr "Exception request mode,% s"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/utils/http.py:46
-#, python-format
-msgid "请求超时，url=%s，method=%s，params=%s，timeout=%s"
-msgstr "Request timed out, url =%s, method =%s, params =%s, timeout =%s"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/utils/http.py:54
-#, python-format
-msgid "返回异常状态码，status_code=%s，url=%s，method=%s，params=%s"
-msgstr ""
-"return exception status code，status_code=%s，url=%s，method=%s，params=%s"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/account/utils/http.py:62
-#, python-format
-msgid ""
-"返回内容不符合 JSON 格式，url=%s，method=%s，params=%s，error=%s，response=%s"
-msgstr ""
-"The returned content does not conform to JSON format，url=%s，method=%s，"
-"params=%s，error=%s，response=%s"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/app_control/templates/app_control/home.html:128
-msgid "需要组件开发者完成相关接口开发"
-msgstr ""
-"Component developers are required to complete the development of relevant "
-"interfaces"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/blueapps_example/config/sites/tencent/utils.py:31
-msgid "esb调用get_rtx_by_uin结果为False"
-msgstr "esb calls get_rtx_by_uin with False"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/templates/base.html:7
-#: templates/base.html:7
-msgid "开发样例|蓝鲸智云"
-msgstr "dev Example|BK Cloud"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/templates/base.html:68
-#: templates/base.html:68
-msgid "功能样例"
-msgstr "Func Example"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/templates/base.html:69
-#: templates/base.html:69
-msgid "后台任务样例"
-msgstr "Celery Task"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/templates/base.html:70
-#: templates/base.html:70
-msgid "组件样例"
-msgstr "Component Example"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/templates/base.html:71
-#: templates/base.html:71
-msgid "ajax异步样例"
-msgstr "Ajax Example"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/templates/base.html:73
-#: templates/base.html:73
-msgid "联系我们"
-msgstr "Contact Us"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/templates/base.html:76
-#: templates/base.html:76
-msgid "语言"
-msgstr "Language"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/templates/base.html:107
-#: templates/base.html:107
-msgid "QQ咨询(800802001)"
-msgstr "QQ Consulting (800802001)"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/templates/base.html:108
-#: templates/base.html:108
-msgid "蓝鲸论坛"
-msgstr "BlueKing Forum"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/templates/base.html:109
-#: templates/base.html:109
-msgid "蓝鲸官网"
-msgstr "BlueKing Official Website"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/templates/base.html:110
-#: templates/base.html:110
-msgid "蓝鲸智云工作台"
-msgstr "BlueKing Workbench"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/example_template/templates/base.html:113
-#: templates/base.html:113
-msgid "蓝鲸智云 版权所有"
-msgstr "BlueKing All Rights Reserved"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/weixin_template/weixin/views.py:53
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/weixin_template/weixin/views.py:76
-msgid "其他"
-msgstr "other"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/weixin_template/weixin/views.py:83
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/weixin_template/weixin/views.py:84
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/weixin_template/weixin/views.py:89
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/weixin_template/weixin/views.py:90
-msgid "无业务"
-msgstr "no biz"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/wxapp_template/wxapp/views.py:54
-msgid "分类一"
-msgstr "category one"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/wxapp_template/wxapp/views.py:58
-msgid "分类二"
-msgstr "category two"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/wxapp_template/wxapp/views.py:62
-msgid "分类三"
-msgstr "category III"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/wxapp_template/wxapp/views.py:106
-#, python-format
-msgid "第%s篇文章标题"
-msgstr "Title of Article %s"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/conf/wxapp_template/wxapp/views.py:107
-#, python-format
-msgid "这是内容%s"
-msgstr "This is content %s"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/core/exceptions/base.py:12
-msgid "APP异常"
-msgstr "APP exception"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/core/exceptions/base.py:41
-msgid "客户端请求异常"
-msgstr "client request exception"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/core/exceptions/base.py:48
-msgid "服务端服务异常"
-msgstr "Server service exception"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/core/exceptions/base.py:55
-msgid "找不到请求的资源"
-msgstr "The requested resource could not be found."
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/core/exceptions/base.py:62
+"The format of the returned data is incorrect, and the result format is not "
+"json."
+
+#: apps/api/base.py:335
+#, python-brace-format
+msgid "[BKAPI] {info}"
+msgstr "[bkapi] {info}"
+
+#: apps/api/base.py:425
+#, fuzzy, python-brace-format
+#| msgid "异常请求方式，%s"
+msgid "异常请求方式，{method}"
+msgstr "Exception request mode，{method}"
+
+#: apps/api/base.py:589
+#, fuzzy, python-brace-format
+#| msgid "请求方法不支持"
+msgid "请求方法 {key} 不存在"
+msgstr "Request method {key} is not exist"
+
+#: apps/api/modules/bscp.py:19
+msgid "蓝鲸配置服务"
+msgstr "Bscp"
+
+#: apps/api/modules/cc.py:67 apps/iam/handlers/permission.py:311
+msgid "配置平台"
+msgstr "Cmdb"
+
+#: apps/api/modules/cmsi.py:19
+msgid "消息管理"
+msgstr "Cmsi"
+
+#: apps/api/modules/esb.py:26
+msgid "ESB"
+msgstr "ESB"
+
+#: apps/api/modules/gse.py:19
+msgid "管控平台"
+msgstr "Gse"
+
+#: apps/api/modules/job.py:19
+msgid "作业平台"
+msgstr "Job"
+
+#: apps/api/modules/usermanage.py:19
+msgid "用户管理模块"
+msgstr "Usermanage"
+
+#: apps/exceptions.py:39
+msgid "系统异常"
+msgstr "System exception"
+
+#: apps/exceptions.py:118
+msgid "系统错误"
+msgstr "System error"
+
+#: apps/exceptions.py:129
 msgid "参数验证失败"
-msgstr "parameter validation failed"
+msgstr "Parameter validation failed"
 
-#: pythonenv/lib/python3.6/site-packages/blueapps/core/exceptions/base.py:69
-msgid "关键参数缺失"
-msgstr "missing key parameters"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/core/exceptions/base.py:76
-msgid "登陆失败"
-msgstr "login failed"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/core/exceptions/base.py:83
-msgid "请求拒绝"
-msgstr "request denied"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/core/exceptions/base.py:90
-msgid "请求资源被锁定"
-msgstr "Request resource is locked."
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/core/exceptions/base.py:97
-msgid "请求方法不支持"
-msgstr "Request method is not supported"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/core/exceptions/base.py:104
-msgid "登陆请求经智能网关检测失败"
-msgstr "Login request failed detection by smart gateway"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/core/exceptions/base.py:111
-msgid "登陆请求经JWT检测失败"
-msgstr "Login request failed JWT detection"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/core/exceptions/base.py:118
-msgid "数据库异常"
-msgstr "database exception"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/core/exceptions/base.py:124
-msgid "网络异常导致远程服务失效"
-msgstr "Network abnormality causes remote service failure"
-
-#: pythonenv/lib/python3.6/site-packages/blueapps/core/exceptions/base.py:131
+#: apps/exceptions.py:134
 msgid "远程服务请求结果异常"
 msgstr "Remote service request result exception."
 
-#: pythonenv/lib/python3.6/site-packages/blueapps/core/exceptions/base.py:138
-msgid "远程服务返回结果格式异常"
-msgstr "The format of the result returned by the remote service is abnormal."
+#: apps/exceptions.py:139
+msgid "组件调用异常"
+msgstr "Component call exception"
 
-#: pythonenv/lib/python3.6/site-packages/blueapps/core/exceptions/middleware.py:72
+#: apps/exceptions.py:144
+msgid "业务不存在"
+msgstr "Business does not exist"
+
+#: apps/exceptions.py:149
+msgid "语言不支持"
+msgstr "Language not supported"
+
+#: apps/exceptions.py:154
+#, fuzzy
+#| msgid "系统权限不足"
+msgid "权限不足"
+msgstr "Insufficient system permissions"
+
+#: apps/exceptions.py:160
+msgid "服务不稳定，请检查组件健康状况"
+msgstr "The service is unstable, please check the component health status"
+
+#: apps/exceptions.py:166
+msgid "请升级blueapps至最新版本"
+msgstr "Please upgrade blueapps to the latest version"
+
+#: apps/exceptions.py:171
+msgid "获取JWT信息异常"
+msgstr "Obtaining JWT information is abnormal"
+
+#: apps/exceptions.py:176
+msgid "JWT校验失败"
+msgstr "JWT verification failed"
+
+#: apps/exceptions.py:181
+msgid "认证信息已过期, 请重装并填入认证信息"
+msgstr ""
+"The authentication information has expired, please reinstall and fill in the "
+"authentication information"
+
+#: apps/generic.py:68
+msgid "该接口暂未配置swagger mock数据"
+msgstr "The interface has not yet configured swagger mock data"
+
+#: apps/generic.py:205 apps/middlewares.py:168
+#, python-brace-format
+msgid "【APP 自定义异常】{message}, code={code}, args={args}"
+msgstr "【app custom exception】{message}, code={code}, args={args}"
+
+#: apps/generic.py:224
+#, fuzzy
+#| msgid "系统异常,请联系管理员处理"
+msgid "系统错误，请联系管理员"
+msgstr "The system is abnormal, please contact the administrator."
+
+#: apps/gsekit/adapters/bscp/exceptions.py:25
+msgid "BSCP块异常"
+msgstr "BSCP block exception"
+
+#: apps/gsekit/adapters/bscp/exceptions.py:30
+msgid "BSCP配置不存在"
+msgstr "BSCP configuration does not exist"
+
+#: apps/gsekit/adapters/bscp/exceptions.py:35
+msgid "BSCP下发配置失败"
+msgstr "BSCP delivery Configuration Failed"
+
+#: apps/gsekit/adapters/bscp/exceptions.py:36
+#, python-brace-format
+msgid "BSCP下发配置失败, error_msg: [{error_msg}]"
+msgstr "BSCP delivery configuration failed, error_msg: [{error_msg}]"
+
+#: apps/gsekit/adapters/bscp/exceptions.py:41
+msgid "BSCP配置提交异常"
+msgstr "BSCP configuration submission exception"
+
+#: apps/gsekit/adapters/bscp/exceptions.py:46
+msgid "BSCP创建进程属性异常"
+msgstr "BSCP creation process attribute exception"
+
+#: apps/gsekit/adapters/bscp/exceptions.py:51
+msgid "BSCP AGENT已离线，请尝试重装AGENT或联系管理员处理"
+msgstr ""
+"BSCP AGENT is offline, please try to reinstall the AGENT or contact the "
+"administrator"
+
+#: apps/gsekit/adapters/bscp/models.py:20
+#: apps/gsekit/cmdb/serializers/cmdb.py:29 apps/gsekit/configfile/models.py:65
+#: apps/gsekit/configfile/models.py:148 apps/gsekit/job/models.py:127
+#: apps/gsekit/migrate/models.py:21 apps/gsekit/migrate/models.py:46
+#: apps/gsekit/operations/models.py:18 apps/gsekit/operations/serializers.py:47
+#: apps/gsekit/process/models.py:44 apps/gsekit/process/models.py:84
+msgid "业务ID"
+msgstr "Business ID"
+
+#: apps/gsekit/adapters/bscp/models.py:21
+#, fuzzy
+#| msgid "业务ID"
+msgid "BSCP业务ID"
+msgstr "BSCP business ID"
+
+#: apps/gsekit/adapters/bscp/models.py:22
+#: apps/gsekit/adapters/bscp/models.py:42
+msgid "BSCP应用ID"
+msgstr "BSCP application ID"
+
+#: apps/gsekit/adapters/bscp/models.py:24 apps/gsekit/configfile/models.py:151
+#: apps/gsekit/configfile/serializers/config_template.py:118
+msgid "进程对象类型"
+msgstr "Process object type"
+
+#: apps/gsekit/adapters/bscp/models.py:26 apps/gsekit/configfile/models.py:153
+msgid "进程实例ID/进程模板ID"
+msgstr "Process instance ID/process template ID"
+
+#: apps/gsekit/adapters/bscp/models.py:35
+#: apps/gsekit/adapters/bscp/models.py:36
+msgid "BSCP应用"
+msgstr "BSCP application"
+
+#: apps/gsekit/adapters/bscp/models.py:43 apps/gsekit/configfile/models.py:28
+#: apps/gsekit/configfile/models.py:64 apps/gsekit/configfile/models.py:149
+#: apps/gsekit/configfile/models.py:194
+msgid "模板ID"
+msgstr "Template ID"
+
+#: apps/gsekit/adapters/bscp/models.py:44 apps/gsekit/configfile/models.py:198
+msgid "文件名"
+msgstr "File name"
+
+#: apps/gsekit/adapters/bscp/models.py:45
+msgid "文件路径"
+msgstr "File path"
+
+#: apps/gsekit/adapters/bscp/models.py:46
+msgid "BSCP配置ID"
+msgstr "BSCP configuration ID"
+
+#: apps/gsekit/adapters/bscp/models.py:73
+#: apps/gsekit/adapters/bscp/models.py:74
+msgid "BSCP配置"
+msgstr "BSCP configuration"
+
+#: apps/gsekit/cmdb/constants.py:25
+msgid "全部"
+msgstr "All"
+
+#: apps/gsekit/cmdb/constants.py:26
+#, fuzzy
+#| msgid "测试人员"
+msgid "测试"
+msgstr "Testers"
+
+#: apps/gsekit/cmdb/constants.py:27
+msgid "体验"
+msgstr "Experience"
+
+#: apps/gsekit/cmdb/constants.py:28
+msgid "正式"
+msgstr "Formal"
+
+#: apps/gsekit/cmdb/handlers/cmdb.py:70
+#, fuzzy
+#| msgid "业务ID"
+msgid "业务"
+msgstr "Business"
+
+#: apps/gsekit/cmdb/handlers/cmdb.py:71
+msgid "集群"
+msgstr "Cluster"
+
+#: apps/gsekit/cmdb/handlers/cmdb.py:72
+msgid "模块"
+msgstr "Module"
+
+#: apps/gsekit/cmdb/handlers/cmdb.py:73
+msgid "主机"
+msgstr "Host"
+
+#: apps/gsekit/cmdb/handlers/cmdb.py:74 apps/gsekit/job/models.py:99
+#: apps/gsekit/migrate/models.py:39
+msgid "进程"
+msgstr "Process"
+
+#: apps/gsekit/cmdb/handlers/cmdb.py:553
+msgid "(旧)"
+msgstr "(old)"
+
+#: apps/gsekit/cmdb/handlers/cmdb.py:555
+msgid "旧系统字段"
+msgstr "Old system field"
+
+#: apps/gsekit/cmdb/handlers/cmdb.py:563
+msgid "进程别名(旧)"
+msgstr "Process alias (old)"
+
+#: apps/gsekit/cmdb/handlers/cmdb.py:564
+#: apps/gsekit/cmdb/serializers/cmdb.py:37 apps/gsekit/configfile/models.py:196
+msgid "实例ID"
+msgstr "Instance ID"
+
+#: apps/gsekit/cmdb/handlers/cmdb.py:565
+msgid "实例ID（从0编号）"
+msgstr "Instance ID (numbered from 0)"
+
+#: apps/gsekit/cmdb/handlers/cmdb.py:566
+msgid "主机进程实例ID"
+msgstr "Host process instance ID"
+
+#: apps/gsekit/cmdb/handlers/cmdb.py:567
+msgid "主机进程实例ID（从0编号）"
+msgstr "Host process instance ID (numbered from 0)"
+
+#: apps/gsekit/cmdb/handlers/cmdb.py:568
+msgid "【当前实例对象】"
+msgstr "【current instance object】"
+
+#: apps/gsekit/cmdb/handlers/cmdb.py:569
+msgid "【业务拓扑对象】"
+msgstr "【business Topology Object】"
+
+#: apps/gsekit/cmdb/handlers/cmdb.py:570
+msgid "【HELP】帮助"
+msgstr "【help】help"
+
+#: apps/gsekit/cmdb/handlers/cmdb.py:577
+msgid "内置字段"
+msgstr "Built-in fields"
+
+#: apps/gsekit/cmdb/serializers/cmdb.py:30
+msgid "业务名称"
+msgstr "Business name"
+
+#: apps/gsekit/cmdb/serializers/cmdb.py:38
+msgid "实例名称"
+msgstr "Instance name"
+
+#: apps/gsekit/cmdb/serializers/cmdb.py:39
+msgid "对象ID"
+msgstr "Object ID"
+
+#: apps/gsekit/cmdb/serializers/cmdb.py:40
+msgid "对象名称"
+msgstr "Object name"
+
+#: apps/gsekit/cmdb/serializers/cmdb.py:41
+#: apps/gsekit/cmdb/serializers/cmdb.py:118 apps/gsekit/process/models.py:51
+#: apps/gsekit/process/serializers/process.py:43
+#: apps/gsekit/process/serializers/process.py:93
+msgid "服务模板ID"
+msgstr "Service Template ID"
+
+#: apps/gsekit/cmdb/serializers/cmdb.py:42
+msgid "拓扑子树"
+msgstr "Topological subtree"
+
+#: apps/gsekit/cmdb/serializers/cmdb.py:54 apps/gsekit/job/serializers.py:42
+#: apps/gsekit/utils/expression_utils/serializers.py:26
+msgid "模块ID列表"
+msgstr "List of module IDs"
+
+#: apps/gsekit/cmdb/serializers/cmdb.py:55
+#: apps/gsekit/cmdb/serializers/cmdb.py:76
+#: apps/gsekit/cmdb/serializers/cmdb.py:92
+#: apps/gsekit/process/serializers/process.py:181
+msgid "筛选表达式"
+msgstr "Filter expression"
+
+#: apps/gsekit/cmdb/serializers/cmdb.py:56
+msgid "是否包含进程数量信息"
+msgstr "Whether to include process number information"
+
+#: apps/gsekit/cmdb/serializers/cmdb.py:75
+#: apps/gsekit/cmdb/serializers/cmdb.py:89
+#: apps/gsekit/utils/expression_utils/serializers.py:23
+#: apps/gsekit/utils/expression_utils/serializers.py:33
+msgid "环境类型"
+msgstr "Environment type"
+
+#: apps/gsekit/cmdb/serializers/cmdb.py:91 apps/gsekit/job/serializers.py:39
+#: apps/gsekit/utils/expression_utils/serializers.py:25
+msgid "集群ID列表"
+msgstr "Cluster ID list"
+
+#: apps/gsekit/cmdb/serializers/cmdb.py:106
+msgid "模型ID"
+msgstr "Model ID"
+
+#: apps/gsekit/cmdb/serializers/cmdb.py:130
+msgid "服务模板ID列表"
+msgstr "List of Service Template IDs"
+
+#: apps/gsekit/configfile/exceptions.py:18
+msgid "配置模板模块异常"
+msgstr "Configure template module exception"
+
+#: apps/gsekit/configfile/exceptions.py:23
+msgid "配置模板不存在"
+msgstr "The configuration template does not exist"
+
+#: apps/gsekit/configfile/exceptions.py:28
+msgid "配置模板版本不存在"
+msgstr "Config template version does not exist"
+
+#: apps/gsekit/configfile/exceptions.py:33
+msgid "配置模板草稿已存在，不允许创建"
+msgstr "Draft configuration template already exists, creation not allowed"
+
+#: apps/gsekit/configfile/exceptions.py:38
+msgid "模板渲染失败"
+msgstr "Template rendering failed"
+
+#: apps/gsekit/configfile/exceptions.py:39
+#, python-brace-format
+msgid "模板渲染失败，[{error_message}]，请检查模板变量是否正确书写"
+msgstr ""
+"Template rendering failed, [{error_message}], please check whether the "
+"template variable is written correctly"
+
+#: apps/gsekit/configfile/exceptions.py:44
+#: apps/gsekit/pipeline_plugins/exceptions.py:44
+msgid "配置实例不存在"
+msgstr "Config instance does not exist"
+
+#: apps/gsekit/configfile/exceptions.py:49
+msgid "进程未绑定配置模板"
+msgstr "The process is not bound to a configuration template"
+
+#: apps/gsekit/configfile/exceptions.py:54
+msgid "Mako模板非法"
+msgstr "Illegal Mako template"
+
+#: apps/gsekit/configfile/exceptions.py:59
+msgid "配置模板名称重复"
+msgstr "Duplicate configuration template name"
+
+#: apps/gsekit/configfile/exceptions.py:60
+#, python-brace-format
+msgid "配置模板名称重复[{template_name}]"
+msgstr "Duplicate configuration template name [{template_name}]"
+
+#: apps/gsekit/configfile/exceptions.py:65
+msgid "配置模板没有可用的版本"
+msgstr "No version available for configuration template"
+
+#: apps/gsekit/configfile/exceptions.py:66
+#, python-brace-format
+msgid "配置模板[{template_name}]没有可用的版本，请对该模板进行保存操作"
+msgstr ""
+"Configuration template [{template_name}] has no available version, please "
+"save the template"
+
+#: apps/gsekit/configfile/exceptions.py:71
+msgid "生成配置Context失败"
+msgstr "Failed to generate configuration context"
+
+#: apps/gsekit/configfile/exceptions.py:76
+msgid "配置文件内容非法"
+msgstr "The content of the configuration file is illegal"
+
+#: apps/gsekit/configfile/exceptions.py:77
+#, python-brace-format
+msgid "配置文件内容非法, {err_msg}"
+msgstr "The configuration file content is illegal, {err_msg}"
+
+#: apps/gsekit/configfile/handlers/config_version.py:256
+#, python-brace-format
+msgid ""
+"依赖模板[{template_name}]不存在，请注意Ginclude的是模板名称，不是文件名称"
+msgstr ""
+"The dependent template [{template_name}] does not exist, please note that "
+"Ginclude is the template name, not the file name"
+
+#: apps/gsekit/configfile/handlers/config_version.py:260
+#, python-brace-format
+msgid "依赖模板[{template_name}]不唯一，请重命名依赖"
+msgstr ""
+"The dependent template [{template_name}] is not unique, please rename the "
+"dependent"
+
+#: apps/gsekit/configfile/handlers/config_version.py:326
+msgid "context[cc_host]生成失败"
+msgstr "Context[cc_host] failed to generate"
+
+#: apps/gsekit/configfile/models.py:27 apps/gsekit/configfile/models.py:193
+msgid "模板版本ID"
+msgstr "Template version ID"
+
+#: apps/gsekit/configfile/models.py:29
+#: apps/gsekit/configfile/serializers/config_template.py:98
+msgid "版本描述"
+msgstr "Version description"
+
+#: apps/gsekit/configfile/models.py:30
+msgid "配置模板内容"
+msgstr "Configure template content"
+
+#: apps/gsekit/configfile/models.py:31
+#: apps/gsekit/configfile/serializers/config_version.py:33
+msgid "是否草稿"
+msgstr "Draft"
+
+#: apps/gsekit/configfile/models.py:32
+msgid "是否可用"
+msgstr "It's usable or not"
+
+#: apps/gsekit/configfile/models.py:33
+#: apps/gsekit/configfile/serializers/config_version.py:35
+msgid "文件风格"
+msgstr "File style"
+
+#: apps/gsekit/configfile/models.py:44 apps/gsekit/configfile/models.py:45
+msgid "配置模板版本（ConfigTemplateVersion）"
+msgstr "Configuration template version (ConfigTemplateVersion)"
+
+#: apps/gsekit/configfile/models.py:59
+msgid "MacOs(\\r)"
+msgstr "Macos(\\r)"
+
+#: apps/gsekit/configfile/models.py:60
+msgid "Unix(\\n)"
+msgstr "Unix(\\n)"
+
+#: apps/gsekit/configfile/models.py:61
+msgid "Windows(\\r\\n)"
+msgstr "Windows(\\r\\n)"
+
+#: apps/gsekit/configfile/models.py:66
+#: apps/gsekit/configfile/serializers/config_template.py:34
+msgid "模板名称"
+msgstr "Template name"
+
+#: apps/gsekit/configfile/models.py:67
+#: apps/gsekit/configfile/serializers/config_template.py:35
+msgid "文件名称"
+msgstr "File name"
+
+#: apps/gsekit/configfile/models.py:68 apps/gsekit/configfile/models.py:199
+#: apps/gsekit/configfile/serializers/config_template.py:36
+msgid "文件绝对路径"
+msgstr "File absolute path"
+
+#: apps/gsekit/configfile/models.py:69
+#: apps/gsekit/configfile/serializers/config_template.py:37
+msgid "文件所有者"
+msgstr "File owner"
+
+#: apps/gsekit/configfile/models.py:70
+#: apps/gsekit/configfile/serializers/config_template.py:38
+msgid "文件归属群组"
+msgstr "File attribution group"
+
+#: apps/gsekit/configfile/models.py:71
+#: apps/gsekit/configfile/serializers/config_template.py:39
+msgid "文件权限"
+msgstr "File Permissions"
+
+#: apps/gsekit/configfile/models.py:72
+#: apps/gsekit/configfile/serializers/config_template.py:40
+msgid "换行符格式"
+msgstr "Line break format"
+
+#: apps/gsekit/configfile/models.py:80
+msgid "参数中不允许有空白字符"
+msgstr "Whitespace characters are not allowed in the parameter"
+
+#: apps/gsekit/configfile/models.py:111 apps/gsekit/configfile/models.py:112
+msgid "配置模板（ConfigTemplate）"
+msgstr "Configuration Template (ConfigTemplate)"
+
+#: apps/gsekit/configfile/models.py:185 apps/gsekit/configfile/models.py:186
+msgid "配置模板与进程的绑定关系（ConfigTemplateBindingRelationship）"
+msgstr ""
+"Configure the binding relationship between the template and the process "
+"(ConfigTemplateBindingRelationship)"
+
+#: apps/gsekit/configfile/models.py:195
+#: apps/gsekit/configfile/serializers/config_instance.py:20
+#: apps/gsekit/configfile/serializers/config_version.py:48
+msgid "进程实例ID"
+msgstr "Process instance id"
+
+#: apps/gsekit/configfile/models.py:197
+msgid "实例内容"
+msgstr "Example content"
+
+#: apps/gsekit/configfile/models.py:200
+msgid "是否最新"
+msgstr "Is it up to date"
+
+#: apps/gsekit/configfile/models.py:201
+msgid "是否已发布"
+msgstr "Is it published"
+
+#: apps/gsekit/configfile/models.py:202 apps/gsekit/configfile/models.py:289
+msgid "SHA256"
+msgstr "SHA256"
+
+#: apps/gsekit/configfile/models.py:203 apps/gsekit/job/models.py:128
+#: apps/gsekit/process/models.py:45
+msgid "实例表达式"
+msgstr "Instance expression"
+
+#: apps/gsekit/configfile/models.py:204 apps/utils/models.py:99
+msgid "创建时间"
+msgstr "Creation time"
+
+#: apps/gsekit/configfile/models.py:205 apps/utils/models.py:100
+msgid "创建者"
+msgstr "Creator"
+
+#: apps/gsekit/configfile/models.py:213
+msgid "已生成"
+msgstr "Generated"
+
+#: apps/gsekit/configfile/models.py:214
+msgid "未生成"
+msgstr "Not generated"
+
+#: apps/gsekit/configfile/models.py:215
+msgid "非最新"
+msgstr "Not up to date"
+
+#: apps/gsekit/configfile/models.py:280 apps/gsekit/configfile/models.py:281
+msgid "配置实例（ConfigInstance）"
+msgstr "Configuration instance (ConfigInstance)"
+
+#: apps/gsekit/configfile/models.py:286
+msgid "配置实例 ID"
+msgstr "Configure instance ID"
+
+#: apps/gsekit/configfile/models.py:287
+msgid "作业实例ID"
+msgstr "Job instance ID"
+
+#: apps/gsekit/configfile/models.py:288
+msgid "快照内容"
+msgstr "Snapshot content"
+
+#: apps/gsekit/configfile/models.py:292 apps/gsekit/configfile/models.py:293
+msgid "现网配置快照（ConfigSnapshot）"
+msgstr "Live Network Configuration Snapshot (ConfigSnapshot)"
+
+#: apps/gsekit/configfile/serializers/config_instance.py:19
+#: apps/gsekit/configfile/serializers/config_instance.py:37
+#: apps/gsekit/configfile/serializers/config_template.py:123
+#: apps/gsekit/configfile/serializers/config_template.py:139
+#: apps/gsekit/configfile/serializers/config_template.py:152
+#: apps/gsekit/configfile/serializers/config_template.py:172
+msgid "配置模板ID"
+msgstr "Configuration Template ID"
+
+#: apps/gsekit/configfile/serializers/config_instance.py:21
+#: apps/gsekit/process/models.py:91
+msgid "InstID"
+msgstr "InstID"
+
+#: apps/gsekit/configfile/serializers/config_instance.py:34
+#: apps/gsekit/process/serializers/process.py:136
+msgid "云区域ID列表"
+msgstr "Cloud area ID list"
+
+#: apps/gsekit/configfile/serializers/config_instance.py:35
+#: apps/gsekit/process/models.py:56 apps/gsekit/process/models.py:92
+#: apps/gsekit/process/serializers/process.py:141
+#: apps/gsekit/process/serializers/process.py:151
+msgid "进程状态"
+msgstr "Process status"
+
+#: apps/gsekit/configfile/serializers/config_instance.py:36
+#: apps/gsekit/process/models.py:57 apps/gsekit/process/models.py:93
+#: apps/gsekit/process/serializers/process.py:138
+#: apps/gsekit/process/serializers/process.py:153
+msgid "托管状态"
+msgstr "Supervised status"
+
+#: apps/gsekit/configfile/serializers/config_instance.py:38
+#: apps/gsekit/configfile/serializers/config_template.py:153
+#: apps/gsekit/configfile/serializers/config_template.py:173
+msgid "配置模板版本ID列表"
+msgstr "Configure the template version ID list"
+
+#: apps/gsekit/configfile/serializers/config_instance.py:39
+msgid "是否过滤出已下发的版本"
+msgstr "Whether to filter out the released version"
+
+#: apps/gsekit/configfile/serializers/config_template.py:99
+#: apps/gsekit/configfile/serializers/config_version.py:32
+#: apps/gsekit/configfile/serializers/config_version.py:47
+msgid "配置版本内容"
+msgstr "Configuration version content"
+
+#: apps/gsekit/configfile/serializers/config_template.py:100
+msgid "文件格式"
+msgstr "File format"
+
+#: apps/gsekit/configfile/serializers/config_template.py:101
+msgid "是否保存上线"
+msgstr "Whether to save online"
+
+#: apps/gsekit/configfile/serializers/config_template.py:119
+msgid "进程对象ID"
+msgstr "Process object id"
+
+#: apps/gsekit/configfile/serializers/config_template.py:125
+msgid "进程对象列表"
+msgstr "Process objects list"
+
+#: apps/gsekit/configfile/serializers/config_template.py:125
+msgid "进程对象"
+msgstr "Process object"
+
+#: apps/gsekit/configfile/serializers/config_template.py:139
+#: apps/gsekit/configfile/serializers/config_template.py:186
+msgid "配置模板ID列表"
+msgstr "Configure template ID list"
+
+#: apps/gsekit/configfile/serializers/config_template.py:160
+#: apps/gsekit/job/models.py:163 apps/gsekit/job/models.py:305
+#: apps/gsekit/job/serializers.py:45 apps/gsekit/process/models.py:54
+#: apps/gsekit/process/models.py:88
+#: apps/gsekit/process/serializers/process.py:124
+msgid "进程ID"
+msgstr "Process ID"
+
+#: apps/gsekit/configfile/serializers/config_version.py:19
+msgid "配置模板版本描述"
+msgstr "Configuration template version description"
+
+#: apps/gsekit/configfile/serializers/config_version.py:31
+msgid "描述"
+msgstr "Describe"
+
+#: apps/gsekit/configfile/serializers/config_version.py:34
+msgid "是否上线"
+msgstr "Is it online"
+
+#: apps/gsekit/configfile/serializers/config_version.py:39
+msgid "不允许同时保存为草稿和可用状态"
+msgstr "Simultaneous saving as draft and available is not allowed"
+
+#: apps/gsekit/configfile/views/config_version.py:93
+#, python-brace-format
+msgid "${HELP}变量仅在预览时提供帮助，保存配置时请不要包含"
+msgstr ""
+"The ${HELP} variable is only for help when previewing, please do not include "
+"it when saving the configuration"
+
+#: apps/gsekit/constants.py:58 apps/gsekit/constants.py:89
+msgid "该IP未执行作业，请联系管理员排查问题"
+msgstr ""
+"The IP has not executed the job, please contact the administrator to "
+"troubleshoot the problem"
+
+#: apps/gsekit/constants.py:59 apps/gsekit/constants.py:72
+#: apps/gsekit/constants.py:75 apps/gsekit/constants.py:90
+msgid "Agent异常"
+msgstr "Agent exception"
+
+#: apps/gsekit/constants.py:60
+msgid "上次已成功"
+msgstr "Last time was successful"
+
+#: apps/gsekit/constants.py:61 apps/gsekit/constants.py:91
+#: apps/gsekit/job/models.py:46 apps/gsekit/job/models.py:84
+msgid "等待执行"
+msgstr "Waiting to execute"
+
+#: apps/gsekit/constants.py:62 apps/gsekit/constants.py:92
+#: apps/gsekit/job/models.py:47 apps/gsekit/job/models.py:85
+msgid "正在执行"
+msgstr "Executing"
+
+#: apps/gsekit/constants.py:63 apps/gsekit/constants.py:93
+#: apps/gsekit/job/models.py:48 apps/gsekit/job/models.py:86
+msgid "执行成功"
+msgstr "Execution succeed"
+
+#: apps/gsekit/constants.py:64
+msgid "任务失败"
+msgstr "Mission failed"
+
+#: apps/gsekit/constants.py:65 apps/gsekit/constants.py:95
+msgid "任务下发失败"
+msgstr "Failed to deliver the task"
+
+#: apps/gsekit/constants.py:66
+msgid "任务超时"
+msgstr "Task timeout"
+
+#: apps/gsekit/constants.py:67
+msgid "任务日志错误"
+msgstr "Mission log error"
+
+#: apps/gsekit/constants.py:68
+msgid "脚本执行失败"
+msgstr "Script execution failed"
+
+#: apps/gsekit/constants.py:69
+msgid "脚本执行超时"
+msgstr "Script execution timed out"
+
+#: apps/gsekit/constants.py:70
+msgid "脚本执行被终止"
+msgstr "Script execution was terminated"
+
+#: apps/gsekit/constants.py:71
+msgid "脚本返回码非零"
+msgstr "Script return code is non-zero"
+
+#: apps/gsekit/constants.py:73
+msgid "文件传输失败"
+msgstr "File transfer failed"
+
+#: apps/gsekit/constants.py:74
+msgid "源文件不存在"
+msgstr "Source file does not exist"
+
+#: apps/gsekit/constants.py:76
+msgid "用户名不存在"
+msgstr "Username does not exist"
+
+#: apps/gsekit/constants.py:77
+msgid "文件获取失败"
+msgstr "File fetch failed"
+
+#: apps/gsekit/constants.py:78
+msgid "文件超出限制"
+msgstr "File exceeds limit"
+
+#: apps/gsekit/constants.py:79
+msgid "文件传输错误"
+msgstr "File transfer error"
+
+#: apps/gsekit/constants.py:80
+#, fuzzy
+#| msgid "任务执行参数"
+msgid "任务执行出错"
+msgstr "Task execution error"
+
+#: apps/gsekit/constants.py:94 apps/gsekit/job/models.py:49
+#: apps/gsekit/job/models.py:87
+msgid "执行失败"
+msgstr "Execution failed"
+
+#: apps/gsekit/constants.py:96
+msgid "任务强制终止成功"
+msgstr "Task terminated successfully"
+
+#: apps/gsekit/constants.py:97
+msgid "任务强制终止失败"
+msgstr "Task force termination failed"
+
+#: apps/gsekit/job/exceptions.py:18
+msgid "任务模块异常"
+msgstr "Task module exception"
+
+#: apps/gsekit/job/exceptions.py:23
+msgid "不支持的任务对象"
+msgstr "Unsupported task object"
+
+#: apps/gsekit/job/exceptions.py:24
+#, python-brace-format
+msgid "不支持的任务对象: [{job_object}]"
+msgstr "Unsupported job object: [{job_object}]"
+
+#: apps/gsekit/job/exceptions.py:29
+msgid "不支持的任务动作"
+msgstr "Unsupported task action"
+
+#: apps/gsekit/job/exceptions.py:30
+#, python-brace-format
+msgid "不支持的任务动作: [{job_action}]"
+msgstr "Unsupported job action: [{job_action}]"
+
+#: apps/gsekit/job/exceptions.py:35
+msgid "任务未准备好，请稍后再试"
+msgstr "Task not ready, please try again later"
+
+#: apps/gsekit/job/exceptions.py:40
+msgid "任务动作管理器未定义"
+msgstr "Task Action Manager is undefined"
+
+#: apps/gsekit/job/exceptions.py:45
+msgid "作业不存在"
+msgstr "Job does not exist"
+
+#: apps/gsekit/job/exceptions.py:50
+msgid "任务不存在"
+msgstr "Job task does not exist"
+
+#: apps/gsekit/job/exceptions.py:55
+msgid "启动任务数为0，请确认是否已同步进程或绑定配置文件"
+msgstr ""
+"The number of startup tasks is 0, please confirm whether the process or "
+"binding configuration file has been synchronized"
+
+#: apps/gsekit/job/exceptions.py:60
+msgid "任务重试失败"
+msgstr "Task retry failed"
+
+#: apps/gsekit/job/exceptions.py:61
+#, python-brace-format
+msgid "任务重试失败: [{message}]"
+msgstr "Task retry failed: [{message}]"
+
+#: apps/gsekit/job/handlers.py:170
+#, python-brace-format
+msgid "未知错误{err_code}"
+msgstr "Unknown error {err_code}"
+
+#: apps/gsekit/job/models.py:50 apps/gsekit/job/models.py:88
+msgid "已忽略"
+msgstr "Ignored"
+
+#: apps/gsekit/job/models.py:51
+msgid "其它错误"
+msgstr "Other errors"
+
+#: apps/gsekit/job/models.py:98 apps/gsekit/migrate/models.py:40
+msgid "配置文件"
+msgstr "Configuration file"
+
+#: apps/gsekit/job/models.py:115
+#, fuzzy
+#| msgid "用户"
+msgid "生成"
+msgstr "Generate"
+
+#: apps/gsekit/job/models.py:116
+msgid "下发"
+msgstr "Released"
+
+#: apps/gsekit/job/models.py:117
+msgid "检查"
+msgstr "Examine"
+
+#: apps/gsekit/job/models.py:118
+msgid "启动"
+msgstr "Start up"
+
+#: apps/gsekit/job/models.py:119
+msgid "停止"
+msgstr "Stop"
+
+#: apps/gsekit/job/models.py:120
+msgid "重启"
+msgstr "Reboot"
+
+#: apps/gsekit/job/models.py:121
+msgid "重载"
+msgstr "Reload"
+
+#: apps/gsekit/job/models.py:122
+msgid "强制停止"
+msgstr "Forced stop"
+
+#: apps/gsekit/job/models.py:123
+msgid "托管"
+msgstr "Supervised"
+
+#: apps/gsekit/job/models.py:124
+msgid "取消托管"
+msgstr "Unsupervised"
+
+#: apps/gsekit/job/models.py:129
+msgid "范围"
+msgstr "Scope"
+
+#: apps/gsekit/job/models.py:130
+msgid "表达式范围"
+msgstr "Expression scope"
+
+#: apps/gsekit/job/models.py:131
+msgid "任务对象"
+msgstr "Task object"
+
+#: apps/gsekit/job/models.py:132
+msgid "动作"
+msgstr "Action"
+
+#: apps/gsekit/job/models.py:134 apps/gsekit/job/models.py:165
+#: apps/gsekit/job/serializers.py:52 apps/gsekit/job/serializers.py:71
+#, fuzzy
+#| msgid "查询任务状态失败"
+msgid "任务状态"
+msgstr "Rask status"
+
+#: apps/gsekit/job/models.py:136
+msgid "执行账户"
+msgstr "Execution account"
+
+#: apps/gsekit/job/models.py:137
+msgid "是否已准备(子任务是否全部创建完成)"
+msgstr "Whether it is ready (whether all subtasks have been created)"
+
+#: apps/gsekit/job/models.py:138 apps/gsekit/job/models.py:168
+#: apps/gsekit/operations/serializers.py:55
+#: apps/gsekit/operations/serializers.py:67
+msgid "开始时间"
+msgstr "Starting time"
+
+#: apps/gsekit/job/models.py:139 apps/gsekit/job/models.py:169
+#: apps/gsekit/operations/serializers.py:56
+#: apps/gsekit/operations/serializers.py:68
+msgid "结束时间"
+msgstr "End Time"
+
+#: apps/gsekit/job/models.py:140 apps/gsekit/job/models.py:170
+msgid "PIPELINE ID"
+msgstr ""
+
+#: apps/gsekit/job/models.py:142
+msgid "任务聚合粒度"
+msgstr "Task aggregation granularity"
+
+#: apps/gsekit/job/models.py:144 apps/gsekit/job/models.py:171
+msgid "额外数据"
+msgstr "Extra data"
+
+#: apps/gsekit/job/models.py:146
+msgid "蓝鲸应用ID"
+msgstr "BK App ID"
+
+#: apps/gsekit/job/models.py:157
+msgid "任务（Job）"
+msgstr "Job task（Job）"
+
+#: apps/gsekit/job/models.py:158
+msgid "任务历史（Job）"
+msgstr "Job task history (Job)"
+
+#: apps/gsekit/job/models.py:162 apps/gsekit/job/models.py:304
+#: apps/gsekit/meta/serializers.py:24
+msgid "任务ID"
+msgstr "Job task ID"
+
+#: apps/gsekit/job/models.py:167 apps/gsekit/job/serializers.py:55
+msgid "错误码"
+msgstr "Error code"
+
+#: apps/gsekit/job/models.py:299 apps/gsekit/job/models.py:300
+msgid "任务详情（JobTask）"
+msgstr "Job task details (JobTask)"
+
+#: apps/gsekit/job/models.py:306
+msgid "进程实例数量"
+msgstr "Number of process instances"
+
+#: apps/gsekit/job/models.py:307
+msgid "进程终止数量"
+msgstr "Number of process terminations"
+
+#: apps/gsekit/job/models.py:308
+msgid "进程运行数量"
+msgstr "Number of processes running"
+
+#: apps/gsekit/job/models.py:309
+msgid "进程托管数量"
+msgstr "Number of process supervised"
+
+#: apps/gsekit/job/models.py:310
+msgid "进程未托管数量"
+msgstr "Process unsupervised count"
+
+#: apps/gsekit/job/models.py:313 apps/gsekit/job/models.py:314
+msgid "任务进程实例状态统计"
+msgstr "Task process instance status statistics"
+
+#: apps/gsekit/job/serializers.py:23 apps/gsekit/operations/serializers.py:69
+msgid "操作对象"
+msgstr "Operation object"
+
+#: apps/gsekit/job/serializers.py:24 apps/gsekit/operations/serializers.py:70
+msgid "操作动作"
+msgstr "Action"
+
+#: apps/gsekit/job/serializers.py:26
+#: apps/gsekit/process/serializers/process.py:133
+#: apps/gsekit/process/serializers/process.py:183
+msgid "进程范围"
+msgstr "Process scope"
+
+#: apps/gsekit/job/serializers.py:27
+#: apps/gsekit/process/serializers/process.py:134
+#: apps/gsekit/process/serializers/process.py:184
+msgid "操作范围表达式, 和scope同时传入时, 优先使用scope"
+msgstr ""
+"When the operation range expression is passed in together with the scope, "
+"the scope will be used first"
+
+#: apps/gsekit/job/serializers.py:28
+msgid "其它参数"
+msgstr "Other parameters"
+
+#: apps/gsekit/job/serializers.py:39 apps/gsekit/process/models.py:49
+msgid "集群ID"
+msgstr "Cluster ID"
+
+#: apps/gsekit/job/serializers.py:42 apps/gsekit/process/models.py:50
+#: apps/gsekit/process/models.py:89
+msgid "模块ID"
+msgstr "Module ID"
+
+#: apps/gsekit/job/serializers.py:45
+#: apps/gsekit/utils/expression_utils/serializers.py:29
+msgid "进程ID列表"
+msgstr "List of process ids"
+
+#: apps/gsekit/job/serializers.py:48
+#: apps/gsekit/utils/expression_utils/serializers.py:28
+msgid "进程别名列表"
+msgstr "List of process aliases"
+
+#: apps/gsekit/job/serializers.py:48 apps/gsekit/migrate/handlers.py:52
+msgid "进程别名"
+msgstr "Process alias"
+
+#: apps/gsekit/job/serializers.py:51
+#, fuzzy
+#| msgid "查询任务状态失败"
+msgid "任务状态列表"
+msgstr "Query task status failed"
+
+#: apps/gsekit/job/serializers.py:67
+msgid "任务ID列表"
+msgstr "List of task IDs"
+
+#: apps/gsekit/meta/models.py:26
+msgid "键"
+msgstr "Key"
+
+#: apps/gsekit/meta/models.py:27
+msgid "值"
+msgstr "Value"
+
+#: apps/gsekit/meta/models.py:70 templates/base.html:90
+msgid "QQ咨询(800802001)"
+msgstr "QQ Consulting (800802001)"
+
+#: apps/gsekit/meta/models.py:74 templates/base.html:91
+msgid "蓝鲸论坛"
+msgstr "Blueking forum"
+
+#: apps/gsekit/meta/models.py:75 templates/base.html:92
+msgid "蓝鲸官网"
+msgstr "Blueking Official Website"
+
+#: apps/gsekit/meta/models.py:76
+#, fuzzy
+#| msgid "蓝鲸智云开发框架"
+msgid "蓝鲸智云桌面"
+msgstr "Blueking desktop"
+
+#: apps/gsekit/meta/models.py:91 apps/gsekit/meta/models.py:92
+msgid "全局配置表（GlobalSettings）"
+msgstr "Global Configuration Table (GlobalSettings)"
+
+#: apps/gsekit/meta/serializers.py:38
+msgid "表达式"
+msgstr "Expression"
+
+#: apps/gsekit/meta/serializers.py:39
+msgid "待筛选字符串"
+msgstr "String to be filtered"
+
+#: apps/gsekit/migrate/handlers.py:40
+#: apps/gsekit/pipeline_plugins/components/collections/gse.py:136
+#: apps/gsekit/pipeline_plugins/components/collections/gse.py:138
+msgid "启动命令"
+msgstr "Start command"
+
+#: apps/gsekit/migrate/handlers.py:41
+#: apps/gsekit/pipeline_plugins/components/collections/gse.py:137
+msgid "停止命令"
+msgstr "Stop order"
+
+#: apps/gsekit/migrate/handlers.py:42
+#: apps/gsekit/pipeline_plugins/components/collections/gse.py:140
+msgid "重载命令"
+msgstr "Reload command"
+
+#: apps/gsekit/migrate/handlers.py:43
+#: apps/gsekit/pipeline_plugins/components/collections/gse.py:139
+msgid "重启命令"
+msgstr "Restart command"
+
+#: apps/gsekit/migrate/handlers.py:44
+#: apps/gsekit/pipeline_plugins/components/collections/gse.py:141
+msgid "强制停止命令"
+msgstr "Mandatory stop order"
+
+#: apps/gsekit/migrate/handlers.py:45
+msgid "操作超时时长"
+msgstr "Operation timeout"
+
+#: apps/gsekit/migrate/handlers.py:46
+#: apps/gsekit/pipeline_plugins/components/collections/gse.py:147
+msgid "工作路径"
+msgstr "Work path"
+
+#: apps/gsekit/migrate/handlers.py:47
+msgid "启动优先级"
+msgstr "Boot priority"
+
+#: apps/gsekit/migrate/handlers.py:48
+#: apps/gsekit/pipeline_plugins/components/collections/gse.py:149
+msgid "启动用户"
+msgstr "Start user"
+
+#: apps/gsekit/migrate/handlers.py:49
+msgid "启动等待时长"
+msgstr "Start waiting time"
+
+#: apps/gsekit/migrate/handlers.py:50
+msgid "PID路径"
+msgstr "PID path"
+
+#: apps/gsekit/migrate/handlers.py:51 apps/gsekit/process/models.py:96
+msgid "启动数量"
+msgstr "Number of starts"
+
+#: apps/gsekit/migrate/handlers.py:53
+msgid "备注"
+msgstr "Remark"
+
+#: apps/gsekit/migrate/models.py:22
+msgid "金枪鱼进程ID"
+msgstr "GSEKIT process id"
+
+#: apps/gsekit/migrate/models.py:23
+msgid "CC3.0进程模板ID"
+msgstr "CC3.0 process template ID"
+
+#: apps/gsekit/migrate/models.py:26 apps/gsekit/migrate/models.py:27
+msgid "金枪鱼进程映射表"
+msgstr "GSEKIT Process Mapping Table"
+
+#: apps/gsekit/migrate/models.py:41
+msgid "绑定关系"
+msgstr "Binding relationship"
+
+#: apps/gsekit/migrate/models.py:42 apps/gsekit/process/models.py:27
+msgid "进程实例"
+msgstr "Process instance"
+
+#: apps/gsekit/migrate/models.py:43
+msgid "权限"
+msgstr "Permissions"
+
+#: apps/gsekit/migrate/models.py:47
+msgid "迁移对象"
+msgstr "Migration object"
+
+#: apps/gsekit/migrate/models.py:48
+msgid "是否已迁移"
+msgstr "Whether it has been migrated"
+
+#: apps/gsekit/migrate/models.py:81 apps/gsekit/migrate/models.py:82
+msgid "迁移状态"
+msgstr "Migration status"
+
+#: apps/gsekit/migrate/views.py:29 apps/gsekit/migrate/views.py:32
+msgid "权限获得者，不填则默认是配置模板创建者"
+msgstr ""
+"Authorization acquirer, if left blank, the default is the configuration "
+"template creator"
+
+#: apps/gsekit/migrate/views.py:56
+msgid "【不迁移的runshell】"
+msgstr "[runshell without migration]"
+
+#: apps/gsekit/migrate/views.py:60
+msgid "【新增的进程模板】"
+msgstr "[added process template]"
+
+#: apps/gsekit/operations/models.py:17
+#, fuzzy
+#| msgid "用户"
+msgid "用户名"
+msgstr "User name"
+
+#: apps/gsekit/operations/models.py:19
+msgid "访问时间"
+msgstr "Interview time"
+
+#: apps/gsekit/operations/models.py:26 apps/gsekit/operations/models.py:27
+msgid "用户访问统计"
+msgstr "User access statistics"
+
+#: apps/gsekit/operations/serializers.py:19
+msgid "筛选条件"
+msgstr "Filter criteria"
+
+#: apps/gsekit/operations/serializers.py:20
+msgid "排除条件"
+msgstr "Exclusion criteria"
+
+#: apps/gsekit/operations/serializers.py:21
+#: apps/gsekit/operations/serializers.py:57
+msgid "分组字段"
+msgstr "Grouping field"
+
+#: apps/gsekit/pipeline_plugins/components/collections/base.py:107
+#, fuzzy, python-brace-format
+#| msgid "系统异常,请联系管理员处理"
+msgid "系统异常，请联系管理员:{error}"
+msgstr "The system is abnormal, please contact the administrator:{error}"
+
+#: apps/gsekit/pipeline_plugins/components/collections/base.py:115
+msgid "编辑进程属性"
+msgstr "Edit process properties"
+
+#: apps/gsekit/pipeline_plugins/components/collections/base.py:138
+#, python-brace-format
+msgid "系统异常：{error}。请先参照下方的解决方案处理，若有疑问请联系管理员"
+msgstr ""
+"System exception: {error}. Please refer to the solution below first, if you "
+"have any questions, please contact the administrator"
+
+#: apps/gsekit/pipeline_plugins/components/collections/base.py:140
+#, fuzzy, python-brace-format
+#| msgid "系统异常,请联系管理员处理"
+msgid "系统异常：{error}。请联系管理员处理"
+msgstr "The system is abnormal：{error}。please contact the administrator."
+
+#: apps/gsekit/pipeline_plugins/components/collections/base.py:150
+#: apps/gsekit/pipeline_plugins/components/collections/base.py:308
+#, python-brace-format
+msgid "JobTask[{job_task_id}] not exist"
+msgstr "JobTask[{job_task_id}] not exist"
+
+#: apps/gsekit/pipeline_plugins/components/collections/configfile.py:193
+#, python-brace-format
+msgid "[gsekit]下发配置_{bk_process_id}_{config_instance_id}"
+msgstr "[gsekit] send configuration_{bk_process_id}_{config_instance_id}"
+
+#: apps/gsekit/pipeline_plugins/components/collections/configfile.py:711
+#, python-brace-format
+msgid "作业平台执行失败: {err_msg}"
+msgstr "Job execution failed: {err_msg}"
+
+#: apps/gsekit/pipeline_plugins/components/collections/configfile.py:1003
+#, python-brace-format
+msgid "配置实例[{config_inst_id}]未找到"
+msgstr "Configuration instance [{config_inst_id}] not found"
+
+#: apps/gsekit/pipeline_plugins/components/collections/configfile.py:1014
+#, python-brace-format
+msgid "现网配置不存在：{path}"
+msgstr "The live network configuration does not exist: {path}"
+
+#: apps/gsekit/pipeline_plugins/components/collections/configfile.py:1054
+msgid "现网配置与最近一次下发的配置不一致"
+msgstr ""
+"The live network configuration is inconsistent with the last delivered "
+"configuration"
+
+#: apps/gsekit/pipeline_plugins/components/collections/gse.py:102
+msgid "进程操作正在执行"
+msgstr "Process operation is executing"
+
+#: apps/gsekit/pipeline_plugins/components/collections/gse.py:103
+msgid "AGENT状态异常"
+msgstr "AGENT status is abnormal"
+
+#: apps/gsekit/pipeline_plugins/components/collections/gse.py:104
+msgid "进程正在运行中，无需启动"
+msgstr "The process is running and does not need to be started"
+
+#: apps/gsekit/pipeline_plugins/components/collections/gse.py:105
+msgid "进程当前未运行，无需停止"
+msgstr "Process is not currently running, no need to stop"
+
+#: apps/gsekit/pipeline_plugins/components/collections/gse.py:106
+msgid "操作类型非法"
+msgstr "Illegal operation type"
+
+#: apps/gsekit/pipeline_plugins/components/collections/gse.py:108
+msgid "进程启动失败（后置检查状态为未运行）"
+msgstr "Process startup failed (post check status is not running)"
+
+#: apps/gsekit/pipeline_plugins/components/collections/gse.py:109
+msgid "进程操作命令执行失败，命令打屏信息参考error_msg"
+msgstr ""
+"The execution of the process operation command failed, and the command "
+"display information refers to error_msg"
+
+#: apps/gsekit/pipeline_plugins/components/collections/gse.py:148
+msgid "PID 文件路径"
+msgstr "PID file path"
+
+#: apps/gsekit/pipeline_plugins/components/collections/gse.py:242
+msgid "参考返回的error_code和error_msg"
+msgstr "Refer to returned error_code and error_msg"
+
+#: apps/gsekit/pipeline_plugins/components/collections/gse.py:244
+msgid "进程停止失败（后置检查状态为运行中）"
+msgstr "The process failed to stop (the post-check status is running)"
+
+#: apps/gsekit/pipeline_plugins/components/collections/gse.py:246
+#, python-brace-format
+msgid "[GSE_ERROR-{error_code}]: {simple_msg} (detail: {error_msg})"
+msgstr "[GSE_ERROR-{error_code}]: {simple_msg} (detail: {error_msg})"
+
+#: apps/gsekit/pipeline_plugins/exceptions.py:18
+msgid "Pipeline模块异常"
+msgstr "Pipeline module exception"
+
+#: apps/gsekit/pipeline_plugins/exceptions.py:23
+msgid "执行超时"
+msgstr "Execution timeout"
+
+#: apps/gsekit/pipeline_plugins/exceptions.py:24
+msgid ""
+"执行超时，有两种异常可能：<div><span>1.</span> 脚本执行时间过长 </"
+"div><div><span>2.</span> 脚本未正常退出 </div>"
+msgstr ""
+"Execution timeout, there are two possible exceptions: <div><span>1.</span> "
+"The script execution time is too long </div><div><span>2.</span> The script "
+"did not exit normally </div>"
+
+#: apps/gsekit/pipeline_plugins/exceptions.py:29
+msgid "GSE接口错误"
+msgstr "GSE interface error"
+
+#: apps/gsekit/pipeline_plugins/exceptions.py:34
+msgid "进程优先级提前错误"
+msgstr "Process priority advance error"
+
+#: apps/gsekit/pipeline_plugins/exceptions.py:39
+msgid "作业平台接口错误"
+msgstr "Job interface error"
+
+#: apps/gsekit/pipeline_plugins/exceptions.py:49
+msgid "现网配置不存在"
+msgstr "The live network configuration does not exist"
+
+#: apps/gsekit/pipeline_plugins/exceptions.py:54
+msgid "现网配置异常"
+msgstr "Abnormal live network configuration"
+
+#: apps/gsekit/pipeline_plugins/signals.py:86
+#, python-brace-format
+msgid ""
+"优先级等于[{priority}]的进程({bk_func_name}-{bk_process_name})操作已失败，优"
+"先级小于此的进程操作不会被继续执行"
+msgstr ""
+"The operation of the process ({bk_func_name}-{bk_process_name}) with "
+"priority equal to [{priority}] has failed, and the operation of processes "
+"with a priority lower than this will not be continued"
+
+#: apps/gsekit/pipeline_plugins/signals.py:91
+#, python-brace-format
+msgid ""
+"优先级等于[{priority}]的进程({bk_func_name}-{bk_process_name})操作已失败，优"
+"先级大于此的进程操作不会被继续执行"
+msgstr ""
+"The operation of the process ({bk_func_name}-{bk_process_name}) with "
+"priority equal to [{priority}] has failed, and the operation of processes "
+"with a priority higher than this will not be continued"
+
+#: apps/gsekit/process/exceptions.py:19
+msgid "进程模块异常"
+msgstr "Process module exception"
+
+#: apps/gsekit/process/exceptions.py:24
+msgid "进程不存在"
+msgstr "Process does not exist"
+
+#: apps/gsekit/process/exceptions.py:25
+#, python-brace-format
+msgid "进程不存在: bk_process_id[{bk_process_id}]"
+msgstr "Process does not exist: bk_process_id[{bk_process_id}]"
+
+#: apps/gsekit/process/exceptions.py:30
+msgid "未配置该操作对应的进程属性"
+msgstr ""
+"The process attribute corresponding to this operation is not configured"
+
+#: apps/gsekit/process/exceptions.py:32
+#, python-brace-format
+msgid ""
+"进程【{process_name}】有两种异常可能：<div><span>1.</span> 未配置进程属性"
+"【{process_attr}】</div><div><span>2.</span> 在【配置平台】编辑进程模板信息后"
+"未锁定并同步。</div><b>注意：</b>此任务为操作时配置的快照（无法直接重试），请"
+"配置后新建任务进行操作"
+msgstr ""
+"Process [{process_name}] has two possible exceptions: <div><span>1.</span> process attribute is not configured"
+"【{process_attr}】</div><div><span>2.</span> After editing process template information in [Configuration Platform]"
+"unlocked and synchronized.</div><b>Note:</b> This task is a snapshot of the configuration at operation time (cannot be retried directly), please"
+"create a new task after configuration"
+""
+
+#: apps/gsekit/process/exceptions.py:41
+msgid "进程未生成进程实例，请进行同步操作"
+msgstr ""
+"The process does not generate a process instance, please perform a "
+"synchronous operation"
+
+#: apps/gsekit/process/exceptions.py:46
+msgid "构造进程对象失败，请检查参数"
+msgstr "Failed to construct process object, please check parameters"
+
+#: apps/gsekit/process/exceptions.py:51
+msgid "进程实例重复"
+msgstr "Process instance duplication"
+
+#: apps/gsekit/process/exceptions.py:52
+#, python-brace-format
+msgid "进程实例重复，请删除或合并对应实例（{uniq_key}）"
+msgstr ""
+"The process instance is duplicated, please delete or merge the corresponding "
+"instance ({uniq_key})"
+
+#: apps/gsekit/process/exceptions.py:57
+msgid "查询进程不匹配"
+msgstr "Query process mismatch"
+
+#: apps/gsekit/process/exceptions.py:58
+#, python-brace-format
+msgid "查询进程不匹配: {user_bk_process_id} vs {cc_bk_process_id}"
+msgstr "Query process mismatch: {user_bk_process_id} vs {cc_bk_process_id}"
+
+#: apps/gsekit/process/models.py:28
+msgid "进程模板"
+msgstr "Process template"
+
+#: apps/gsekit/process/models.py:38
+#, fuzzy
+#| msgid "运行"
+msgid "运行中"
+msgstr "Running"
+
+#: apps/gsekit/process/models.py:39
+#, fuzzy
+#| msgid "运行"
+msgid "未运行"
+msgstr "Not running"
+
+#: apps/gsekit/process/models.py:42
+msgid "未托管"
+msgstr "Unsupervised"
+
+#: apps/gsekit/process/models.py:42
+msgid "已托管"
+msgstr "Supervised"
+
+#: apps/gsekit/process/models.py:45
+msgid "待完善"
+msgstr "To be perfected"
+
+#: apps/gsekit/process/models.py:46 apps/gsekit/process/models.py:86
+msgid "主机IP"
+msgstr "Host IP"
+
+#: apps/gsekit/process/models.py:47 apps/gsekit/process/models.py:87
+msgid "云区域ID"
+msgstr "Cloud area ID"
+
+#: apps/gsekit/process/models.py:48
+msgid "集群环境类型"
+msgstr "Cluster environment type"
+
+#: apps/gsekit/process/models.py:52
+#: apps/gsekit/process/serializers/process.py:31
+#: apps/gsekit/process/serializers/process.py:80
+msgid "服务实例ID"
+msgstr "Service instance id"
+
+#: apps/gsekit/process/models.py:53 apps/gsekit/process/models.py:90
+msgid "进程名称"
+msgstr "Process name"
+
+#: apps/gsekit/process/models.py:55
+#: apps/gsekit/process/serializers/process.py:67
+msgid "进程模板ID"
+msgstr "Process template ID"
+
+#: apps/gsekit/process/models.py:73 apps/gsekit/process/models.py:74
+msgid "业务进程（Process）"
+msgstr "Business process (Process)"
+
+#: apps/gsekit/process/models.py:85
+msgid "主机编号"
+msgstr "Host number"
+
+#: apps/gsekit/process/models.py:94
+msgid "LocalInstID"
+msgstr "Localinstid"
+
+#: apps/gsekit/process/models.py:95
+msgid "进程实例唯一标识"
+msgstr "Process instance unique identifier"
+
+#: apps/gsekit/process/models.py:135 apps/gsekit/process/models.py:136
+msgid "进程实例（ProcessInst）"
+msgstr "Process Instance (ProcessInst)"
+
+#: apps/gsekit/process/serializers/process.py:55
+#: apps/gsekit/process/serializers/process.py:81
+msgid "进程属性列表"
+msgstr "List of process attributes"
+
+#: apps/gsekit/process/serializers/process.py:68
+#: apps/gsekit/process/serializers/process.py:94
+msgid "进程模板属性"
+msgstr "Process Template Properties"
+
+#: apps/gsekit/process/serializers/process.py:107
+#: apps/gsekit/process/serializers/process.py:124
+msgid "进程实例ID列表"
+msgstr "List of process instance IDs"
+
+#: apps/gsekit/process/serializers/process.py:116
+msgid "进程模板ID列表"
+msgstr "List of process template IDs"
+
+#: apps/gsekit/process/serializers/process.py:135
+msgid "内网IP"
+msgstr "Inner IP"
+
+#: apps/gsekit/process/serializers/process.py:138
+msgid "托管状态列表"
+msgstr "Supervised status list"
+
+#: apps/gsekit/process/serializers/process.py:141
+msgid "进程状态列表"
+msgstr "Process status list"
+
+#: apps/gsekit/process/serializers/process.py:146
+msgid "scope, expression_scope required at least one."
+msgstr "Scope, expression_scope required at least one."
+
+#: apps/gsekit/process/serializers/process.py:152
+msgid "多模糊查询:支持内网IP及云区域名称"
+msgstr "Multi-fuzzy query: support inner IP and cloud area name"
+
+#: apps/gsekit/process/serializers/process.py:154
+msgid "返回的字段"
+msgstr "Returned fields"
+
+#: apps/gsekit/process/serializers/process.py:166
+msgid "任务动作"
+msgstr "Task action"
+
+#: apps/gsekit/process/serializers/process.py:179
+#: apps/gsekit/utils/expression_utils/serializers.py:27
+msgid "服务实例ID列表"
+msgstr "List of service instance IDs"
+
+#: apps/gsekit/urls.py:53
+#, python-brace-format
+msgid "{app_name} API"
+msgstr "{app_name} API"
+
+#: apps/gsekit/urls.py:56
+#, python-brace-format
+msgid ""
+"{app_name} 是腾讯蓝鲸智云推出的一个专注于进程和配置文件管理的 SaaS 工具。\n"
+"GitHub 开源，欢迎共建：https://github.com/TencentBlueKing/bk-process-config-"
+"manager"
+msgstr ""
+"{app_name} is a SaaS tool focused on process and configuration file "
+"management launched by Tencent BlueKing.\n"
+"GitHub is open source, welcome to build: https://github.com/TencentBlueKing/"
+"bk-process-config-manager"
+
+#: apps/gsekit/utils/expression_utils/exceptions.py:17
+msgid "表达式解析模块异常"
+msgstr "Expression parsing module exception"
+
+#: apps/gsekit/utils/expression_utils/exceptions.py:22
+msgid "表达式语法错误"
+msgstr "Expression syntax error"
+
+#: apps/gsekit/utils/expression_utils/exceptions.py:27
+msgid "表达式解析异常"
+msgstr "Expression parsing exception"
+
+#: apps/gsekit/utils/expression_utils/exceptions.py:32
+msgid "表达式切片异常"
+msgstr "Expression slicing exception"
+
+#: apps/gsekit/utils/expression_utils/match.py:41
+#, python-brace-format
+msgid "表达式[{expression}]切片解析异常：{err}"
+msgstr "Expression [{expression}] slice parsing exception: {err}"
+
+#: apps/gsekit/utils/expression_utils/parse.py:155
+#, python-brace-format
+msgid "范围表达式解析错误: {range_expression}"
+msgstr "Range expression parse error: {range_expression}"
+
+#: apps/gsekit/utils/expression_utils/parse.py:168
+#, python-brace-format
+msgid "枚举表达式缺少`]`: {error_expression}"
+msgstr "Missing `]` for enum expression: {error_expression}"
+
+#: apps/gsekit/utils/expression_utils/parse.py:194
+#, python-brace-format
+msgid "表达式[{expression}]解析异常：{err}"
+msgstr "Parsing exception for expression [{expression}]: {err}"
+
+#: apps/gsekit/utils/expression_utils/serializers.py:34
+msgid "集群名称表达式"
+msgstr "Cluster name expression"
+
+#: apps/gsekit/utils/expression_utils/serializers.py:35
+msgid "模块名称表达式"
+msgstr "Module name expression"
+
+#: apps/gsekit/utils/expression_utils/serializers.py:37
+msgid "服务实例名称表达式"
+msgstr "Service instance name expression"
+
+#: apps/gsekit/utils/expression_utils/serializers.py:39
+msgid "进程别名表达式"
+msgstr "Process alias expression"
+
+#: apps/gsekit/utils/expression_utils/serializers.py:40
+msgid "进程ID表达式"
+msgstr "Process ID expression"
+
+#: apps/gsekit/utils/notification_maker.py:94
+#, fuzzy, python-brace-format
+#| msgid "任务执行结果"
+msgid "{app_name}-任务执行结果通知"
+msgstr "{app_name}-Task execution result notification"
+
+#: apps/gsekit/utils/solution_maker.py:43
+#, python-brace-format
+msgid ""
+"<span>点击跳转到</span><a href=\"{link}\" target=\"_blank\">[{highlight}]</"
+"a>，请您进行 <b>[{action}]</b> 操作"
+msgstr ""
+"<span>Click to jump to</span><a href=\"{link}\" target=\"_blank"
+"\">[{highlight}]</a>, please perform <b>[{action}]</b > operation"
+
+#: apps/gsekit/utils/solution_maker.py:132
+msgid "检查脚本是否执行完成且正常退出"
+msgstr "Check if the script execution is complete and exited normally"
+
+#: apps/gsekit/utils/solution_maker.py:132
+msgid "联系系统负责人排查"
+msgstr "Contact the person in charge of the system to check"
+
+#: apps/iam/exceptions.py:43
+#, python-brace-format
+msgid "当前用户无 [{action_name}] 权限"
+msgstr "The current user does not have permission for [{action_name}]"
+
+#: apps/iam/handlers/actions.py:157
+#, python-brace-format
+msgid "动作ID不存在：{action_id}"
+msgstr "Action ID does not exist: {action_id}"
+
+#: apps/iam/handlers/permission.py:253
+#, python-brace-format
+msgid "获取系统信息错误：{message}"
+msgstr "Error getting system information: {message}"
+
+#: apps/iam/handlers/resources.py:141
+#, python-brace-format
+msgid "资源ID不存在：{resource_id}"
+msgstr "Resource ID does not exist: {resource_id}"
+
+#: apps/iam/serializers.py:17
+msgid "资源类型"
+msgstr "Resource Type"
+
+#: apps/iam/serializers.py:18
+msgid "资源ID"
+msgstr "Resource ID"
+
+#: apps/iam/serializers.py:20
+msgid "动作ID列表"
+msgstr "Action id list"
+
+#: apps/iam/serializers.py:21
+msgid "资源列表"
+msgstr "Resource list"
+
+#: apps/middlewares.py:157
+msgid "S-mart应用仅支持正式环境部署！"
+msgstr "S-mart applications only support formal environment deployment!"
+
+#: apps/middlewares.py:206
 msgid "系统异常,请联系管理员处理"
 msgstr "The system is abnormal, please contact the administrator."
 
-#: templates/403.html:6
-msgid "系统权限不足"
-msgstr "insufficient system permissions"
+#: apps/utils/drf.py:184
+msgid "页数"
+msgstr "Number of pages"
 
-#: templates/403.html:7
-msgid "你的角色所拥有的权限不足"
-msgstr "Your role has insufficient permissions."
+#: apps/utils/drf.py:185
+msgid "每页数量"
+msgstr "Quantity per page"
 
-#: templates/500.html:6
-msgid "系统出现异常"
-msgstr "system exception"
-
-#: templates/500.html:7
-msgid "请记录下错误场景并及时与开发人员联系"
-msgstr "please record the error scenario and contact the developer in time."
-
-#: templates/admin/base_site.html:4 templates/admin/base_site.html:7
-msgid "管理"
-msgstr "management"
-
-#: templates/admin/login.html:6
-msgid "您暂时不能访问该站点的后台管理，这是以下原因造成的："
+#: apps/utils/drf.py:189
+msgid "排序字段，`-`表示逆序，多个排序字段以`,`分隔"
 msgstr ""
-"you are temporarily unable to access the site's background management due to "
-"the following reasons："
+"Sorting field, `-` means reverse order, multiple sorting fields are "
+"separated by `,`"
 
-#: templates/admin/login.html:9
-msgid "你还没登录，请重新刷新页面！"
-msgstr "you are not logged in, please refresh the page again!"
+#: apps/utils/drf.py:193
+msgid "模糊查找，多个查找关键字以`,`分隔"
+msgstr "Fuzzy search, multiple search keywords separated by `,`"
 
-#: templates/admin/login.html:12
-msgid "未激活！"
-msgstr "inactivated!"
+#: apps/utils/drf.py:198
+msgid "查询目标字段列表"
+msgstr "Query target field list"
 
-#: templates/admin/login.html:14
-msgid "没有管理员权限，请联系管理员！"
-msgstr "no administrator rights, please contact the administrator!"
+#: apps/utils/drf.py:199
+msgid "查询类型，可选：`in` `contains` `range` `gt(lt)` `gte(lte)..."
+msgstr "Query type, optional: `in` `contains` `range` `gt(lt)` `gte(lte)..."
 
-#: templates/admin/login.html:18
-msgid "如有需要，请联系管理员或开发者为您解决上述问题。"
+#: apps/utils/drf.py:200
+msgid "查询目标值列表"
+msgstr "Query target value list"
+
+#: apps/utils/drf.py:202
+msgid "查询条件"
+msgstr "Query conditions"
+
+#: apps/utils/drf.py:276
+msgid "请求参数必须全部为整数"
+msgstr "Request parameters must all be integers"
+
+#: apps/utils/mako_utils/checker.py:58
+#, python-brace-format
+msgid "mako解析失败, {err_msg}"
+msgstr "Mako parsing failed, {err_msg}"
+
+#: apps/utils/mako_utils/render.py:50
+#, python-brace-format
+msgid "第{lineno}行：{line}，错误：{message}"
+msgstr "Line {lineno}: {line}, error: {message}"
+
+#: apps/utils/mako_utils/visitor.py:120
+msgid "发现非法属性使用:[{}]，请修改"
+msgstr "Illegal attribute usage found: [{}], please modify"
+
+#: apps/utils/mako_utils/visitor.py:126
+msgid "发现非法名称使用:[{}]，请修改"
+msgstr "Illegal use of name found: [{}], please modify"
+
+#: apps/utils/mako_utils/visitor.py:131
+msgid "发现非法导入:[{}]，请修改"
+msgstr "Illegal import found: [{}], please modify"
+
+#: apps/utils/models.py:101
+msgid "更新时间"
+msgstr "Update time"
+
+#: apps/utils/models.py:102
+#, fuzzy
+#| msgid "修改"
+msgid "修改者"
+msgstr "Editor"
+
+#: apps/utils/models.py:156
+msgid "是否删除"
+msgstr "Delete or not"
+
+#: apps/utils/models.py:157
+msgid "删除时间"
+msgstr "Delete time"
+
+#: apps/utils/models.py:158
+#, fuzzy
+#| msgid "删除"
+msgid "删除者"
+msgstr "Deleter"
+
+#: bkoauth/jwt_client.py:56
+msgid "【PyJWT】SDK未安装，请在requirements.txt中添加【PyJWT】后重新提测"
 msgstr ""
-"If necessary, contact your administrator or developer to resolve the issue "
-"for you."
+"【PyJWT】SDK is not installed, please add 【PyJWT】in requirements.txt and "
+"try again"
 
-#: templates/base.html:40
-msgid "蓝鲸开发框架(Django模板)"
-msgstr "BlueKing Dev Framework(django template)"
+#: bkoauth/jwt_client.py:59
+msgid ""
+"【cryptography】SDK未安装，请在requirements.txt中添加【cryptography】后重新提"
+"测"
+msgstr ""
+"[cryptography] SDK is not installed, please add [cryptography] in "
+"requirements.txt and try again"
 
-#: templates/base.html:72
-msgid "版本日志"
-msgstr "Version Log"
+#: bkoauth/jwt_client.py:63
+msgid "【X_BKAPI_JWT】不在HTTP头部或者为空，请确认请求来源是否为 API Gateway"
+msgstr ""
+"[X_BKAPI_JWT] is not in the HTTP header or is empty, please confirm whether "
+"the request source is API Gateway"
 
-#: mako_templates/base.mako:40
-msgid "蓝鲸开发框架(mako模板)"
-msgstr "BlueKing Dev Framework(mako template)"
+#: bkoauth/jwt_client.py:73
+msgid ""
+"公钥设置错误，请在 API Gateway 下载网关公钥，并配置到Django配置项"
+"【APIGW_PUBLIC_KEY】"
+msgstr ""
+"The public key is set incorrectly. Please download the gateway public key "
+"from API Gateway and configure it in the Django configuration "
+"item【APIGW_PUBLIC_KEY】"
+
+#: bkoauth/jwt_client.py:75
+msgid "【X_BKAPI_JWT】不合法，请确认格式或者使用合法私钥签名"
+msgstr ""
+"【X_BKAPI_JWT】Invalid, please confirm the format or sign with a legal "
+"private key"
+
+#: bkoauth/jwt_client.py:77
+msgid "【X_BKAPI_JWT】不合法，已经过期"
+msgstr "【X_BKAPI_JWT】illegal, has expired"
+
+#: bkoauth/jwt_client.py:79
+msgid "【X_BKAPI_JWT】不合法，签发者不是APIGW"
+msgstr "[X_BKAPI_JWT] Illegal, the issuer is not APIGW"
+
+#: common/context_processors.py:23 common/context_processors.py:24
+#, python-brace-format
+msgid "{app_name} | 腾讯蓝鲸智云"
+msgstr "{app_name} | Tencent BlueKing"
+
+#: config/__init__.py:52
+msgid "进程配置管理"
+msgstr "Process configuration management"
+
+#: config/__init__.py:52
+msgid "GSEKit"
+msgstr "GSEKit"
+
+#: env/constants.py:25
+msgid "V3具备容器及二进制配置差异"
+msgstr "V3 has container and binary configuration differences"
+
+
+#: templates/base.html:93
+#, fuzzy
+#| msgid "蓝鲸智云开发框架"
+msgid "蓝鲸智云工作台"
+msgstr "Blueking desktop"
+
+#: templates/base.html:96
+#, fuzzy
+#| msgid "蓝鲸智云开发框架"
+msgid "蓝鲸智云 版权所有"
+msgstr "Blueking desktop"
+
+#, python-brace-format
+#~ msgid "<div><span>1.</span> 未配置进程属性【{process_attr}】</div>"
+#~ msgstr ""
+#~ "<div><span>1.</span> The process attribute [{process_attr}] is not "
+#~ "configured</div>"
+
+#~ msgid ""
+#~ "<b>注意：</b>此任务为操作时配置的快照（无法直接重试），请配置后新建任务进"
+#~ "行操作"
+#~ msgstr ""
+#~ "<b>Note:</b> This task is a snapshot configured during operation (it "
+#~ "cannot be retried directly), please configure and create a new task for "
+#~ "operation"
+
+#, python-brace-format
+#~ msgid "进程【{process_name}】有两种异常可能："
+#~ msgstr "Process [{process_name}] has two possible exceptions:"
+
+#~ msgid "业务访问"
+#~ msgstr "Business visit"
+
+#~ msgid "进程操作"
+#~ msgstr "Process operation"
+
+#~ msgid "配置模板创建"
+#~ msgstr "Configuration template creation"
+
+#~ msgid "配置模板编辑"
+#~ msgstr "Configuration TemplateEdit"
+
+#~ msgid "配置模板删除"
+#~ msgstr "Configuration template deletion"
+
+#~ msgid "配置操作"
+#~ msgstr "Configuration operation"
+
+#~ msgid "配置生成"
+#~ msgstr "Configuration generation"
+
+#~ msgid "配置下发"
+#~ msgstr "Configuration delivery"
