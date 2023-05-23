@@ -10,6 +10,7 @@ See the License for the specific language governing permissions and limitations 
 """
 import ast
 import _ast
+from django.utils.translation import ugettext_lazy as _
 
 from django.utils.module_loading import import_string
 
@@ -116,18 +117,18 @@ class MakoNodeVisitor(ast.NodeVisitor):
         if self.is_white_list_ast_obj(node):
             return
         if node.attr in self.black_list_methods:
-            raise ForbiddenMakoTemplateException("发现非法属性使用:[{}]，请修改".format(node.attr))
+            raise ForbiddenMakoTemplateException(_("发现非法属性使用:[{}]，请修改").format(node.attr))
 
     def visit_Name(self, node):
         if self.is_white_list_ast_obj(node):
             return
         if node.id in self.black_list_methods:
-            raise ForbiddenMakoTemplateException("发现非法名称使用:[{}]，请修改".format(node.id))
+            raise ForbiddenMakoTemplateException(_("发现非法名称使用:[{}]，请修改").format(node.id))
 
     def visit_Import(self, node):
         for name in node.names:
             if name.name not in self.white_list_modules:
-                raise ForbiddenMakoTemplateException("发现非法导入:[{}]，请修改".format(name.name))
+                raise ForbiddenMakoTemplateException(_("发现非法导入:[{}]，请修改").format(name.name))
 
     def visit_ImportFrom(self, node):
         self.visit_Import(node)

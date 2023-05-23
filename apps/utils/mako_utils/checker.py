@@ -11,6 +11,7 @@ See the License for the specific language governing permissions and limitations 
 
 import ast
 from typing import List
+from django.utils.translation import ugettext_lazy as _
 
 from mako import parsetree
 from mako.ast import PythonFragment
@@ -54,7 +55,7 @@ def check_mako_template_safety(text: str, node_visitor: ast.NodeVisitor) -> bool
     try:
         lexer_template = Lexer(text).parse()
     except MakoException as mako_error:
-        raise ForbiddenMakoTemplateException("mako解析失败, {err_msg}".format(err_msg=mako_error))
+        raise ForbiddenMakoTemplateException(_("mako解析失败, {err_msg}").format(err_msg=mako_error))
     parse_template_nodes(lexer_template.nodes, node_visitor)
     return True
 

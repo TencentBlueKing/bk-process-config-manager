@@ -15,7 +15,7 @@ from django.utils.translation import ugettext_lazy as _
 
 class VisitCount(models.Model):
     bk_username = models.CharField(_("用户名"), max_length=32, default="")
-    bk_biz_id = models.IntegerField("业务ID")
+    bk_biz_id = models.IntegerField(_("业务ID"))
     visit_time = models.DateTimeField(_("访问时间"), auto_now_add=True)
 
     @classmethod

@@ -8,37 +8,85 @@ Unless required by applicable law or agreed to in writing, software distributed 
 an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and limitations under the License.
 """
-from __future__ import unicode_literals
+import typing
+from contextlib import contextmanager
 
-import time
-
-from googletrans import Translator
-
-"""
-1. pip install googletrans  安装pip包
-2. 在 TO_TRANSLATE_DICT 中放入待翻译的词条
-3. python translate.py  执行翻译脚本
-
-需要注意的是，如果一次性请求次数过多（亲测400个以下没问题）
-ip地址可能会被谷歌加入黑名单，导致无法再请求调用
-"""
-
-TO_TRANSLATE_DICT = {
-    "中文": "被翻译的语句",
-    "提示": "提示语句",
-}
+import wrapt
+from django.utils import translation
 
 
-def main():
-    translator = Translator(service_urls=["translate.google.cn"])
-    translated_dict = {}
-    for key, value in TO_TRANSLATE_DICT.items():
-        translated_dict[key] = translator.translate(value, dest="en").text
-        print(f"'{key}': '{translated_dict[key]}',")
-        # 睡1秒，避免限频
-        time.sleep(1)
-    print(translated_dict)
+@contextmanager
+def respect_language(language):
+    """Context manager that changes the current translation language for
+    all code inside the following block.
+    Can e.g. be used inside tasks like this::
+        from celery import task
+        from apps.utils.translation import respect_language
+        @task
+        def my_task(language=None):
+            with respect_language(language):
+                pass
+    """
+    if language:
+        prev = translation.get_language()
+        translation.activate(language)
+        try:
+            yield
+        finally:
+            translation.activate(prev)
+    else:
+        yield
 
 
-if __name__ == "__main__":
-    main()
+GetLanguageFuncT = typing.Callable[
+    [typing.Callable, typing.Any, typing.Tuple[typing.Any], typing.Dict[str, typing.Any]], typing.Optional[str]
+]
+
+
+class RespectsLanguage:
+    language: typing.Optional[str] = None
+    get_language_func: typing.Optional[GetLanguageFuncT] = None
+
+    @staticmethod
+    def default_get_language_func(
+        wrapped: typing.Callable,
+        instance: typing.Any,
+        args: typing.Tuple[typing.Any],
+        kwargs: typing.Dict[str, typing.Any],
+    ) -> typing.Optional[str]:
+        language = kwargs.pop("language", None)
+        if language:
+            return language
+        return translation.get_language()
+
+    def __init__(
+        self, get_language_func: typing.Optional[GetLanguageFuncT] = None, language: typing.Optional[str] = None
+    ):
+        """
+        :param get_language_func: 获取语言方法
+        :param language: 指定语言，优先于 get_language_func
+        """
+        self.language = language
+        self.get_language_func = get_language_func or self.default_get_language_func
+
+    @wrapt.decorator
+    def __call__(
+        self,
+        wrapped: typing.Callable,
+        instance: typing.Any,
+        args: typing.Tuple[typing.Any],
+        kwargs: typing.Dict[str, typing.Any],
+    ) -> typing.Any:
+        """
+        :param wrapped: 被装饰的函数或类方法
+        :param instance:
+            - 如果被装饰者为普通类方法，该值为类实例
+            - 如果被装饰者为 classmethod / 类方法，该值为类
+            - 如果被装饰者为类/函数/静态方法，该值为 None
+        :param args: 位置参数
+        :param kwargs: 关键字参数
+        :return:
+        """
+        language = self.language or self.get_language_func(wrapped, instance, args, kwargs)
+        with respect_language(language):
+            return wrapped(*args, **kwargs)

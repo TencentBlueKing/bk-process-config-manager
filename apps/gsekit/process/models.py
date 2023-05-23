@@ -42,7 +42,7 @@ class Process(models.Model):
     IS_AUTO_CHOICE = ((False, _("未托管")), (True, _("已托管")))
 
     bk_biz_id = models.IntegerField(_("业务ID"), db_index=True)
-    expression = models.CharField(_("实例表达式"), max_length=256, db_index=True, default="待完善")
+    expression = models.CharField(_("实例表达式"), max_length=256, db_index=True, default=_("待完善"))
     bk_host_innerip = models.GenericIPAddressField(_("主机IP"), db_index=True)
     bk_cloud_id = models.IntegerField(_("云区域ID"), db_index=True)
     bk_set_env = models.CharField(_("集群环境类型"), choices=BK_SET_ENV_CHOICES, max_length=4, db_index=True)
