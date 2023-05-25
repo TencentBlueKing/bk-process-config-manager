@@ -11,9 +11,9 @@ See the License for the specific language governing permissions and limitations 
 import os
 from django.conf import settings
 
-ESB_PREFIX = "/api/c/compapi/v2/"
+ESB_PREFIX_V2 = os.getenv("ESB_PREFIX_V2") or "/api/c/compapi/v2/"
 
-APIGATEWAY_ROOT_PREFIX_FORMAT = "{}{}{{}}/".format(settings.BK_COMPONENT_API_OVERWRITE_URL, ESB_PREFIX)
+APIGATEWAY_ROOT_PREFIX_FORMAT = "{}{}{{}}/".format(settings.BK_COMPONENT_API_OVERWRITE_URL, ESB_PREFIX_V2)
 
 CC_APIGATEWAY_ROOT = os.getenv("BKAPP_CC_APIGATEWAY_ROOT") or APIGATEWAY_ROOT_PREFIX_FORMAT.format("cc")
 JOB_APIGATEWAY_ROOT_V3 = os.getenv("BKAPP_JOB_APIGATEWAY_ROOT") or APIGATEWAY_ROOT_PREFIX_FORMAT.format("jobv3")
@@ -26,3 +26,5 @@ CMSI_APIGATEWAY_ROOT = os.getenv("BKAPP_GSE_APIGATEWAY_ROOT") or APIGATEWAY_ROOT
 BK_NODE_APIGATEWAY_ROOT = os.getenv("BKAPP_BK_NODE_APIGATEWAY_ROOT") or APIGATEWAY_ROOT_PREFIX_FORMAT.format("nodeman")
 BSCP_APIGATEWAY_ROOT = os.getenv("BKAPP_BSCP_APIGATEWAY_ROOT") or APIGATEWAY_ROOT_PREFIX_FORMAT.format("bscp")
 BSCP_DIRECT_ROOT = os.getenv("BKAPP_BSCP_DIRECT_ROOT") or "http://bscp.service.consul:8080"
+
+GSE_APIGATEWAY_ROOT_V2 = os.getenv("BKAPP_BK_GSE_APIGATEWAY") or APIGATEWAY_ROOT_PREFIX_FORMAT.format("gse")

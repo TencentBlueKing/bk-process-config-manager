@@ -35,6 +35,8 @@ from apps.utils import APIModel
 from apps.utils.basic import distinct_dict_list
 from apps.utils.local import get_request
 from apps.utils.models import model_to_dict, queryset_to_dict_list
+from apps.core.gray.handlers import GrayTools
+from env.constants import GseVersion
 from common.log import logger
 from bamboo_engine import api
 
@@ -59,11 +61,11 @@ class JobHandlers(APIModel):
 
     @staticmethod
     @task
-    def create_job_task(job_id, extra_data):
+    def create_job_task(job_id, extra_data, meta):
         job = Job.objects.get(id=job_id)
         manager = channel_adapter.PIPELINE_MANAGER_FACTORY.get_manager(job)
         try:
-            manager.create_job_task(extra_data=extra_data)
+            manager.create_job_task(extra_data=extra_data, meta=meta)
         except Exception as err:
             failed_reason = str(err)
             logger.exception("Failed to create job task: {err}".format(err=failed_reason))
@@ -111,7 +113,11 @@ class JobHandlers(APIModel):
             created_by=created_by,
             bk_app_code=bk_app_code or settings.APP_ID,
         )
-        self.create_job_task.delay(job.id, extra_data=extra_data)
+
+        is_gse2_gray = GrayTools().is_gse2_gray(self.bk_biz_id)
+        meta = {"GSE_VERSION": GseVersion.V2.value if is_gse2_gray else GseVersion.V1.value}
+
+        self.create_job_task.delay(job.id, extra_data=extra_data, meta=meta)
         return {"job_id": job.id}
 
     @staticmethod

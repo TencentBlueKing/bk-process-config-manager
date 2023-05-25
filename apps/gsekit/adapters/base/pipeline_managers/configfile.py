@@ -11,7 +11,7 @@ See the License for the specific language governing permissions and limitations 
 import copy
 from collections import defaultdict
 from functools import reduce
-from typing import Dict, List
+from typing import Dict, List, Any
 
 from django.db import transaction
 from django.db.models import QuerySet
@@ -25,6 +25,7 @@ from apps.gsekit.job.exceptions import NotSupportedJobActionException
 from apps.gsekit.job.models import Job, JobTask
 from apps.gsekit.process.models import Process
 from pipeline import builder
+from pipeline.builder import Var
 
 from .base import BasePipelineManager
 
@@ -128,7 +129,7 @@ class ConfigFilePipelineManager(BasePipelineManager):
             "to_be_created_proc_inst_status_statistics": [],
         }
 
-    def create_pipeline(self, job_tasks: QuerySet) -> Dict:
+    def create_pipeline(self, job_tasks: QuerySet, meta: Dict[str, Any]) -> Dict:
         """
         根据优先级生成不同的执行顺序的并行网关，组成pipeline
                    StartEvent
@@ -161,11 +162,13 @@ class ConfigFilePipelineManager(BasePipelineManager):
                 activities = activity_manager(
                     job=self.job, job_task_ids=job_task_ids[start : start + PIPELINE_BATCH_SIZE]
                 ).bulk_generate_activities()["activities"]
+                for act in activities:
+                    act.component.inputs.meta = Var(type=Var.PLAIN, value=meta)
                 self.mark_acts_tail_and_head(activities)
 
                 activities_start_event = activities[0]
                 # 串联 activities
-                reduce(lambda l, r: l.extend(r), [act for act in activities if act])
+                reduce(lambda l, r: l.extend(r), [act for act in activities if act])  # noqa
                 sub_processes.append(activities_start_event)
                 start = start + PIPELINE_BATCH_SIZE
 

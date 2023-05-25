@@ -41,7 +41,7 @@ class BasePipelineManager(object):
         activities[0].component.inputs.act_type = Var(type=Var.PLAIN, value=ActivityType.HEAD)
         activities[-1].component.inputs.act_type = Var(type=Var.PLAIN, value=ActivityType.TAIL)
 
-    def create_pipeline(self, job_tasks) -> Dict[str, Any]:
+    def create_pipeline(self, job_tasks, meta) -> Dict[str, Any]:
         """创建pipeline，由子类实现，返回构建Pipeline的相关参数
 
         required:
@@ -98,7 +98,7 @@ class BasePipelineManager(object):
             "to_be_created_proc_inst_status_statistics": to_be_created_proc_inst_status_statistics,
         }
 
-    def create_job_task(self, extra_data=None):
+    def create_job_task(self, extra_data=None, meta: Dict[str, any] = {}):
         # 表达式筛选情况下bk_process_ids为空表示无进程，在list_process_related_info表示全选，需要兼容并提前返回
         if self.job.scope.get("is_expression") and not self.job.scope.get("bk_process_ids", []):
             raise JobEmptyTaskException()
@@ -161,7 +161,7 @@ class BasePipelineManager(object):
 
         job_tasks = JobTask.objects.filter(job_id=self.job.id)
 
-        create_pipeline_params = self.create_pipeline(job_tasks)
+        create_pipeline_params = self.create_pipeline(job_tasks, meta)
 
         pipeline = builder.build_tree(
             create_pipeline_params["pipeline_start"], data=create_pipeline_params.get("global_pipeline_data")
