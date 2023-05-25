@@ -8,3 +8,24 @@ Unless required by applicable law or agreed to in writing, software distributed 
 an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and limitations under the License.
 """
+import hashlib
+
+
+def _count_md5(content):
+    if content is None:
+        return None
+    m2 = hashlib.md5()
+    if isinstance(content, str):
+        m2.update(content.encode("utf8"))
+    else:
+        m2.update(content)
+    return m2.hexdigest()
+
+
+def count_md5(content, dict_sort=True):
+    if dict_sort and isinstance(content, dict):
+        # dict的顺序受到hash的影响，所以这里先排序再计算MD5
+        return count_md5([(str(k), count_md5(content[k])) for k in sorted(content.keys())])
+    elif isinstance(content, (list, tuple)):
+        content = sorted([count_md5(k) for k in content])
+    return _count_md5(str(content))

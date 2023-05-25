@@ -32,6 +32,8 @@ class GlobalSettings(models.Model):
         APIGW_PUBLIC_KEY = "APIGW_PUBLIC_KEY"  # APIGW 公钥
         PIPELINE_POLLING_TIMEOUT = "PIPELINE_POLLING_TIMEOUT"  # pipeline 轮询超时时间
         PROCESS_TASK_GRANULARITY = "PROCESS_TASK_GRANULARITY"  # 进程任务聚合粒度
+        # GSE 2.0 灰度列表
+        GSE2_GRAY_SCOPE_LIST = "GSE2_GRAY_SCOPE_LIST"
 
     @classmethod
     def process_task_aggregate_info(cls, bk_biz_id: int) -> typing.Dict[str, str]:
@@ -86,6 +88,21 @@ class GlobalSettings(models.Model):
             return cls.objects.get(key=cls.KEYS.APIGW_PUBLIC_KEY).v_json
         except cls.DoesNotExist:
             return ""
+
+    @classmethod
+    def get_config(cls, key=None, default=None):
+        try:
+            return cls.objects.get(key=key).v_json
+        except cls.DoesNotExist:
+            return default
+
+    @classmethod
+    def set_config(cls, key, value):
+        cls.objects.create(key=key, v_json=value)
+
+    @classmethod
+    def update_config(cls, key, value):
+        cls.objects.filter(key=key).update(v_json=value)
 
     class Meta:
         verbose_name = _("全局配置表（GlobalSettings）")
