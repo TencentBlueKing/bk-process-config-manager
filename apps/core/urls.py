@@ -8,3 +8,21 @@ Unless required by applicable law or agreed to in writing, software distributed 
 an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and limitations under the License.
 """
+from django.conf.urls import include, url
+from rest_framework import routers
+
+from .gray import views as gray_views
+
+router = routers.DefaultRouter(trailing_slash=True)
+
+
+router.register(
+    gray_views.GrayViewSet.URL_BASE_NAME,
+    gray_views.GrayViewSet,
+    basename=gray_views.GrayViewSet.URL_BASE_NAME,
+)
+
+
+urlpatterns = [
+    url(r"^", include(router.urls)),
+]

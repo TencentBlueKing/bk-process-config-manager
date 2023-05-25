@@ -8,3 +8,13 @@ Unless required by applicable law or agreed to in writing, software distributed 
 an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and limitations under the License.
 """
+# from enum import Enum
+# from typing import Dict
+#
+# from django.utils.translation import ugettext_lazy as _
+#
+# from apps.utils.enum import EnhanceEnum
+
+
+# 全量进入灰度的标志
+ALL_IN_FLAG = -1

@@ -54,7 +54,7 @@ class GenerateConfigService(JobTaskBaseService):
     生成配置
     """
 
-    def _execute(self, data, parent_data):
+    def _execute(self, data, parent_data, common_data):
         job_task = data.get_one_of_inputs("job_task")
         bk_username = data.get_one_of_inputs("bk_username")
         bk_biz_id = data.get_one_of_inputs("bk_biz_id")
@@ -141,8 +141,7 @@ class ReleaseConfigService(JobTaskBaseService):
     下发配置
     """
 
-    @staticmethod
-    def release_by_job(job_task, bk_biz_id):
+    def release_by_job(self, job_task, bk_biz_id):
         host_info = job_task.extra_data["process_info"]["host"]
 
         config_template_ids = job_task.get_job_task_config_template_ids()
@@ -186,21 +185,21 @@ class ReleaseConfigService(JobTaskBaseService):
                 owner=config_template.owner,
                 group=config_template.group,
             )
-            JobApi.fast_execute_script(
-                {
-                    "bk_biz_id": bk_biz_id,
-                    "ip_list": [{"ip": host_info["bk_host_innerip"], "bk_cloud_id": host_info["bk_cloud_id"]}],
-                    "task_name": _("[gsekit]下发配置_{bk_process_id}_{config_instance_id}").format(
-                        bk_process_id=job_task.bk_process_id, config_instance_id=latest_config_instance.id
-                    ),
-                    "script_timeout": 300,
-                    "script_type": 1,
-                    "account": "root",
-                    "script_content": base64.b64encode(script_content.encode()).decode(),
-                }
-            )
+            job_params = {
+                "bk_biz_id": bk_biz_id,
+                "ip_list": [{"ip": host_info["bk_host_innerip"], "bk_cloud_id": host_info["bk_cloud_id"]}],
+                "host_id_list": [host_info["bk_host_id"]],
+                "task_name": _("[gsekit]下发配置_{bk_process_id}_{config_instance_id}").format(
+                    bk_process_id=job_task.bk_process_id, config_instance_id=latest_config_instance.id
+                ),
+                "script_timeout": 300,
+                "script_type": 1,
+                "account": "root",
+                "script_content": base64.b64encode(script_content.encode()).decode(),
+            }
+            self.request_single_job(JobApi.fast_execute_script, job_params)
 
-    def _execute(self, data, parent_data):
+    def _execute(self, data, parent_data, common_data):
         job_task = data.get_one_of_inputs("job_task")
         bk_biz_id = data.get_one_of_inputs("bk_biz_id")
         self.release_by_job(job_task, bk_biz_id)
@@ -212,7 +211,7 @@ class SetConfigReleasedService(JobTaskBaseService):
     设置下发状态
     """
 
-    def _execute(self, data, parent_data):
+    def _execute(self, data, parent_data, common_data):
         job_task = data.get_one_of_inputs("job_task")
         config_instance_ids = job_task.get_job_task_config_instance_ids()
         ConfigInstance.objects.filter(id__in=config_instance_ids).update(is_released=True)
@@ -242,7 +241,7 @@ class BulkGenerateConfigService(MultiJobTaskBaseService):
     生成配置
     """
 
-    def _execute(self, data, parent_data):
+    def _execute(self, data, parent_data, common_data):
         job_tasks = data.get_one_of_inputs("job_tasks")
         bk_username = data.get_one_of_inputs("bk_username")
         bk_biz_id = data.get_one_of_inputs("bk_biz_id")
@@ -429,7 +428,7 @@ class BulkExecuteJobPlatformService(MultiJobTaskBaseService):
 
         try:
             # 请求作业平台
-            job_instance_id = job_func(job_params)["job_instance_id"]
+            job_instance_id = self.request_single_job(job_func, job_params)["job_instance_id"]
         except ApiResultError as err:
             if err.code in EsbApi.ErrorCode.RATE_LIMIT_EXCEEDED_ERR_LIST:
                 # 超过ESB频率限制，进行重试
@@ -466,7 +465,7 @@ class BulkExecuteJobPlatformService(MultiJobTaskBaseService):
         """
         raise NotImplementedError
 
-    def _execute(self, data, parent_data):
+    def _execute(self, data, parent_data, common_data):
         job_tasks = data.get_one_of_inputs("job_tasks")
         bk_biz_id = data.get_one_of_inputs("bk_biz_id")
         data.outputs.job_instance_id__job_task_ids_map = {}
@@ -559,6 +558,9 @@ class BulkExecuteJobPlatformService(MultiJobTaskBaseService):
                     multi_job_params_map[key]["job_params"]["target_server"]["ip_list"].append(
                         {"bk_cloud_id": host_info["bk_cloud_id"], "ip": host_info["bk_host_innerip"]}
                     )
+                    multi_job_params_map[key]["job_params"]["target_server"]["host_id_list"].append(
+                        host_info["bk_host_id"]
+                    )
                 else:
                     multi_job_params_map[key] = {
                         "job_func": data.get_one_of_inputs("job_func"),
@@ -572,7 +574,8 @@ class BulkExecuteJobPlatformService(MultiJobTaskBaseService):
                             "target_server": {
                                 "ip_list": [
                                     {"bk_cloud_id": host_info["bk_cloud_id"], "ip": host_info["bk_host_innerip"]}
-                                ]
+                                ],
+                                "host_id_list": [host_info["bk_host_id"]],
                             },
                         },
                         "pipeline_data": data,
@@ -730,7 +733,7 @@ class BulkExecuteJobPlatformService(MultiJobTaskBaseService):
         self.handle_succeeded_conf_inst_ids(succeeded_config_inst_ids)
         return [job_status]
 
-    def _schedule(self, data, parent_data, callback_data=None):
+    def _schedule(self, data, parent_data, common_data, callback_data=None):
         polling_time = data.get_one_of_outputs("polling_time") or 0
         job_instance_id__job_task_ids_map = data.get_one_of_outputs("job_instance_id__job_task_ids_map") or {}
 
@@ -806,7 +809,7 @@ class BulkPushConfigService(BulkExecuteJobPlatformService):
         # 下发配置成功则设置状态为成功
         job_task.set_status(JobStatus.SUCCEEDED)
 
-    def _execute(self, data, parent_data):
+    def _execute(self, data, parent_data, common_data):
         job_params = {
             "file_target_path": {"args": ["file_target_path"], "func": lambda file_target_path: file_target_path},
             "file_list": {
@@ -819,7 +822,7 @@ class BulkPushConfigService(BulkExecuteJobPlatformService):
         data.inputs.job_params = job_params
         data.inputs.job_func = JobApi.push_config_file
 
-        return super()._execute(data, parent_data)
+        return super()._execute(data, parent_data, common_data)
 
 
 class BulkPushConfigComponent(Component):
@@ -833,7 +836,7 @@ class BulkExecuteJobService(MultiJobTaskBaseService):
     执行脚本
     """
 
-    def _execute(self, data, parent_data):
+    def _execute(self, data, parent_data, common_data):
         pass
 
     def inputs_format(self):
@@ -876,7 +879,7 @@ class BulkBackupConfigService(BulkExecuteJobPlatformService):
             now_time=datetime.datetime.now().strftime("%Y%m%d_%H%M%S"),
         )
 
-    def _execute(self, data, parent_data):
+    def _execute(self, data, parent_data, common_data):
         with open("apps/gsekit/scripts/backup_cfg.bat") as bat, open("apps/gsekit/scripts/backup_cfg.sh") as sh:
             script_content = {JOB_TASK_OS_TYPE["win"]: bat.read(), JOB_TASK_OS_TYPE["linux"]: sh.read()}
 
@@ -889,7 +892,7 @@ class BulkBackupConfigService(BulkExecuteJobPlatformService):
         data.inputs.job_params = job_params
         data.inputs.job_func = JobApi.fast_execute_script
 
-        return super()._execute(data, parent_data)
+        return super()._execute(data, parent_data, common_data)
 
 
 class BulkBackupConfigComponent(Component):
@@ -1082,7 +1085,7 @@ class BulkDiffConfigService(BulkExecuteJobPlatformService):
         config_instance_ids = [config_instance["id__max"] for config_instance in max_config_instance_ids]
         return ConfigInstance.objects.filter(id__in=config_instance_ids)
 
-    def _execute(self, data, parent_data):
+    def _execute(self, data, parent_data, common_data):
         with open("apps/gsekit/scripts/get_release_cfg.bat") as bat, open(
             "apps/gsekit/scripts/get_release_cfg.sh"
         ) as sh:
@@ -1097,7 +1100,7 @@ class BulkDiffConfigService(BulkExecuteJobPlatformService):
         data.inputs.job_params = job_params
         data.inputs.job_func = JobApi.fast_execute_script
 
-        return super()._execute(data, parent_data)
+        return super()._execute(data, parent_data, common_data)
 
 
 class BulkDiffConfigComponent(Component):

@@ -18,6 +18,7 @@ urlpatterns = [
     url(r"^admin_gsekit/?", admin.site.urls),
     url(r"^account/", include("blueapps.account.urls")),
     url(r"^api/iam/", include("apps.iam.urls")),
+    url(r"^api/core/", include("apps.core.urls")),
     url(r"^", include("apps.gsekit.urls")),
     url(r"^i18n/", include("django.conf.urls.i18n")),
 ]
