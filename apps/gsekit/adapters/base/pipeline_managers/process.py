@@ -24,6 +24,7 @@ from common.log import logger
 from bamboo_engine import builder
 from bamboo_engine.builder import Data, ServiceActivity
 from .base import BasePipelineManager
+from pipeline.builder import Var
 
 
 class ProcessPipelineManager(BasePipelineManager):
@@ -44,7 +45,7 @@ class ProcessPipelineManager(BasePipelineManager):
 
         return channel_adapter.BulkOperateProcessActivityManager
 
-    def create_pipeline(self, job_tasks: QuerySet) -> Dict[str, Any]:
+    def create_pipeline(self, job_tasks: QuerySet, meta: Dict[str, Any]) -> Dict[str, Any]:
         """
         根据优先级生成不同的执行顺序的并行网关，组成pipeline
                  StartEvent
@@ -117,11 +118,13 @@ class ProcessPipelineManager(BasePipelineManager):
                     activities: List[ServiceActivity] = activity_manager(
                         job=self.job, job_task_ids=job_task_ids, op_type=op_type
                     ).bulk_generate_activities(global_pipeline_data)["activities"]
+                    for act in activities:
+                        act.component.inputs.meta = Var(type=Var.PLAIN, value=meta)
                     self.mark_acts_tail_and_head(activities)
                     ordered_activities.extend(list(filter(None, activities)))
 
                 # 串联 activities
-                reduce(lambda l, r: l.extend(r), ordered_activities)
+                reduce(lambda l, r: l.extend(r), ordered_activities)  # noqa
                 sub_processes.append(ordered_activities[0])
 
         start_event = builder.EmptyStartEvent()

@@ -17,7 +17,6 @@ from django.utils.translation import ugettext as _
 from pipeline.component_framework.component import Component
 from pipeline.core.flow.activity import StaticIntervalGenerator
 
-from apps.api import GseApi
 from apps.gsekit.job.models import JobProcInstStatusStatistics, JobTask, JobStatus
 from apps.gsekit.pipeline_plugins.components.collections.base import (
     JobTaskBaseService,
@@ -27,6 +26,10 @@ from apps.gsekit.pipeline_plugins.components.collections.base import (
 from apps.gsekit.process.exceptions import ProcessAttrIsNotConfiguredException
 from apps.gsekit.process.models import Process, ProcessInst
 from apps.utils.mako_utils.render import mako_render
+from dataclasses import dataclass
+from .base import CommonData
+from apps.adapters.api.gse import get_gse_api_helper
+from apps.adapters.api.gse.base import GseApiBaseHelper
 
 logger = logging.getLogger("app")
 
@@ -155,7 +158,22 @@ DEFAULT_START_CHECK_SECS = 5
 DEFAULT_OP_TIMEOUT = 60
 
 
-class BulkGseOperateProcessService(MultiJobTaskBaseService):
+@dataclass
+class GseCommonData(CommonData):
+    gse_api_helper: GseApiBaseHelper
+
+
+class GseCommonService(MultiJobTaskBaseService):
+    @classmethod
+    def get_common_data(cls, data) -> GseCommonData:
+        common_data = super().get_common_data(data)
+        return GseCommonData(
+            gse_version=common_data.gse_version,
+            gse_api_helper=get_gse_api_helper(gse_version=common_data.gse_version),
+        )
+
+
+class BulkGseOperateProcessService(GseCommonService):
     """
     GSE Service 基类
     """
@@ -181,15 +199,14 @@ class BulkGseOperateProcessService(MultiJobTaskBaseService):
         return True
 
     @classmethod
-    def get_job_task_gse_result(cls, gse_api_result: Dict[str, Dict], job_task: JobTask) -> Dict:
+    def get_job_task_gse_result(cls, gse_api_result: Dict[str, Dict], job_task: JobTask, common_data) -> Dict:
         """GSE接口偶尔会出现IP进程不返回的情况，针对这种情况默认填充 GseDataErrorCode.RUNNING 状态"""
         host_info = job_task.extra_data["process_info"]["host"]
         process_info = job_task.extra_data["process_info"]["process"]
         local_inst_id = job_task.extra_data["local_inst_id"]
         namespace = NAMESPACE.format(bk_biz_id=process_info["bk_biz_id"])
-        uniq_key = (
-            f"{host_info['bk_cloud_id']}:{host_info['bk_host_innerip']}:"
-            f"{namespace}:{process_info['bk_process_name']}_{local_inst_id}"
+        uniq_key = common_data.gse_api_helper.get_gse_proc_key(
+            host_info, namespace, f"{process_info['bk_process_name']}_{local_inst_id}"
         )
         return gse_api_result["data"].get(uniq_key) or {
             "content": "",
@@ -247,7 +264,7 @@ class BulkGseOperateProcessService(MultiJobTaskBaseService):
             error_code=error_code, simple_msg=simple_msg, error_msg=error_msg
         )
 
-    def _execute(self, data, parent_data):
+    def _execute(self, data, parent_data, common_data):
         job_tasks = data.get_one_of_inputs("job_tasks")
         op_type = data.get_one_of_inputs("op_type")
         data.outputs.proc_op_status_map = {}
@@ -292,7 +309,13 @@ class BulkGseOperateProcessService(MultiJobTaskBaseService):
                         },
                     },
                     "op_type": op_type,
-                    "hosts": [{"ip": host_info["bk_host_innerip"], "bk_cloud_id": host_info["bk_cloud_id"]}],
+                    "hosts": [
+                        {
+                            "bk_host_innerip": host_info["bk_host_innerip"],
+                            "bk_cloud_id": host_info["bk_cloud_id"],
+                            "bk_agent_id": host_info.get("bk_agent_id", ""),
+                        }
+                    ],
                     "spec": {
                         "identity": {
                             "index_key": "",
@@ -319,23 +342,23 @@ class BulkGseOperateProcessService(MultiJobTaskBaseService):
             )
             # pipeline-engine会把data转为json，不能用int作为key
             data.outputs.proc_op_status_map[str(job_task.id)] = GseDataErrorCode.RUNNING
-        task_id = GseApi.operate_proc_multi({"proc_operate_req": proc_operate_req})["task_id"]
+        task_id = common_data.gse_api_helper.operate_proc_multi(proc_operate_req=proc_operate_req)
 
         data.outputs.task_id = task_id
         return self.return_data(result=True)
 
-    def _schedule(self, data, parent_data, callback_data=None):
+    def _schedule(self, data, parent_data, common_data, callback_data=None):
         job_tasks = data.get_one_of_inputs("job_tasks")
         op_type = data.get_one_of_inputs("op_type")
         task_id = data.get_one_of_outputs("task_id")
-        gse_api_result = GseApi.get_proc_operate_result({"task_id": task_id}, raw=True)
+        gse_api_result = common_data.gse_api_helper.get_proc_operate_result(task_id)
         if gse_api_result["code"] == GSE_RUNNING_TASK_CODE:
             # 查询的任务等待执行中，还未入到redis，继续下一次查询
             return self.return_data(result=True)
 
         for job_task in job_tasks:
             local_inst_id = job_task.extra_data["local_inst_id"]
-            task_result = self.get_job_task_gse_result(gse_api_result, job_task)
+            task_result = self.get_job_task_gse_result(gse_api_result, job_task, common_data)
             error_code = task_result.get("error_code")
 
             # 已处理过的任务
@@ -400,17 +423,17 @@ class BulkGseOperateProcessService(MultiJobTaskBaseService):
 
 
 class BulkGseCheckProcessService(BulkGseOperateProcessService):
-    def _execute(self, data, parent_data):
+    def _execute(self, data, parent_data, common_data):
         # 上一个原子进程操作不是成功或忽略的情况，需要进一步查询进程实际的运行状态
         for job_task in data.get_one_of_inputs("job_tasks"):
             if job_task.status not in [JobStatus.SUCCEEDED, JobStatus.IGNORED]:
-                return super()._execute(data, parent_data)
+                return super()._execute(data, parent_data, common_data)
 
         # 上一个原子进程操作都成功或忽略了，无需查询进程状态, 也无需更新job_task，直接跳过此原子
         self.finish_schedule()
         return self.return_data(result=True)
 
-    def _schedule(self, data, parent_data, callback_data=None):
+    def _schedule(self, data, parent_data, common_data, callback_data=None):
 
         job_tasks = data.get_one_of_inputs("job_tasks")
         task_id = data.get_one_of_outputs("task_id")
@@ -419,7 +442,7 @@ class BulkGseCheckProcessService(BulkGseOperateProcessService):
             # 兼容新版引擎，TODO 待优化，在 execute 处提前 finish_schedule
             return self.return_data(result=True, is_finished=True)
 
-        gse_api_result = GseApi.get_proc_operate_result({"task_id": task_id}, raw=True)
+        gse_api_result = common_data.gse_api_helper.get_proc_operate_result({"task_id": task_id}, raw=True)
         if gse_api_result["code"] == GSE_RUNNING_TASK_CODE:
             # 查询的任务等待执行中，还未入到redis，继续下一次查询
             return self.return_data(result=True)

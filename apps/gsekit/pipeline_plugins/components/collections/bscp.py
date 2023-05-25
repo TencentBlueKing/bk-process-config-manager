@@ -49,7 +49,7 @@ class UploadContentService(JobTaskBaseService):
     上传文件内容 -> BSCP -> 制品库
     """
 
-    def _execute(self, data, parent_data):
+    def _execute(self, data, parent_data, common_data):
         job_task = data.get_one_of_inputs("job_task")
 
         inst_id = job_task.extra_data["inst_id"]
@@ -119,7 +119,7 @@ class CommitAndReleaseService(MultiJobTaskBaseService):
     __need_schedule__ = True
     interval = StaticIntervalGenerator(POLLING_INTERVAL)
 
-    def _execute(self, data, parent_data) -> Dict:
+    def _execute(self, data, parent_data, common_data) -> Dict:
         job_task = data.get_one_of_inputs("job_task")
         job_task_ids = data.get_one_of_inputs("job_task_ids")
         config_template_ids = job_task.get_job_task_config_template_ids()
@@ -260,7 +260,11 @@ class CommitAndReleaseService(MultiJobTaskBaseService):
         # 创建策略
         try:
             strategy_id = BscpApi.create_strategy(
-                dict(name=f"gsekit_strategy_{job_task.id}", labels_and=strategy_labels, **bscp_base_params,)
+                dict(
+                    name=f"gsekit_strategy_{job_task.id}",
+                    labels_and=strategy_labels,
+                    **bscp_base_params,
+                )
             )["strategy_id"]
         except ApiResultError as error:
             logger.warning("策略已存在，无需重复创建, {error}".format(error=error))
@@ -414,7 +418,7 @@ class BulkUploadContentService(MultiJobTaskBaseService):
     上传文件内容 -> BSCP -> 制品库
     """
 
-    def _execute(self, data, parent_data):
+    def _execute(self, data, parent_data, common_data):
         job_tasks = data.get_one_of_inputs("job_tasks")
 
         is_all_success = True

@@ -12,40 +12,28 @@ See the License for the specific language governing permissions and limitations 
 from django.utils.translation import ugettext_lazy as _
 
 from ..base import BaseApi, DataAPI
-from ..domains import GSE_APIGATEWAY_ROOT
+from ..domains import GSE_APIGATEWAY_ROOT_V2
 
 
-class _GseApi(BaseApi):
-    MODULE = _("管控平台")
+class _GseV2Api(BaseApi):
+    MODULE = _("管控平台 V2")
 
     def __init__(self):
-        self.operate_proc = DataAPI(
-            method="POST",
-            url=GSE_APIGATEWAY_ROOT + "operate_proc_v2/",
-            module=self.MODULE,
-            description="进程操作",
-        )
         self.operate_proc_multi = DataAPI(
             method="POST",
-            url=GSE_APIGATEWAY_ROOT + "operate_proc_multi/",
+            url=GSE_APIGATEWAY_ROOT_V2 + "api/v2/proc/operate_proc_multi/",
             module=self.MODULE,
             description="批量进程操作",
         )
         self.get_proc_operate_result = DataAPI(
             method="POST",
-            url=GSE_APIGATEWAY_ROOT + "get_proc_operate_result_v2/",
+            url=GSE_APIGATEWAY_ROOT_V2 + "api/v2/proc/get_proc_operate_result_v2/",
             module=self.MODULE,
             description="查询进程操作结果",
         )
         self.get_proc_status = DataAPI(
             method="POST",
-            url=GSE_APIGATEWAY_ROOT + "get_proc_status_v2/",
+            url=GSE_APIGATEWAY_ROOT_V2 + "api/v2/proc/get_proc_status_v2/",
             module=self.MODULE,
             description="查询进程状态信息",
-        )
-        self.sync_proc_status = DataAPI(
-            method="POST",
-            url=GSE_APIGATEWAY_ROOT + "sync_proc_status/",
-            module=self.MODULE,
-            description="同步进程状态信息",
         )

@@ -22,3 +22,12 @@ class BkPaaSVersion(EnhanceEnum):
     @classmethod
     def _get_member__alias_map(cls) -> Dict[Enum, str]:
         return {cls.V2: "V2", cls.V3: "V3具备容器及二进制配置差异"}
+
+
+class GseVersion(EnhanceEnum):
+    V1 = "V1"
+    V2 = "V2"
+
+    @classmethod
+    def _get_member__alias_map(cls) -> Dict[Enum, str]:
+        return {cls.V1: "V1", cls.V2: "V2"}
