@@ -10,7 +10,7 @@ See the License for the specific language governing permissions and limitations 
 """
 import logging
 import traceback
-from typing import Dict
+from typing import Dict, List
 
 from django.db.models import QuerySet
 from django.utils.translation import ugettext as _
@@ -24,6 +24,9 @@ from apps.gsekit.process import exceptions as process_exceptions
 from apps.gsekit.utils import solution_maker
 from pipeline.core.data.base import DataObject
 from pipeline.core.flow.activity import Service
+from dataclasses import dataclass
+from apps.core.gray.tools import GrayTools
+
 
 logger = logging.getLogger("celery")
 
@@ -37,6 +40,15 @@ class ActivityType:
     HEAD = 0
     TAIL = 1
     HEAD_TAIL = 2
+
+
+@dataclass
+class CommonData:
+    """
+    抽象出通用数据结构体，用于原子执行时常用数据
+    """
+
+    gse_version: str
 
 
 class JobTaskBaseService(Service):
@@ -59,6 +71,20 @@ class JobTaskBaseService(Service):
                 job_task_id=job_task.id, act_name=self.__class__.__name__
             )
         )
+
+    @classmethod
+    def get_common_data(cls, data) -> CommonData:
+        gse_version: str = data.get_one_of_inputs("meta", {}).get("GSE_VERSION", "")
+        return CommonData(gse_version=gse_version)
+
+    def request_single_job(self, job_func, job_params: Dict):
+        # 适配 host_id_list
+        is_gse2_gray: bool = GrayTools().is_gse2_gray(job_params["bk_biz_id"])
+        host_interaction_from: str = ("ip_list", "host_id_list")[is_gse2_gray]
+        host_interaction_data_list: List = job_params["target_server"].get(host_interaction_from, [])
+        job_params["target_server"] = {host_interaction_from: host_interaction_data_list}
+
+        return job_func(job_params)
 
     @classmethod
     def return_data(cls, result: bool, job_extra_data: Dict = None, is_finished: bool = False, **kwargs) -> Dict:
@@ -144,6 +170,7 @@ class JobTaskBaseService(Service):
 
     def execute(self, data, parent_data):
         job_task_id = data.get_one_of_inputs("job_task_id")
+        common_data: CommonData = self.get_common_data(data)
         try:
             job_task = job_models.JobTask.objects.get(id=job_task_id)
         except job_models.JobTask.DoesNotExist:
@@ -158,7 +185,7 @@ class JobTaskBaseService(Service):
         self.judge_act_head_and_set_running(data, job_task)
 
         data.inputs.job_task = job_task
-        execute_return = self.run(self._execute, job_task, data=data, parent_data=parent_data)
+        execute_return = self.run(self._execute, job_task, data=data, parent_data=parent_data, common_data=common_data)
 
         if not execute_return["result"]:
             return False
@@ -174,8 +201,14 @@ class JobTaskBaseService(Service):
 
     def schedule(self, data, parent_data, callback_data=None):
         job_task = data.get_one_of_inputs("job_task")
+        common_data: CommonData = self.get_common_data(data)
         schedule_return = self.run(
-            self._schedule, job_task, data=data, parent_data=parent_data, callback_data=callback_data
+            self._schedule,
+            job_task,
+            data=data,
+            parent_data=parent_data,
+            common_data=common_data,
+            callback_data=callback_data,
         )
 
         # 执行错误，返回失败并结束调度
@@ -197,10 +230,10 @@ class JobTaskBaseService(Service):
         data.outputs.polling_time = polling_time + POLLING_INTERVAL
         return True
 
-    def _execute(self, data, parent_data) -> Dict:
+    def _execute(self, data, parent_data, common_data) -> Dict:
         raise NotImplementedError
 
-    def _schedule(self, data, parent_data, callback_data=None) -> Dict:
+    def _schedule(self, data, parent_data, common_data, callback_data=None) -> Dict:
         return {"result": True, "is_finished": True}
 
     def inputs_format(self):
@@ -302,6 +335,7 @@ class MultiJobTaskBaseService(JobTaskBaseService):
 
     def execute(self, data, parent_data):
         job_task_id = data.get_one_of_inputs("job_task_id")
+        common_data = self.get_common_data(data)
         try:
             job_task = job_models.JobTask.objects.get(id=job_task_id)
         except job_models.JobTask.DoesNotExist:
@@ -319,7 +353,7 @@ class MultiJobTaskBaseService(JobTaskBaseService):
 
         data.inputs.job_task = job_task
         data.inputs.job_tasks = list(job_tasks)
-        execute_return = self.run(self._execute, job_tasks, data=data, parent_data=parent_data)
+        execute_return = self.run(self._execute, job_tasks, data=data, parent_data=parent_data, common_data=common_data)
 
         if not execute_return["result"]:
             return False
@@ -335,9 +369,15 @@ class MultiJobTaskBaseService(JobTaskBaseService):
 
     def schedule(self, data, parent_data, callback_data=None):
         job_task_ids = data.get_one_of_inputs("job_task_ids")
+        common_data = self.get_common_data(data)
         job_tasks = job_models.JobTask.objects.filter(id__in=job_task_ids)
         schedule_return = self.run(
-            self._schedule, job_tasks, data=data, parent_data=parent_data, callback_data=callback_data
+            self._schedule,
+            job_tasks,
+            data=data,
+            parent_data=parent_data,
+            common_data=common_data,
+            callback_data=callback_data,
         )
 
         # 执行错误，返回失败并结束调度

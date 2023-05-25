@@ -112,3 +112,10 @@ class TaskGranularity(object):
     }
 
     TASK_GRANULARITY_CHOICES = [BIZ, SET, MODULE, HOST]
+
+
+class TimeUnit:
+    SECOND = 1
+    MINUTE = SECOND * 60
+    HOUR = MINUTE * 60
+    DAY = HOUR * 24
