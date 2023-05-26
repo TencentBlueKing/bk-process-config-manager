@@ -13,6 +13,7 @@ import datetime
 from blueapps.account.conf import ConfFixture
 from django.conf import settings
 from django.utils.translation import ugettext as _
+from apps.gsekit import constants
 
 """
 context_processor for common(setting)
@@ -23,6 +24,19 @@ WEB_TITLE_MAP = {
     "ieod": _("{app_name} | 腾讯蓝鲸智云").format(app_name=settings.APP_NAME),
     "open": _("{app_name} | 腾讯蓝鲸智云").format(app_name=settings.APP_NAME),
 }
+
+
+def get_docs_center_url():
+    docs_suffix = "markdown/进程配置管理/产品白皮书/Introduce/Overview.md"
+    if settings.BK_DOCS_CENTER_HOST:
+        docs_prefix = settings.BK_DOCS_CENTER_HOST
+        return f"{docs_prefix}/{docs_suffix}"
+
+    if settings.BKAPP_RUN_ENV == constants.BkappRunEnvType.CE.value:
+        docs_prefix = "https://bk.tencent.com/docs"
+    else:
+        docs_prefix = f"{settings.BK_PAAS_HOST}/o/bk_docs_center"
+    return f"{docs_prefix}/{docs_suffix}"
 
 
 def mysetting(request):
@@ -58,4 +72,10 @@ def mysetting(request):
         "CMDB_URL": settings.BK_CC_HOST,
         "TAM_AEGIS_KEY": settings.TAM_AEGIS_KEY,
         "TAM_AEGIS_URL": settings.TAM_AEGIS_URL,
+        # 导航栏开源社区地址
+        "BKAPP_NAV_OPEN_SOURCE_URL": settings.BKAPP_NAV_OPEN_SOURCE_URL,
+        # 导航栏技术支持地址
+        "BKAPP_NAV_HELPER_URL": settings.BKAPP_NAV_HELPER_URL,
+        "BK_DOCS_CENTER_URL": get_docs_center_url(),
+        "BKAPP_RUN_ENV": settings.BKAPP_RUN_ENV,
     }

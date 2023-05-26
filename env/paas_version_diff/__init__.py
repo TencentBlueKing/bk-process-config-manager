@@ -14,6 +14,7 @@ from .. import constants
 
 # 差异化赋值后的统一命名 settings
 __all__ = [
+    "BKAPP_RUN_ENV",
     # PaaS 部署环境，标准化为 stag / dev
     "ENVIRONMENT",
     # esb 访问地址
@@ -31,6 +32,8 @@ BKPAAS_MAJOR_VERSION = get_type_env(key="BKPAAS_MAJOR_VERSION", default=constant
 # 是否为 PaaS V3 容器化部署版本
 BKAPP_IS_V3_CONTAINER = get_type_env(key="BKAPP_IS_V3_CONTAINER", default=False, _type=bool)
 
+# 运行环境，ce / ee / ieod, 默认为 ce
+BKAPP_RUN_ENV = get_type_env(key="BKAPP_RUN_ENV", default="ce", _type=str)
 
 if BKPAAS_MAJOR_VERSION == constants.BkPaaSVersion.V3.value:
     if BKAPP_IS_V3_CONTAINER:

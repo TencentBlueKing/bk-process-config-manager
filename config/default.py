@@ -34,6 +34,7 @@ INSTALLED_APPS += (
     "apps.gsekit",
     "apps.iam",
     "drf_yasg",
+    "version_log",
     "rest_framework",
     # pipeline
     "pipeline",
@@ -251,6 +252,16 @@ BK_IAM_SAAS_HOST = env.BK_IAM_SAAS_HOST
 TAM_AEGIS_KEY = os.getenv("BKAPP_TAM_AEGIS_KEY")
 TAM_AEGIS_URL = os.getenv("BKAPP_TAM_AEGIS_URL")
 
+# 导航栏技术支持地址
+BKAPP_NAV_HELPER_URL = env.BKAPP_NAV_HELPER_URL
+# 导航栏开源社区地址
+BKAPP_NAV_OPEN_SOURCE_URL = env.BKAPP_NAV_OPEN_SOURCE_URL
+
+VERSION_LOG = {"MD_FILES_DIR": os.path.join(PROJECT_ROOT, "release")}
+
+BKAPP_RUN_ENV = env.BKAPP_RUN_ENV
+
+BK_DOCS_CENTER_HOST = os.getenv("BK_DOCS_CENTER_HOST")
 # ==============================================================================
 # Cache
 # ==============================================================================

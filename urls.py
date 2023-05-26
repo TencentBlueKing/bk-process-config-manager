@@ -11,10 +11,12 @@ See the License for the specific language governing permissions and limitations 
 
 from django.conf.urls import include, url
 from django.contrib import admin
+from version_log import config
 
 urlpatterns = [
     # 出于安全考虑，默认屏蔽admin访问路径。
     # 开启前请修改路径随机内容，降低被猜测命中几率，提升安全性
+    url(r"^{}".format(config.ENTRANCE_URL), include("version_log.urls", namespace="version_log")),
     url(r"^admin_gsekit/?", admin.site.urls),
     url(r"^account/", include("blueapps.account.urls")),
     url(r"^api/iam/", include("apps.iam.urls")),
