@@ -26,6 +26,8 @@ __all__ = [
     "BK_SAAS_HOST",
     "BKAPP_DOCS_URL",
     "BKAPP_STATIC_PROTOCOL_PREFIX",
+    "BKAPP_NAV_OPEN_SOURCE_URL",
+    "BKAPP_NAV_HELPER_URL",
 ]
 
 # 文档地址
@@ -35,3 +37,12 @@ BKAPP_DOCS_URL = get_type_env(
 
 # 站点协议前缀，用于静态文件访问链接异常的场景
 BKAPP_STATIC_PROTOCOL_PREFIX = get_type_env("BKAPP_STATIC_PROTOCOL_PREFIX", default="", _type=str)
+
+# 导航栏开源社区地址
+BKAPP_NAV_OPEN_SOURCE_URL = get_type_env(
+    key="BKAPP_NAV_OPEN_SOURCE_URL", default="https://github.com/TencentBlueKing/bk-process-config-manager", _type=str
+)
+# 导航栏技术支持地址
+BKAPP_NAV_HELPER_URL = get_type_env(
+    key="BKAPP_NAV_HELPER_URL", default="https://wpa1.qq.com/KziXGWJs?_type=wpa&qidian=true", _type=str
+)

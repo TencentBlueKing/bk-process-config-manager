@@ -10,6 +10,7 @@ See the License for the specific language governing permissions and limitations 
 """
 import re
 from django.utils.translation import ugettext_lazy as _
+from enum import Enum
 
 
 # 缓存过期时间
@@ -112,6 +113,13 @@ class TaskGranularity(object):
     }
 
     TASK_GRANULARITY_CHOICES = [BIZ, SET, MODULE, HOST]
+
+
+class BkappRunEnvType(Enum):
+    """APP运行环境"""
+
+    CE = "ce"
+    EE = "ee"
 
 
 class TimeUnit:
