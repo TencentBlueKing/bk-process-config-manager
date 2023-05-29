@@ -253,29 +253,18 @@ export default {
     },
     handleCreate() { // 新建版本
       const firstVersion = this.versionList[0];
-      if (!firstVersion) {
+      if (!firstVersion || firstVersion.is_draft) {
         // 新建草稿
-        this.handleNewCreate();
-      } else if (firstVersion.is_draft) {
-        // 当前已有草稿，是否继续编辑
-        this.$bkInfo({
-          title: this.$t('当前已有草稿，是否继续编辑？'),
-          confirmFn: () => {
-            this.$store.commit('routeConfigTemplateVersionDetail', {
-              templateId: this.$route.params.templateId,
-              versionId: firstVersion.config_version_id,
-            });
-          },
-        });
+        this.handleNewCreate(!firstVersion ? '0' : firstVersion.config_version_id);
       } else {
         // 载入版本克隆草稿
         this.showCreateDialog = true;
       }
     },
-    async handleNewCreate() { // 新建一个全新的版本（不载入其他版本）
+    async handleNewCreate(versionId = '0') { // 新建一个全新的版本（不载入其他版本）
       this.$store.commit('routeConfigTemplateVersionDetail', {
         templateId: this.$route.params.templateId,
-        versionId: '0',
+        versionId,
       });
     },
     handleSuccessCreated(versionId) {

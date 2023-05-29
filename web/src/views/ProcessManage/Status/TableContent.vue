@@ -4,7 +4,7 @@
       ref="statusTable"
       :data="tableData"
       :size="setting.size"
-      :max-height="$store.state.pageHeight - (isSelectedAllPages ? 271 : 235)"
+      :max-height="$store.state.pageHeight - (isSelectedAllPages ? 311 : 275)"
       row-key="bk_process_id"
       :expand-row-keys="expandRow"
       :pagination="pagination"
@@ -90,7 +90,14 @@
             </div>
             其他
             <template v-else> -->
-            <span :title="row[item.id]">{{ row[item.id] || '--' }}</span>
+            <a
+              href="javascript: void(0)"
+              class="bk-button-text bk-primary"
+              v-if="item.id === 'bk_set_name' && row[item.id]"
+              @click.stop="onCheckProcessConfig(row)">
+              {{ row[item.id] }}
+            </a>
+            <span v-else>{{ row[item.id] || '--' }}</span>
             <!-- </template> -->
           </div>
         </bk-table-column>

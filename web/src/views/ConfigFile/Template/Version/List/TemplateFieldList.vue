@@ -5,13 +5,13 @@
         <TemplateField :selected-config="selectedConfig" field="template_name" :field-text="$t('模板名称') + $t('：')" />
       </div>
       <div class="couple">
-        <TemplateField :selected-config="selectedConfig" field="abs_path" :field-text="$t('文件所处路径') + $t('：')" />
+        <TemplateField :selected-config="selectedConfig" field="abs_path" :field-text="$t('文件所处目录') + $t('：')" />
       </div>
       <div class="couple">
         <TemplateField :selected-config="selectedConfig" field="owner" :field-text="$t('文件拥有者') + $t('：')" />
       </div>
       <div class="couple">
-        <TemplateField :selected-config="selectedConfig" field="line_separator" :field-text="$t('输出格式') + $t('：')" />
+        <TemplateField :selected-config="selectedConfig" field="line_separator" :field-text="$t('换行符') + $t('：')" />
       </div>
     </div>
     <div class="row">
@@ -91,6 +91,7 @@ export default {
           align-items: center;
           font-size: 12px;
           line-height: 16px;
+          width: 100%;
           max-width: 100%;
           color: $newBlackColor2;
           white-space: pre;

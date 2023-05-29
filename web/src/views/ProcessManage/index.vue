@@ -87,7 +87,7 @@ export default {
     background-color: #f5f7fa;
 
     .process-status {
-      padding: 18px 60px 30px;
+      padding: 18px 60px 60px;
     }
   }
 </style>

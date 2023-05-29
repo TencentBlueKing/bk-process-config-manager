@@ -48,7 +48,7 @@
     </div>
     <div class="diff-editor-footer">
       <bk-button :loading="isLoading" @click="coverDraftWithSelected">{{ $t('用对比版本覆盖当前草稿') }}</bk-button>
-      <bk-button style="margin-left: 10px;">{{ $t('取消') }}</bk-button>
+      <bk-button style="margin-left: 10px;" @click="$emit('close')">{{ $t('取消') }}</bk-button>
     </div>
   </div>
 </template>

@@ -477,6 +477,41 @@ export default {
         }
       }
     }
+
+    .nav-dropdown-theme {
+      transform: translateY(17px)!important;
+      padding: 0;
+      .bk-dropdown-content {
+        min-width: 80px;
+        padding: 4px 0;
+        margin: 0;
+        z-index: 2500;
+        border-radius: 2px;
+        border: 1px solid #dcdee5;
+        background: #fff;
+      }
+      /* .bk-dropdown-list {} */
+      .dropdown-list-item {
+        display: flex;
+        align-items: center;
+        height: 32px;
+        line-height: 32px;
+        padding: 0 12px;
+        color: #63656e;
+        font-size: var(--font-size);
+        text-decoration: none;
+        white-space: nowrap;
+        cursor: pointer;
+        &:hover {
+          background: #f5f7fa;
+        }
+
+        .gsekit-icon {
+          margin-right: 4px;
+          font-size: 15px;
+        }
+      }
+    }
   }
 
   .reset-icon-btn {

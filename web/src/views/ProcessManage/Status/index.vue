@@ -72,6 +72,7 @@
         @showSideSlider="showSideSlider"
         @empty-clear="handleTableClear">
       </TableContent>
+      <BkFooter />
       <!-- 配置下发侧滑面板 -->
       <ConfigDistribute
         v-if="isShow"
@@ -108,6 +109,7 @@ import ConfigDistribute from './ConfigDistribute';
 import SelectInstance from '@/components/SelectInstance';
 import ButtonGrounp from './ButtonGrounp';
 import EmptyProcess from '@/components/Empty/EmptyProcess';
+import BkFooter from '@/components/BkFooter';
 import { bus } from '@/common/bus';
 import { debounce } from 'lodash';
 
@@ -119,6 +121,7 @@ export default {
     SelectInstance,
     ButtonGrounp,
     EmptyProcess,
+    BkFooter,
   },
   data() {
     const jobAction = [

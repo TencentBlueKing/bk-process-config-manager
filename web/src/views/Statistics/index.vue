@@ -1,9 +1,8 @@
 <template>
   <div class="operational-statistics" v-bkloading="{ isLoading: loading }">
     <div class="page-head">
-      <div>{{ $t('运营统计') }}</div>
       <div class="search-head">
-        <div></div>
+        <div>{{ $t('运营统计') }}</div>
         <bk-date-picker
           ref="datePickerRef"
           :clearable="false"
@@ -257,7 +256,7 @@ export default {
   computed: {
     ...mapState(['bizList', 'pageHeight']),
     chartHeight() {
-      return (Math.max(this.pageHeight, 708) - 220) / 2 - 52;
+      return (Math.max(this.pageHeight, 708) - 200) / 2 - 52;
     },
   },
   created() {
