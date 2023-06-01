@@ -37,7 +37,7 @@
     <!-- 切换表达式和筛选 -->
     <div class="button-text" style="margin-right: 16px;" v-test.range="'mode'" @click="toggleSelect">
       <span class="gsekit-icon gsekit-icon-switch-line"></span>
-      {{ isDropdownMode ? $t('表达式') : $t('筛选') }}
+      {{ isDropdownMode ? $t('切换表达式') : $t('切换筛选模式') }}
     </div>
     <div class="button-text" :class="{ 'is-hidden': isClearDisabled }" v-test.range="'clear'" @click="clearSelect">
       <span class="bk-icon icon-delete"></span>
