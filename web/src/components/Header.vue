@@ -202,8 +202,7 @@ export default {
       this.$router.push('/process-manage/status');
     },
     handleLogout() {
-      http.get(`${window.PROJECT_CONFIG.SITE_URL}logout/`);
-      // location.href = `${window.PROJECT_CONFIG.LOGIN_URL}?&c_url=${window.location}`;
+      location.href = `${window.PROJECT_CONFIG.LOGIN_URL}?c_url=${encodeURI(window.location.href)}`;
     },
     async resetAuthInfo() {
       const currentBiz = this.bizList.find(item => item.bk_biz_id === this.bizId);
@@ -233,6 +232,7 @@ export default {
       switch (item.id) {
         case 'DOC':
         case 'FAQ':
+        case 'OPEN':
           item.href && window.open(item.href);
           break;
         case 'VERSION':
@@ -241,10 +241,11 @@ export default {
       }
     },
     async handleGetVersionList() {
-      const list = await http.get(`${window.PROJECT_CONFIG.SITE_URL}version_log/version_logs_list/`).catch(() => false);
-      if (list) {
+      const res = await http.get(`${window.PROJECT_CONFIG.SITE_URL}version_log/version_logs_list/`).catch(() => false);
+      console.log(res);
+      if (res?.result) {
         this.finished = true;
-        this.versionList = list.map(item => ({
+        this.versionList = res.data.map(item => ({
           title: item[0],
           date: item[1],
         }));
@@ -254,9 +255,10 @@ export default {
       return [...this.versionList];
     },
     async handleGetVersionDetail({ title }) {
-      const detail = await http.get(`${window.PROJECT_CONFIG.SITE_URL}version_log/version_log_detail/?log_version=${title}`).catch(() => '');
-      this.versionDetail = detail;
-      return detail;
+      const res = await http.get(`${window.PROJECT_CONFIG.SITE_URL}version_log/version_log_detail/?log_version=${title}`).catch(() => ({}));
+      console.log(res);
+      this.versionDetail = res?.result ? res.data : '';
+      return this.versionDetail;
     },
   },
 };
