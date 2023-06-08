@@ -26,6 +26,7 @@ __all__ = [
     "BK_SAAS_HOST",
     "BKAPP_DOCS_URL",
     "BKAPP_STATIC_PROTOCOL_PREFIX",
+    "BKPAAS_BK_DOMAIN",
 ]
 
 # 文档地址
@@ -35,3 +36,6 @@ BKAPP_DOCS_URL = get_type_env(
 
 # 站点协议前缀，用于静态文件访问链接异常的场景
 BKAPP_STATIC_PROTOCOL_PREFIX = get_type_env("BKAPP_STATIC_PROTOCOL_PREFIX", default="", _type=str)
+
+# 蓝鲸主域名
+BKPAAS_BK_DOMAIN = get_type_env("BKPAAS_BK_DOMAIN", default="", _type=str)

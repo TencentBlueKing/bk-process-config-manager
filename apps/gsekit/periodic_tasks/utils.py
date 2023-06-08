@@ -14,5 +14,7 @@ DURATION = 60 * 10
 
 def calculate_countdown(count: int, index: int) -> int:
     # 把周期任务平均分布到 ${DURATION}秒 内执行，用于削峰
+    if count <= 1:
+        return 0
     countdown = (index % DURATION) * (DURATION / (count - 1))
     return int(countdown)
