@@ -269,6 +269,8 @@ VERSION_LOG = {"MD_FILES_DIR": os.path.join(PROJECT_ROOT, "release")}
 BKAPP_RUN_ENV = env.BKAPP_RUN_ENV
 
 BK_DOCS_CENTER_HOST = os.getenv("BK_DOCS_CENTER_HOST")
+# 获取 PaaS 注入的蓝鲸域名
+BKPAAS_BK_DOMAIN = os.getenv("BKPAAS_BK_DOMAIN", "")
 # ==============================================================================
 # Cache
 # ==============================================================================

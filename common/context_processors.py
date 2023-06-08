@@ -78,4 +78,6 @@ def mysetting(request):
         "BKAPP_NAV_HELPER_URL": settings.BKAPP_NAV_HELPER_URL,
         "BK_DOCS_CENTER_URL": get_docs_center_url(),
         "BKAPP_RUN_ENV": settings.BKAPP_RUN_ENV,
+        # 获取 PaaS 注入的蓝鲸域名
+        "BKPAAS_BK_DOMAIN": settings.BKPAAS_BK_DOMAIN,
     }
