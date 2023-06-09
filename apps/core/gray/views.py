@@ -41,10 +41,10 @@ class GrayViewSet(APIViewSet):
         return Response(handlers.GrayHandler.rollback(self.validated_data))
 
     @swagger_auto_schema(
-        operation_summary="获取GSE 2.0灰度业务列表",
+        operation_summary="获取GSE 2.0灰度信息",
         tags=GRAY_VIEW_TAGS,
         responses={status.HTTP_200_OK: serializers.GraySerializer},
     )
     @action(detail=False, methods=["GET"])
-    def list_biz_ids(self, request):
+    def info(self, request):
         return Response({"bk_biz_ids": handlers.GrayHandler.list_biz_ids()})
