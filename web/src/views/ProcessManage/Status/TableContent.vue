@@ -405,7 +405,7 @@ export default {
         const defaultColumn = fields;
         this.setting.size = size;
         this.setting.selectedFields = this.fields.slice(0).filter(m => defaultColumn.includes(m.id));
-        this.computedColumnWidth()
+        this.computedColumnWidth();
       }
     },
     handleSortChange({ prop, order }) {
@@ -496,7 +496,7 @@ export default {
         fields: fieldIds,
         size,
       }));
-      this.computedColumnWidth()
+      this.computedColumnWidth();
     },
     // 切换页
     handlePageChange(page) {

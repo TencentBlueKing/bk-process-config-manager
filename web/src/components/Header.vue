@@ -81,7 +81,7 @@
 import { mapState, mapMutations, mapActions } from 'vuex';
 import AuthSelect from '@/components/Auth/AuthSelect';
 import MixinsControlDropdown from '@/components/MixinsControlDropdown';
-import http from '@/api';
+import { axiosInstance } from '@/api';
 
 export default {
   components: {
@@ -241,7 +241,11 @@ export default {
       }
     },
     async handleGetVersionList() {
-      const res = await http.get(`${window.PROJECT_CONFIG.SITE_URL}version_log/version_logs_list/`).catch(() => false);
+      const res = await await axiosInstance({
+        method: 'get',
+        url: 'version_log/version_logs_list/',
+        baseURL: '/',
+      }).catch(() => false);
       console.log(res);
       if (res?.result) {
         this.finished = true;
@@ -255,7 +259,11 @@ export default {
       return [...this.versionList];
     },
     async handleGetVersionDetail({ title }) {
-      const res = await http.get(`${window.PROJECT_CONFIG.SITE_URL}version_log/version_log_detail/?log_version=${title}`).catch(() => ({}));
+      const res = await axiosInstance({
+        method: 'get',
+        url: `version_log/version_log_detail/?log_version=${title}`,
+        baseURL: '/',
+      }).catch(() => ({}));
       console.log(res);
       this.versionDetail = res?.result ? res.data : '';
       return this.versionDetail;
@@ -276,7 +284,7 @@ export default {
     .header-left {
       flex-shrink: 0;
       display: flex;
-      width: 260px;
+      min-width: 260px;
 
       .logo-container {
         display: flex;
@@ -311,6 +319,7 @@ export default {
         margin-right: 32px;
         color: #eaebf0;
         transition: color .3s;
+        white-space: nowrap;
 
         &:hover,
         &.router-link-active {
