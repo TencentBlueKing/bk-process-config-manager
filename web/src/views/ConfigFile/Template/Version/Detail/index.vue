@@ -8,10 +8,12 @@
       </div>
 
       <!-- 详情页核心内容 -->
-      <div class="detail-main-container">
+      <div :class="['detail-main-container', { 'full-screen': isFullScreen }]">
         <!-- 左边主内容 -->
-        <div class="detail-left-panel" :class="isFullScreen && 'full-screen'"
-             :style="{ width: showRightPanel ? `calc(100% - ${rightPanelWidth}px)` : '100%' }">
+        <!-- <div class="detail-left-panel" :class="isFullScreen && 'full-screen'" -->
+        <div
+          class="detail-left-panel"
+          :style="{ width: showRightPanel ? `calc(100% - ${rightPanelWidth}px)` : '100%' }">
           <div class="code-header">
             <!-- 版本ID 和描述 -->
             <div class="code-header-left">
@@ -34,6 +36,7 @@
                 <bk-option id="yaml" name="yaml"></bk-option>
                 <bk-option id="json" name="json"></bk-option>
                 <bk-option id="javascript" name="javascript"></bk-option>
+                <bk-option id="plain text" name="plain text"></bk-option>
               </bk-select>
               <span
                 v-bk-tooltips="{ content: $t('全屏'), theme: 'black-arrow' }"
@@ -100,7 +103,14 @@
           <DragIcon :class="isDragActive && 'active'" @dragBegin="dragBegin" />
         </div>
       </div>
-      <div v-if="selectedVersion.is_draft" class="code-footer">
+      <div v-if="selectedVersion.is_draft" :class="['code-footer', { 'full-screen': isFullScreen }]">
+        <bk-button
+          v-bk-tooltips="rePreviewTips"
+          :class="['king-button dark', { 'is-draft-updated': isDraftUpdated && showPreviewPanel }]"
+          v-test="'preview'"
+          @click="handleOpenPreview">
+          {{ $t('预览') }}
+        </bk-button>
         <bk-button
           v-bk-tooltips="emptyContentTips"
           v-test="'save'"
@@ -128,17 +138,12 @@
           @click="handleDiff">
           {{ $t('对比') }}
         </bk-button>
-        <bk-button class="king-button dark" v-test="'showVariable'" @click="handleOpenVariable">
-          {{ $t('变量') }}
-        </bk-button>
         <bk-button
-          v-bk-tooltips="rePreviewTips"
-          style="margin-right: 60px;"
           class="king-button dark"
-          :class="{ 'is-draft-updated': isDraftUpdated && showPreviewPanel }"
-          v-test="'preview'"
-          @click="handleOpenPreview">
-          {{ $t('预览') }}
+          v-test="'showVariable'"
+          style="margin-right: 60px;"
+          @click="handleOpenVariable">
+          {{ $t('变量') }}
         </bk-button>
         <bk-button class="king-button dark" @click="backToVersionList">{{ $t('取消') }}</bk-button>
       </div>
@@ -150,7 +155,8 @@
           :version-list="versionList"
           :draft-version="selectedVersion"
           :new-data="{ content: currentEditorContent, language: codeLanguage }"
-          @coverSuccess="handleDiffCoverSuccess" />
+          @coverSuccess="handleDiffCoverSuccess"
+          @close="handleDiff" />
       </bk-sideslider>
       <SaveDialog
         :show.sync="showSaveDialog"
@@ -316,7 +322,7 @@ export default {
     selectedVersion: { // 以前有切换功能，现在暂时只是做一些初始化
       handler(val) {
         if (val) {
-          this.codeLanguage = val.file_format || 'python';
+          this.codeLanguage = val.file_format || 'plain text';
           if (this.$route.query.preview) {
             this.showVariablePanel = false;
             this.showPreviewPanel = true;
@@ -519,10 +525,10 @@ export default {
 
     // 对比
     handleDiff() {
-      if (!this.usableVersion) {
+      if (!this.usableVersion && !this.showDiff) {
         return;
       }
-      this.showDiff = true;
+      this.showDiff = !this.showDiff;
     },
     async handleDiffCoverSuccess(res) {
       Object.assign(this.selectedVersion, {
@@ -532,23 +538,25 @@ export default {
         updated_at: res.data.updated_at,
         updated_by: res.data.updated_by,
       });
-      this.showDiff = false;
+      this.handleDiff(); // 关闭
       this.messageSuccess(this.$t('修改成功'));
     },
 
     // 变量
     handleOpenVariable() {
-      this.showVariablePanel = true;
+      this.showVariablePanel = !this.showVariablePanel;
       this.showPreviewPanel = false;
     },
     // 预览
     handleOpenPreview() {
-      if (this.showPreviewPanel) {
-        this.$refs.previewRef.handleRefresh();
-      } else {
-        this.showPreviewPanel = true;
-        this.showVariablePanel = false;
-      }
+      // if (this.showPreviewPanel) {
+      //   this.$refs.previewRef.handleRefresh();
+      // } else {
+      //   this.showPreviewPanel = true;
+      //   this.showVariablePanel = false;
+      // }
+      this.showPreviewPanel = !this.showPreviewPanel;
+      this.showVariablePanel = false;
     },
 
     // 返回版本列表
@@ -656,6 +664,16 @@ export default {
       margin: 0 60px;
       background: #323232;
       overflow: hidden;
+      &.full-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 50px;
+        width: 100% !important;
+        height: auto;
+        z-index: 1000;
+        margin: 0;
+      }
 
       .detail-left-panel {
         display: flex;
@@ -768,16 +786,6 @@ export default {
         .marker-range {
           color: #979ba5;
         }
-
-        &.full-screen {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100% !important;
-          height: 100%;
-          z-index: 1000;
-          margin: 0;
-        }
       }
 
       .detail-right-panel {
@@ -842,6 +850,13 @@ export default {
       background: #323232;
       box-shadow: 0 -2px 4px 0 rgba(0, 0, 0, .3);
       z-index: 1;
+
+      &.full-screen {
+        position: fixed;
+        bottom: 0;
+        margin: 0;
+        width: 100%;
+      }
 
       .king-button {
         position: relative;

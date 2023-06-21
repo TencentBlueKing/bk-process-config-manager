@@ -26,50 +26,113 @@
         v-model="bizId"
         @selected="handleSelect">
       </AuthSelect>
-      <bk-popover v-if="username"
-                  trigger="click"
-                  theme="profile-popover light"
-                  :on-show="() => isPopoverActive = true"
-                  :on-hide="() => isPopoverActive = false">
-        <div class="login-username" :class="isPopoverActive && 'active'">
-          {{ username }}<span class="bk-icon icon-down-shape"></span>
+      <MixinsControlDropdown>
+        <div class="header-nav-btn header-nav-icon-btn">
+          <i :class="`gsekit-icon gsekit-icon-lang-${lang}`" />
         </div>
-        <div slot="content" class="profile-popover-content">
-          <ul class="bk-options">
-            <li class="bk-option" @click="handleLogout">
-              <div class="bk-option-content">
-                <div class="bk-option-content-default">
-                  <div class="bk-option-name">
-                    <span class="gsekit-icon gsekit-icon-logout-fill"></span>
-                    <span class="text">{{ $t('注销') }}</span>
-                  </div>
-                </div>
-              </div>
+        <template slot="content">
+          <ul class="bk-dropdown-list">
+            <li class="dropdown-list-item" v-for="item in langList" :key="item.id" @click="toggleLang(item)">
+              <i :class="`gsekit-icon gsekit-icon-lang-${item.id}`" /> {{ item.name }}
             </li>
           </ul>
+        </template>
+      </MixinsControlDropdown>
+      <MixinsControlDropdown>
+        <div class="header-nav-btn header-nav-icon-btn">
+          <i class="gsekit-icon gsekit-icon-help-document-fill"></i>
         </div>
-      </bk-popover>
+        <template slot="content">
+          <ul class="bk-dropdown-list">
+            <li class="dropdown-list-item" v-for="item in helpList" :key="item.id" @click="handleGotoLink(item)">
+              {{ item.name }}
+            </li>
+          </ul>
+        </template>
+      </MixinsControlDropdown>
+      <MixinsControlDropdown>
+        <div class="header-nav-btn login-username">
+          {{ username }}<span class="bk-icon icon-down-shape"></span>
+        </div>
+        <template slot="content">
+          <ul class="bk-dropdown-list">
+            <li class="dropdown-list-item" @click="handleLogout">{{ $t('退出登录') }}</li>
+          </ul>
+        </template>
+      </MixinsControlDropdown>
     </div>
+    <bk-version-detail
+      :current-version="currentVersion"
+      :finished="finished"
+      :show.sync="showVersionLog"
+      :version-list="versionList"
+      :version-detail="versionDetail"
+      :get-version-detail="handleGetVersionDetail"
+      :get-version-list="handleGetVersionList">
+      <template slot-scope="content">
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <div class="detail-container" v-if="content" v-html="content.detail"></div>
+      </template>
+    </bk-version-detail>
   </header>
 </template>
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex';
 import AuthSelect from '@/components/Auth/AuthSelect';
+import MixinsControlDropdown from '@/components/MixinsControlDropdown';
+import { axiosInstance } from '@/api';
 
 export default {
   components: {
     AuthSelect,
+    MixinsControlDropdown,
   },
   data() {
     return {
       isPopoverActive: false,
       bizId: '',
       bizList: [],
+      showVersionLog: false,
+      helpList: [
+        {
+          id: 'DOC',
+          name: this.$t('产品文档'),
+          href: window.PROJECT_CONFIG.BK_DOCS_CENTER_URL,
+        },
+        {
+          id: 'VERSION',
+          name: this.$t('版本日志'),
+        },
+        {
+          id: 'FAQ',
+          name: this.$t('问题反馈'),
+          href: 'https://bk.tencent.com/s-mart/community',
+        },
+        {
+          id: 'OPEN',
+          name: this.$t('开源社区'),
+          href: window.PROJECT_CONFIG.BKAPP_NAV_OPEN_SOURCE_URL,
+        },
+      ],
+      langList: [
+        {
+          id: 'zh-cn', // zhCN
+          name: '中文',
+        },
+        {
+          id: 'en', // enUS
+          name: 'English',
+        },
+      ],
+      finished: false,
+      currentVersion: '',
+      versionDetail: '',
+      versionList: [],
     };
   },
   computed: {
-    ...mapState(['username', 'appName']),
+    ...mapState(['username', 'appName', 'lang']),
     showStaticRouter() {
       return this.$store.state.showStaticRouter;
     },
@@ -139,8 +202,7 @@ export default {
       this.$router.push('/process-manage/status');
     },
     handleLogout() {
-      // location.assign('/console/accounts/logout/');
-      location.href = `${window.PROJECT_CONFIG.LOGIN_URL}?&c_url=${window.location}`;
+      location.href = `${window.PROJECT_CONFIG.LOGIN_URL}?c_url=${encodeURI(window.location.href)}`;
     },
     async resetAuthInfo() {
       const currentBiz = this.bizList.find(item => item.bk_biz_id === this.bizId);
@@ -152,6 +214,60 @@ export default {
         console.warn(e);
       }
     },
+    toggleLang(item) {
+      if (item.id !== this.lang) {
+        const today = new Date();
+        today.setTime(today.getTime() + 1000 * 60 * 60 * 24);
+        const domainArr = document.domain.split('.');
+        if (domainArr.length > 2) {
+          domainArr.shift();
+        }
+        document.cookie = `blueking_language=0;path=/;domain=${domainArr.slice(-2).join('.')};expires=${new Date(0).toUTCString()}`;
+        document.cookie = `blueking_language=${item.id};path=/;domain=${domainArr.join('.')};expires=${today.toUTCString()}`;
+        document.cookie = `blueking_language=${item.id};path=/;domain=${domainArr.slice(-2).join('.')};expires=${today.toUTCString()}`;
+        location.reload();
+      }
+    },
+    handleGotoLink(item) {
+      switch (item.id) {
+        case 'DOC':
+        case 'FAQ':
+        case 'OPEN':
+          item.href && window.open(item.href);
+          break;
+        case 'VERSION':
+          this.showVersionLog = true;
+          break;
+      }
+    },
+    async handleGetVersionList() {
+      const res = await await axiosInstance({
+        method: 'get',
+        url: 'version_log/version_logs_list/',
+        // baseURL: '/',
+      }).catch(() => false);
+      console.log(res);
+      if (res?.result) {
+        this.finished = true;
+        this.versionList = res.data.map(item => ({
+          title: item[0],
+          date: item[1],
+        }));
+      }
+      const [firstVersion] = this.versionList;
+      this.currentVersion = firstVersion?.title || '';
+      return [...this.versionList];
+    },
+    async handleGetVersionDetail({ title }) {
+      const res = await axiosInstance({
+        method: 'get',
+        url: `version_log/version_log_detail/?log_version=${title}`,
+        // baseURL: '/',
+      }).catch(() => ({}));
+      console.log(res);
+      this.versionDetail = res?.result ? res.data : '';
+      return this.versionDetail;
+    },
   },
 };
 </script>
@@ -161,30 +277,29 @@ export default {
     display: flex;
     align-items: center;
     line-height: 52px;
-    color: #96a2b9;
+    color: #eaebf0;
     background: #182132;
     font-size: 14px;
 
     .header-left {
       flex-shrink: 0;
       display: flex;
-      width: 260px;
+      min-width: 260px;
 
       .logo-container {
         display: flex;
         align-items: center;
-        margin-left: 8px;
+        margin-left: 16px;
         transition: color .3s;
 
         .logo-image {
-          padding: 0 8px;
           height: 28px;
         }
 
         .title {
-          padding: 0 8px;
-          font-size: 18px;
-          font-weight: 700;
+          margin-left: 10px;
+          font-size: 16px;
+          /* font-weight: 700; */
         }
 
         &:hover {
@@ -196,13 +311,15 @@ export default {
     }
 
     .header-nav {
+      display: flex;
       width: 100%;
-      padding-left: 25px;
+      padding: 0 16px;
 
       .nav-item {
-        margin-right: 40px;
-        color: #96a2b9;
+        margin-right: 32px;
+        color: #eaebf0;
         transition: color .3s;
+        white-space: nowrap;
 
         &:hover,
         &.router-link-active {
@@ -217,9 +334,39 @@ export default {
       display: flex;
       align-items: center;
 
+      .header-nav-btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-width: 32px;
+        min-height: 32px;
+        margin-left: 12px;
+        padding: 0 7px;
+      }
+      .header-nav-icon-btn {
+        width: 32px;
+        font-size: 18px;
+      }
+      /deep/ .dropdown-active {
+        .header-nav-icon-btn {
+          background: rgba(255, 255, 255, .1);
+          border-radius: 16px;
+          color: #fff;
+        }
+        .login-username {
+          color: #fff;
+          transition: color .2s;
+
+          .icon-down-shape {
+            transform: rotate(-180deg);
+            transition: transform .2s;
+          }
+        }
+      }
+
       .king-select {
         width: 240px;
-        margin-right: 40px;
+        /* margin-right: 40px; */
         background: #252f43;
         border-color: #252f43;
 
@@ -231,8 +378,7 @@ export default {
       .login-username {
         display: flex;
         align-items: center;
-        line-height: 40px;
-        margin-right: 40px;
+        line-height: 32px;
         cursor: pointer;
         transition: color .2s;
         user-select: none;
@@ -240,21 +386,6 @@ export default {
         .icon-down-shape {
           margin-left: 6px;
           transition: transform .2s;
-        }
-
-        &:hover {
-          color: #fff;
-          transition: color .2s;
-        }
-
-        &.active {
-          color: #fff;
-          transition: color .2s;
-
-          .icon-down-shape {
-            transform: rotate(-180deg);
-            transition: transform .2s;
-          }
         }
       }
     }
