@@ -244,7 +244,7 @@ export default {
       const res = await await axiosInstance({
         method: 'get',
         url: 'version_log/version_logs_list/',
-        baseURL: '/',
+        // baseURL: '/',
       }).catch(() => false);
       console.log(res);
       if (res?.result) {
@@ -262,7 +262,7 @@ export default {
       const res = await axiosInstance({
         method: 'get',
         url: `version_log/version_log_detail/?log_version=${title}`,
-        baseURL: '/',
+        // baseURL: '/',
       }).catch(() => ({}));
       console.log(res);
       this.versionDetail = res?.result ? res.data : '';
