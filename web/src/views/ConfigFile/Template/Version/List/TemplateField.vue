@@ -74,12 +74,12 @@ export default {
           message: this.$t('路径格式非法，请检查绝对路径格式是否正确'),
         },
         owner: {
-          validator: val => val.match(/^[a-zA-Z][a-zA-Z0-9]*$/),
-          message: this.$t('请输入英文字母或数字，且必须以英文字母开头'),
+          validator: val => val.match(/^[a-zA-Z][a-zA-Z0-9-_]*$/),
+          message: this.$t('请输入英文字母、数字、连字符和下划线，且必须以英文字母开头'),
         },
         group: {
-          validator: val => val.match(/^[a-zA-Z][a-zA-Z0-9]*$/),
-          message: this.$t('请输入英文字母或数字，且必须以英文字母开头'),
+          validator: val => val.match(/^[a-zA-Z][a-zA-Z0-9-_]*$/),
+          message: this.$t('请输入英文字母、数字、连字符和下划线，且必须以英文字母开头'),
         },
         filemode: {
           validator: val => val.match(/^[0-7]{4}$/),
