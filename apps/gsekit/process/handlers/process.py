@@ -458,6 +458,8 @@ class ProcessHandler(APIModel):
                 service_template_id=module_id_service_template_id_map[process["module"]["bk_module_id"]],
                 bk_process_id=bk_process_id,
                 bk_host_innerip=process["host"]["bk_host_innerip"],
+                bk_host_innerip_v6=process["host"].get("bk_host_innerip_v6"),
+                bk_agent_id=process["host"].get("bk_agent_id"),
                 bk_cloud_id=process["host"]["bk_cloud_id"],
                 process_template_id=process["process_template"]["id"],
                 bk_process_name=process["process"]["bk_process_name"],
