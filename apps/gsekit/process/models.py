@@ -43,7 +43,9 @@ class Process(models.Model):
 
     bk_biz_id = models.IntegerField(_("业务ID"), db_index=True)
     expression = models.CharField(_("实例表达式"), max_length=256, db_index=True, default="待完善")
-    bk_host_innerip = models.GenericIPAddressField(_("主机IP"), db_index=True)
+    bk_host_innerip = models.GenericIPAddressField(_("主机IP"), db_index=True, null=True, blank=True)
+    bk_host_innerip_v6 = models.GenericIPAddressField(_("主机IPv6"), db_index=True, null=True, blank=True)
+    bk_agent_id = models.CharField(_("AgentID"), max_length=64, db_index=True, blank=True, null=True)
     bk_cloud_id = models.IntegerField(_("云区域ID"), db_index=True)
     bk_set_env = models.CharField(_("集群环境类型"), choices=BK_SET_ENV_CHOICES, max_length=4, db_index=True)
     bk_set_id = models.IntegerField(_("集群ID"), db_index=True)
