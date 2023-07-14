@@ -368,6 +368,8 @@ class MigrateHandlers(object):
 
                 for cmdb_process in processes["processes"]:
                     bk_host_innerip = cmdb_process["host"]["bk_host_innerip"]
+                    bk_host_innerip_v6 = cmdb_process["host"].get("bk_host_innerip_v6")
+                    bk_agent_id = cmdb_process["host"].get("bk_agent_id")
                     bk_cloud_id = cmdb_process["host"]["bk_cloud_id"]
                     bk_host_num = host_no_map.get(bk_host_innerip)
                     # 金枪鱼中没有主机编号，直接跳过
@@ -379,7 +381,7 @@ class MigrateHandlers(object):
                     for local_inst_id in range(1, cmdb_proc_num + 1):
                         inst_id = (bk_host_num - 1) * max_proc_num + local_inst_id
                         local_inst_id_key = ProcessInst.LOCAL_INST_ID_UNIQ_KEY_TMPL.format(
-                            bk_host_innerip=bk_host_innerip,
+                            bk_host_innerip=bk_host_innerip or bk_host_innerip_v6,
                             bk_cloud_id=bk_cloud_id,
                             bk_process_name=process_name,
                             local_inst_id=local_inst_id,
@@ -390,6 +392,8 @@ class MigrateHandlers(object):
                                 bk_host_num=bk_host_num,
                                 bk_module_id=bk_module_id,
                                 bk_host_innerip=bk_host_innerip,
+                                bk_host_innerip_v6=bk_host_innerip_v6,
+                                bk_agent_id=bk_agent_id,
                                 bk_cloud_id=bk_cloud_id,
                                 bk_process_id=cmdb_process["process"]["bk_process_id"],
                                 bk_process_name=process_name,
