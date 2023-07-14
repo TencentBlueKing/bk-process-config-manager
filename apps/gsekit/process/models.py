@@ -85,7 +85,9 @@ class ProcessInst(models.Model):
 
     bk_biz_id = models.IntegerField(_("业务ID"), db_index=True)
     bk_host_num = models.IntegerField(_("主机编号"), db_index=True)
-    bk_host_innerip = models.GenericIPAddressField(_("主机IP"), db_index=True)
+    bk_host_innerip = models.GenericIPAddressField(_("主机IP"), db_index=True, null=True, blank=True)
+    bk_host_innerip_v6 = models.GenericIPAddressField(_("主机IPv6"), db_index=True, null=True, blank=True)
+    bk_agent_id = models.CharField(_("AgentID"), max_length=64, db_index=True, blank=True, null=True)
     bk_cloud_id = models.IntegerField(_("云区域ID"), db_index=True)
     bk_process_id = models.IntegerField(_("进程ID"), db_index=True)
     bk_module_id = models.IntegerField(_("模块ID"), db_index=True)
@@ -126,7 +128,9 @@ class ProcessInst(models.Model):
     @property
     def bk_host_num_key(self):
         return self.BK_HOST_NUM_KEY_TMPL.format(
-            bk_host_innerip=self.bk_host_innerip, bk_cloud_id=self.bk_cloud_id, bk_process_name=self.bk_process_name
+            bk_host_innerip=self.bk_host_innerip or self.bk_host_innerip_v6,
+            bk_cloud_id=self.bk_cloud_id,
+            bk_process_name=self.bk_process_name,
         )
 
     class Meta:

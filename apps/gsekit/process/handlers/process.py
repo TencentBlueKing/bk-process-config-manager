@@ -633,7 +633,8 @@ class ProcessHandler(APIModel):
                             bk_host_num = index + 1
                             inst_id = (bk_host_num - 1) * max_proc_num + local_inst_id
                             local_inst_id_key = ProcessInst.LOCAL_INST_ID_UNIQ_KEY_TMPL.format(
-                                bk_host_innerip=cmdb_process["host"]["bk_host_innerip"],
+                                bk_host_innerip=cmdb_process["host"]["bk_host_innerip"]
+                                or cmdb_process["host"].get("bk_host_innerip_v6"),
                                 bk_cloud_id=cmdb_process["host"]["bk_cloud_id"],
                                 bk_process_name=process_name,
                                 local_inst_id=local_inst_id,
@@ -643,7 +644,8 @@ class ProcessHandler(APIModel):
                                     bk_biz_id=self.bk_biz_id,
                                     bk_host_num=bk_host_num,
                                     bk_module_id=cmdb_process["module"]["bk_module_id"],
-                                    bk_host_innerip=cmdb_process["host"]["bk_host_innerip"],
+                                    bk_host_innerip_v6=cmdb_process["host"].get("bk_host_innerip_v6"),
+                                    bk_agent_id=cmdb_process["host"].get("bk_agent_id"),
                                     bk_cloud_id=cmdb_process["host"]["bk_cloud_id"],
                                     bk_process_id=cmdb_process["process"]["bk_process_id"],
                                     bk_process_name=cmdb_process["process"]["bk_process_name"],
@@ -659,9 +661,13 @@ class ProcessHandler(APIModel):
                     max_host_num = local_module_proc_name_map[bk_module_id][process_name]["max_host_num"]
                     for cmdb_process in processes["processes"]:
                         bk_host_innerip = cmdb_process["host"]["bk_host_innerip"]
+                        bk_host_innerip_v6 = cmdb_process["host"].get("bk_host_innerip_v6")
+                        bk_agent_id = cmdb_process["host"].get("bk_agent_id")
                         bk_cloud_id = cmdb_process["host"]["bk_cloud_id"]
                         host_num_key = ProcessInst.BK_HOST_NUM_KEY_TMPL.format(
-                            bk_host_innerip=bk_host_innerip, bk_cloud_id=bk_cloud_id, bk_process_name=process_name
+                            bk_host_innerip=bk_host_innerip or bk_host_innerip_v6,
+                            bk_cloud_id=bk_cloud_id,
+                            bk_process_name=process_name,
                         )
 
                         cmdb_proc_num = cmdb_process["process"]["proc_num"]
@@ -676,7 +682,7 @@ class ProcessHandler(APIModel):
                                 for local_inst_id in range(1, cmdb_proc_num + 1):
                                     inst_id = (local_process.bk_host_num - 1) * max_proc_num + local_inst_id
                                     local_inst_id_key = ProcessInst.LOCAL_INST_ID_UNIQ_KEY_TMPL.format(
-                                        bk_host_innerip=bk_host_innerip,
+                                        bk_host_innerip=bk_host_innerip or bk_host_innerip_v6,
                                         bk_cloud_id=bk_cloud_id,
                                         bk_process_name=process_name,
                                         local_inst_id=local_inst_id,
@@ -688,6 +694,8 @@ class ProcessHandler(APIModel):
                                                 bk_host_num=local_process.bk_host_num,
                                                 bk_module_id=bk_module_id,
                                                 bk_host_innerip=bk_host_innerip,
+                                                bk_host_innerip_v6=bk_host_innerip_v6,
+                                                bk_agent_id=bk_agent_id,
                                                 bk_cloud_id=bk_cloud_id,
                                                 bk_process_id=cmdb_process["process"]["bk_process_id"],
                                                 bk_process_name=process_name,
@@ -704,6 +712,8 @@ class ProcessHandler(APIModel):
                                     Q(
                                         bk_module_id=bk_module_id,
                                         bk_host_innerip=bk_host_innerip,
+                                        bk_host_innerip_v6=bk_host_innerip_v6,
+                                        bk_agent_id=bk_agent_id,
                                         bk_cloud_id=bk_cloud_id,
                                         bk_process_name=process_name,
                                         local_inst_id__gt=cmdb_proc_num,
@@ -716,7 +726,7 @@ class ProcessHandler(APIModel):
                                 bk_host_num = max_host_num + 1
                                 inst_id = (bk_host_num - 1) * max_proc_num + local_inst_id
                                 local_inst_id_key = ProcessInst.LOCAL_INST_ID_UNIQ_KEY_TMPL.format(
-                                    bk_host_innerip=bk_host_innerip,
+                                    bk_host_innerip=bk_host_innerip or bk_host_innerip_v6,
                                     bk_cloud_id=bk_cloud_id,
                                     bk_process_name=process_name,
                                     local_inst_id=local_inst_id,
@@ -727,6 +737,8 @@ class ProcessHandler(APIModel):
                                         bk_host_num=bk_host_num,
                                         bk_module_id=bk_module_id,
                                         bk_host_innerip=bk_host_innerip,
+                                        bk_host_innerip_v6=bk_host_innerip_v6,
+                                        bk_agent_id=bk_agent_id,
                                         bk_cloud_id=bk_cloud_id,
                                         bk_process_id=cmdb_process["process"]["bk_process_id"],
                                         bk_process_name=process_name,
@@ -943,7 +955,7 @@ class ProcessHandler(APIModel):
             }
             namespace = NAMESPACE.format(bk_biz_id=process_info["bk_biz_id"])
             uniq_key = ProcessInst.LOCAL_INST_ID_UNIQ_KEY_TMPL.format(
-                bk_host_innerip=host_info["bk_host_innerip"],
+                bk_host_innerip=host_info["bk_host_innerip"] or host_info.get("bk_host_innerip_v6"),
                 bk_cloud_id=host_info["bk_cloud_id"],
                 bk_process_name=process_info["bk_process_name"],
                 local_inst_id=local_inst_id,
