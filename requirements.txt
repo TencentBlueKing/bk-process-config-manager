@@ -4,7 +4,7 @@
 
 # sed -i 's|blueapps-open|blueapps|g' requirements.txt
 # 确保内外部版本统一，打包脚本的替换规则为：blueapps-open -> blueapps，不替换版本号
-blueapps[opentelemetry]==4.4.7
+blueapps[opentelemetry]==4.7.0
 python-json-logger==0.1.7
 requests==2.22.0
 MarkupSafe==1.1.1
