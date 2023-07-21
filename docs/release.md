@@ -1,5 +1,25 @@
 # Release
 
+## 1.0.24 - 2023-07-21 
+
+### 🚀 Features
+
+- feature: IPv6 支持 (closed #263)
+
+- feature:  更新 blueapps 框架 (closed #282)
+
+
+### 🐛 Bugfixes
+
+- bugfix:  同步CMDB配置异常 (closed #278)
+
+- bugfix:  同步CMDB配置异常ProcessInst表适配 (closed #280)
+
+
+
+**Full Changelog**: https://github.com/TencentBlueKing/bk-process-config-manager/compare/v1.0.23...v1.0.24
+
+
 ## 1.0.23 - 2023-04-21 
 
 ### 🚀 Features
