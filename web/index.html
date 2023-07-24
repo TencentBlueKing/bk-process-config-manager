@@ -22,6 +22,11 @@
                 const LOGIN_URL = '{{LOGIN_URL}}'
                 const APP_NAME = '{{ APP_NAME }}' // 应用名称
                 const BKAPP_DOCS_URL = '{{ BKAPP_DOCS_URL }}' // 文档链接
+                const BKAPP_NAV_HELPER_URL = '{{ BKAPP_NAV_HELPER_URL }}'
+                const BKAPP_RUN_ENV = '{{ BKAPP_RUN_ENV }}'
+                const DESTOP_URL = '{{ DESTOP_URL }}'
+                const BK_DOCS_CENTER_URL = '{{ BK_DOCS_CENTER_URL }}'
+                const BKAPP_NAV_OPEN_SOURCE_URL = '{{ BKAPP_NAV_OPEN_SOURCE_URL }}'
 
                 // BK_STATIC_URL 不能以 / 结尾
                 if (BK_STATIC_URL.endsWith('/')) {
@@ -45,7 +50,12 @@
                     CMDB_URL: CMDB_URL,
                     LOGIN_URL: LOGIN_URL,
                     APP_NAME: APP_NAME,
-                    BKAPP_DOCS_URL: BKAPP_DOCS_URL
+                    BKAPP_DOCS_URL: BKAPP_DOCS_URL,
+                    BKAPP_NAV_HELPER_URL,
+                    BKAPP_RUN_ENV,
+                    DESTOP_URL,
+                    BK_DOCS_CENTER_URL,
+                    BKAPP_NAV_OPEN_SOURCE_URL,
                 }
             })()
         </script>

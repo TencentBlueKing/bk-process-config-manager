@@ -54,7 +54,7 @@
           <span>{{ row.file_name }}</span>
         </div>
       </bk-table-column>
-      <bk-table-column :label="$t('文件所处路径')" prop="abs_path" sortable="custom">
+      <bk-table-column :label="$t('文件所处目录')" prop="abs_path" sortable="custom">
         <div v-bk-overflow-tips class="table-ceil-overflow" slot-scope="{ row }">
           <span>{{ row.abs_path }}</span>
         </div>

@@ -14,7 +14,7 @@
         <span v-bk-overflow-tips>{{ configFileDetail.file_name || '--' }}</span>
       </li>
       <li class="couple">
-        <label>{{ $t('文件所处路径') }}</label>
+        <label>{{ $t('文件所处目录') }}</label>
         <span v-bk-overflow-tips>{{ configFileDetail.abs_path || '--' }}</span>
       </li>
       <li class="couple">
@@ -30,7 +30,7 @@
         <span>{{ configFileDetail.filemode || '--' }}</span>
       </li>
       <li class="couple">
-        <label>{{ $t('输出格式') }}</label>
+        <label>{{ $t('换行符') }}</label>
         <span>{{ fileFormatMap[configFileDetail.line_separator] || '--' }}</span>
       </li>
     </ul>

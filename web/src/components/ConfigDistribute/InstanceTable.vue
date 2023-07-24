@@ -177,11 +177,11 @@
       <div v-bkloading="{ isLoading: sliderData.isLoading }" style="height: calc(100vh - 60px);" slot="content">
         <SidesliderDiff v-if="sliderData.oldData" :old-data="sliderData.oldData" :new-data="sliderData.newData">
           <template slot="leftTitle">
-            <div class="status-flag">{{ $t('实时') }}</div>
+            <div class="status-flag">{{ $t('最近下发') }}</div>
             <div class="create-time">{{ $t('更新时间') + $t('：') + (formatDate(sliderData.oldData.time) || '--') }}</div>
           </template>
           <template slot="rightTitle">
-            <div class="status-flag">{{ $t('预生成') }}</div>
+            <div class="status-flag">{{ $t('本次待下发') }}</div>
             <div class="create-time">{{ $t('生成时间') + $t('：') + (formatDate(sliderData.newData.time) || '--') }}</div>
           </template>
         </SidesliderDiff>

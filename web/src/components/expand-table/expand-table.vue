@@ -72,7 +72,8 @@
                       v-model.trim="editValue"
                       :placeholder="$t('请输入')"
                       @blur.capture="handleEditBlur(...arguments, row[head.prop], head)"
-                      @keyup.enter.native="handleEditEnter">
+                      @keyup.esc="handEscCancel(row, head)"
+                      @keyup.enter="handleEditEnter">
                   </div>
                 </div>
                 <div
@@ -294,6 +295,10 @@ export default {
       }
       this.editProp = '';
       this.editIndex = null;
+    },
+    handEscCancel(row, head) {
+      this.editValue = row[head.prop];
+      this.handleEditEnter();
     },
     handleEditEnter() {
       this.$refs.editInput[0] && this.$refs.editInput[0].blur();

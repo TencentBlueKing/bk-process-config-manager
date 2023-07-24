@@ -49,7 +49,7 @@
       <div class="editor-content" v-bkloading="{ isLoading: isDataLoading, opacity: .1 }">
         <div class="editor-title">
           <div :class="['common-form-editor', { 'default-width': !isContrast }]">
-            <div class="real-time" v-if="isContrast">{{ $t('实时') }}</div>
+            <div class="real-time" v-if="isContrast">{{ $t('最近下发') }}</div>
             <div class="editor-info">
               <div>{{ configInfo.file_name || '--' }}</div>
               <div>
@@ -64,7 +64,7 @@
             </div>
           </div>
           <div class="common-form-editor" v-if="isContrast">
-            <div class="pre-populated">{{ $t('预生成') }}</div>
+            <div class="pre-populated">{{ $t('本次待下发') }}</div>
             <div class="editor-info">
               <div>{{ configInfo.file_name || '--' }}</div>
               <div>
@@ -335,14 +335,14 @@ export default {
         min-width: 60px;
         text-align: center;
         color: #dcdee5;
-        padding-top: 10px;
+        padding: 10px 6px 0;
         background: #424242;
         line-height: 24px;
         font-size: 14px;
       }
 
       .editor-info {
-        width: 100%;
+        flex: 1;
         line-height: 24px;
         font-size: 14px;
         color: #c4c6cc;

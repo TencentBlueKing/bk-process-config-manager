@@ -14,7 +14,7 @@ import UrlParse from 'url-parse';
 import queryString from 'query-string';
 
 // axios 实例
-const axiosInstance = axios.create({
+export const axiosInstance = axios.create({
   withCredentials: true,
   headers: { 'X-REQUESTED-WITH': 'XMLHttpRequest' },
   baseURL: window.PROJECT_CONFIG.AJAX_URL_PREFIX,
