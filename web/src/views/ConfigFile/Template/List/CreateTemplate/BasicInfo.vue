@@ -81,13 +81,13 @@ export default {
           trigger: 'blur',
         }],
         owner: [required, {
-          validator: val => val.match(/^[a-zA-Z][a-zA-Z0-9]*$/),
-          message: this.$t('请输入英文字母或数字，且必须以英文字母开头'),
+          validator: val => val.match(/^[a-zA-Z][a-zA-Z0-9-_]*$/),
+          message: this.$t('请输入英文字母、数字、连字符和下划线，且必须以英文字母开头'),
           trigger: 'blur',
         }],
         group: [required, {
-          validator: val => val.match(/^[a-zA-Z][a-zA-Z0-9]*$/),
-          message: this.$t('请输入英文字母或数字，且必须以英文字母开头'),
+          validator: val => val.match(/^[a-zA-Z][a-zA-Z0-9-_]*$/),
+          message: this.$t('请输入英文字母、数字、连字符和下划线，且必须以英文字母开头'),
           trigger: 'blur',
         }],
         filemode: [required, {

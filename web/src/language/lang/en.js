@@ -104,7 +104,7 @@ export default {
   '用户组名称，操作系统必须存在此用户组': 'User group name, operating system must exist this user group',
   '文件的权限设置，如0775': 'File permission settings such as 0775',
   文件权限设置提示: 'Please enter the complete file permissions, including sticky permissions. Such as: 0755',
-  '请输入英文字母或数字，且必须以英文字母开头': 'Please input letters or numbers, and must start with an letter',
+  '请输入英文字母、数字、连字符和下划线，且必须以英文字母开头': 'Please input letters, numbers, hyphens and underscores, and must start with an English letter',
   请选择文件输出格式: 'Please select the file output format',
   '路径格式非法，请检查绝对路径格式是否正确': 'The path format is illegal, please check if the absolute path format is correct',
   版本详情: 'Version detail',
