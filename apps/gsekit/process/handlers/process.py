@@ -191,6 +191,7 @@ class ProcessHandler(APIModel):
             # 前端传来的是字符串需要转换为int类型，否则ccapi会报错
             if key == "priority" and value is not None:
                 value = int(value)
+
             proc_template_cmdb_request_format[key] = {"value": value, "as_default_value": value is not None}
             if key == "bind_info":
                 bind_info_list = []
