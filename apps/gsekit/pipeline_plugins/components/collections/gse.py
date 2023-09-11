@@ -442,14 +442,14 @@ class BulkGseCheckProcessService(BulkGseOperateProcessService):
             # 兼容新版引擎，TODO 待优化，在 execute 处提前 finish_schedule
             return self.return_data(result=True, is_finished=True)
 
-        gse_api_result = common_data.gse_api_helper.get_proc_operate_result({"task_id": task_id}, raw=True)
+        gse_api_result = common_data.gse_api_helper.get_proc_operate_result(task_id)
         if gse_api_result["code"] == GSE_RUNNING_TASK_CODE:
             # 查询的任务等待执行中，还未入到redis，继续下一次查询
             return self.return_data(result=True)
 
         for job_task in job_tasks:
             local_inst_id = job_task.extra_data["local_inst_id"]
-            task_result = self.get_job_task_gse_result(gse_api_result, job_task)
+            task_result = self.get_job_task_gse_result(gse_api_result, job_task, common_data)
             error_code = task_result.get("error_code")
 
             if error_code == GseDataErrorCode.SUCCESS:
