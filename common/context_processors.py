@@ -58,4 +58,8 @@ def mysetting(request):
         "CMDB_URL": settings.BK_CC_HOST,
         "TAM_AEGIS_KEY": settings.TAM_AEGIS_KEY,
         "TAM_AEGIS_URL": settings.TAM_AEGIS_URL,
+        # 获取 PaaS 注入的蓝鲸域名
+        "BK_DOMAIN": settings.BK_DOMAIN,
+        # esb api url
+        "BK_COMPONENT_API_URL": settings.BK_COMPONENT_API_OVERWRITE_URL,
     }

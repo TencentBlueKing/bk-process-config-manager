@@ -251,6 +251,8 @@ BK_IAM_SAAS_HOST = env.BK_IAM_SAAS_HOST
 TAM_AEGIS_KEY = os.getenv("BKAPP_TAM_AEGIS_KEY")
 TAM_AEGIS_URL = os.getenv("BKAPP_TAM_AEGIS_URL")
 
+# 获取 PaaS 注入的蓝鲸域名
+BK_DOMAIN = env.BKPAAS_BK_DOMAIN
 # ==============================================================================
 # Cache
 # ==============================================================================
