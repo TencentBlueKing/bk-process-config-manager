@@ -1,5 +1,16 @@
 # Release
 
+## 1.0.26 - 2023-09-20 
+
+### 🐛 Bugfixes
+
+- bugfix:  修复同步ProcessInst重复问题 (closed #302)
+
+
+
+**Full Changelog**: https://github.com/TencentBlueKing/bk-process-config-manager/compare/v1.0.25...v1.0.26
+
+
 ## 1.0.25 - 2023-09-11 
 
 ### 🐛 Bugfixes
