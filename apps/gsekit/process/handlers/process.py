@@ -648,6 +648,7 @@ class ProcessHandler(APIModel):
                                     bk_biz_id=self.bk_biz_id,
                                     bk_host_num=bk_host_num,
                                     bk_module_id=cmdb_process["module"]["bk_module_id"],
+                                    bk_host_innerip=cmdb_process["host"]["bk_host_innerip"],
                                     bk_host_innerip_v6=cmdb_process["host"].get("bk_host_innerip_v6"),
                                     bk_agent_id=cmdb_process["host"].get("bk_agent_id"),
                                     bk_cloud_id=cmdb_process["host"]["bk_cloud_id"],
