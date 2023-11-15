@@ -89,3 +89,12 @@ class GseApiBaseHelper(abc.ABC):
         :return:
         """
         return f"{self.get_agent_id(mixed_types_of_host_info)}:{namespace}:{proc_name}"
+
+    @abc.abstractmethod
+    def sync_proc_status(self, params: InfoDict) -> InfoDict:
+        """
+        获取进程状态信息
+        :param params: 接口查询参数
+        :return:
+        """
+        raise NotImplementedError
