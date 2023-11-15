@@ -33,3 +33,6 @@ class GseV1ApiHelper(base.GseApiBaseHelper):
 
     def get_proc_operate_result(self, task_id: str) -> base.InfoDict:
         return self.gse_api_obj.get_proc_operate_result({"task_id": task_id, "no_request": True}, raw=True)
+
+    def sync_proc_status(self, params: base.InfoDict) -> base.InfoDict:
+        return self.gse_api_obj.sync_proc_status(params)

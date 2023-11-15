@@ -13,6 +13,7 @@ import typing
 from apps.gsekit import constants
 from apps.gsekit.meta import models
 from apps.utils.cache import func_cache_decorator
+from env.constants import GseVersion
 
 
 class GrayTools:
@@ -42,3 +43,7 @@ class GrayTools:
         :return:
         """
         return int(bk_biz_id) in self.gse2_gray_scope_set
+
+    def get_gse_version_by_biz_id(self, bk_biz_id: typing.Any) -> str:
+        is_gse2_gray: bool = self.is_gse2_gray(bk_biz_id=bk_biz_id)
+        return GseVersion.V2.value if is_gse2_gray else GseVersion.V1.value

@@ -37,3 +37,9 @@ class _GseV2Api(BaseApi):
             module=self.MODULE,
             description="查询进程状态信息",
         )
+        self.sync_proc_status = DataAPI(
+            method="POST",
+            url=GSE_APIGATEWAY_ROOT_V2 + "api/v2/proc/sync_proc_status/",
+            module=self.MODULE,
+            description="同步查询进程状态信息",
+        )
