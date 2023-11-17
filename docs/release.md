@@ -1,5 +1,16 @@
 # Release
 
+## 1.0.27 - 2023-11-17 
+
+### 🐛 Bugfixes
+
+- bugfix:  同步进程适配GSE 2.0接口 (closed #305)
+
+
+
+**Full Changelog**: https://github.com/TencentBlueKing/bk-process-config-manager/compare/v1.0.26...v1.0.27
+
+
 ## 1.0.26 - 2023-09-20 
 
 ### 🐛 Bugfixes
