@@ -1,5 +1,16 @@
 # Release
 
+## 1.0.28 - 2024-01-15 
+
+### 🚀 Features
+
+- feature:  API 网关鉴权方案调整 (closed #308)
+
+
+
+**Full Changelog**: https://github.com/TencentBlueKing/bk-process-config-manager/compare/v1.0.27...v1.0.28
+
+
 ## 1.0.27 - 2023-11-17 
 
 ### 🐛 Bugfixes
