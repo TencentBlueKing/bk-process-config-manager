@@ -1,7 +1,7 @@
 ---
 name: Bug反馈
 about: 反馈Bug
-title: "[BUG]"
+title: "fix: "
 labels: bug
 assignees: zhangzhw8
 

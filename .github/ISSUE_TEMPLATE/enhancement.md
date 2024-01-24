@@ -1,7 +1,7 @@
 ---
 name: 需求、优化、建议
 about: 需求、优化、建议
-title: "[FEATURE]"
+title: "feat: "
 labels: feature
 assignees: zhangzhw8
 
