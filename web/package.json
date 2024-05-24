@@ -38,6 +38,7 @@
     },
     "dependencies": {
         "@blueking/bkcharts": "^2.0.10",
+        "@blueking/login-modal": "^1.0.5",
         "@icon-cool/bk-icon-gsekit": "0.0.9",
         "axios": "0.21.4",
         "bk-magic-vue": "2.2.14",

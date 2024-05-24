@@ -22,9 +22,10 @@ npm run build
 # 打包构建分析
 npm run build:analyzer
 ```
+// npm run doc 执行后无效，这里注释了
 
-## 详细说明
-
-```bash
-npm run doc
+# 补充说明，环境搭建
+1.dev.env.js中的LOCAL_DEV_URL:JSON.stringify('http://dev.xxx.com');// hosts配置 127.0.0.1 dev.xxx.com
+2.index-dev.html中const AJAX_URL_PREFIX = 'http://xxx.com/';
+1和2的xxx是一样的，2中的http://xxx.com要是能访问的线上环境（gsekit的测试环境，预发布环境等）
 ```

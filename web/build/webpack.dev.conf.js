@@ -57,6 +57,10 @@ const webpackConfig = merge(baseConf, {
             favicon: path.resolve(__dirname, '../src/assets/images/favicon.png'),
             chunksSortMode: 'none'
         }),
+        new HtmlWebpackPlugin({
+            filename: 'login_success.html',
+            template: 'login_success.html',
+        }),
 
         new FriendlyErrorsPlugin()
     ]

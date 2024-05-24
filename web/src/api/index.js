@@ -12,6 +12,7 @@ import RequestQueue from './request-queue';
 import { messageError } from '@/common/bkmagic';
 import UrlParse from 'url-parse';
 import queryString from 'query-string';
+import { showLoginModal } from '@blueking/login-modal';
 
 // axios 实例
 const axiosInstance = axios.create({
@@ -185,12 +186,19 @@ function handleReject(error, config) {
     const nextError = { message: error.message, response: error.response };
     if (status === 401) {
       // 未登录, o.a 登录弹窗有问题先不做弹窗
-      let loginUrl = window.PROJECT_CONFIG.LOGIN_SERVICE_URL;
-      if (!loginUrl.includes('?')) {
-        loginUrl += '?';
+      const siteLoginUrl  = window.PROJECT_CONFIG.LOGIN_URL;
+      // 登录成功之后的回调地址，用于执行关闭登录窗口或刷新父窗口页面等动作
+      const successUrl = `${window.location.origin}/login_success.html`;
+      if (!siteLoginUrl) {
+        console.error('Login URL not configured!')
+        return
       }
-      const url = `${loginUrl}&c_url=${encodeURIComponent(window.location)}`;
-      window.location.assign(url);
+      const loginURL = new URL(siteLoginUrl);
+      loginURL.searchParams.set('c_url', successUrl);
+      const pathname = loginURL.pathname.endsWith('/') ? loginURL.pathname : `${loginURL.pathname}/`;
+      const loginUrl = `${loginURL.origin}${pathname}plain/${loginURL.search}`;
+      // 使用登录弹框登录
+      showLoginModal({ loginUrl });
     } else if (status === 500) {
       nextError.message = '系统出现异常';
     } else if (data && data.message) {

@@ -140,7 +140,7 @@ export default {
     },
     handleLogout() {
       // location.assign('/console/accounts/logout/');
-      location.href = `${window.PROJECT_CONFIG.LOGIN_URL}?&c_url=${window.location}`;
+      location.href = `${window.PROJECT_CONFIG.LOGIN_URL}?c_url=${window.location}&is_from_logout=1`;
     },
     async resetAuthInfo() {
       const currentBiz = this.bizList.find(item => item.bk_biz_id === this.bizId);
