@@ -139,8 +139,12 @@ export default {
       this.$router.push('/process-manage/status');
     },
     handleLogout() {
-      // location.assign('/console/accounts/logout/');
-      location.href = `${window.PROJECT_CONFIG.LOGIN_URL}?c_url=${encodeURIComponent(`${window.location}&is_from_logout=1`)}`;
+      // 加上协议头
+      let loginUrl = window.PROJECT_CONFIG.LOGIN_URL;
+      if (!/http(s)?:\/\//.test(loginUrl)) {
+        loginUrl = `${window.location.protocol}//${loginUrl}`;
+      }
+      location.href = `${loginUrl}?is_from_logout=1&c_url=${encodeURIComponent(window.location)}`;
     },
     async resetAuthInfo() {
       const currentBiz = this.bizList.find(item => item.bk_biz_id === this.bizId);

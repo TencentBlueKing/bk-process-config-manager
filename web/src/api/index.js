@@ -186,12 +186,16 @@ function handleReject(error, config) {
     const nextError = { message: error.message, response: error.response };
     if (status === 401) {
       // 未登录, o.a 登录弹窗有问题先不做弹窗
-      const siteLoginUrl  = window.PROJECT_CONFIG.LOGIN_URL;
+      let siteLoginUrl  = window.PROJECT_CONFIG.LOGIN_URL;
       // 登录成功之后的回调地址，用于执行关闭登录窗口或刷新父窗口页面等动作
       const successUrl = `${window.location.origin}/login_success.html`;
       if (!siteLoginUrl) {
         console.error('Login URL not configured!')
         return
+      }
+      // 加上协议头
+      if (!/http(s)?:\/\//.test(siteLoginUrl)) {
+        siteLoginUrl = `${window.location.protocol}//${siteLoginUrl}`;
       }
       const loginURL = new URL(siteLoginUrl);
       loginURL.searchParams.set('c_url', successUrl);
