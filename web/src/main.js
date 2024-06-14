@@ -15,6 +15,7 @@ import { injectCSRFTokenToHeaders } from '@/api';
 import '@/mixins/emptyMixin.js';
 import StatusView from '@/components/StatusView';
 import TableException from '@/components/Empty/TableException';
+import VueCompositionAPI from '@vue/composition-api';
 
 try {
   const id = window.PROJECT_CONFIG.TAM_AEGIS_KEY;
@@ -37,6 +38,7 @@ try {
 Vue.config.devtools = true;
 Vue.component('StatusView', StatusView);
 Vue.component('TableException', TableException);
+Vue.use(VueCompositionAPI);
 
 injectCSRFTokenToHeaders();
 getUserInfo().then(() => {
@@ -55,6 +57,7 @@ getUserInfo().then(() => {
 async function getUserInfo() {
   try {
     const res = await store.dispatch('meta/ajaxGetUserInfo');
+    console.log("🚀 ~ getUserInfo ~ res:", res)
     this.username = res.data.username;
     store.commit('updateUsername', res.data.username);
     store.commit('updateToggleStaticRouter', !!res.data.is_superuser);
@@ -64,6 +67,7 @@ async function getUserInfo() {
       });
     }
   } catch (e) {
+    console.log("🚀 ~ getUserInfo ~ e:", e)
     console.warn(e);
   }
 }

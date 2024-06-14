@@ -329,7 +329,7 @@ export default {
       fields,
       setting: {
         fields,
-        selectedFields: fields.slice(0, 7),
+        selectedFields: fields.slice(0, 8),
         size: 'small',
       },
       // 是否全选

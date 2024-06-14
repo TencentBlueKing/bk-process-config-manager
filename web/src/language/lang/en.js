@@ -232,6 +232,7 @@ export default {
   操作成功: 'Operation is successful',
   '内网IP、云区域': 'Intranet IP, cloud area',
   同步进程状态: 'Sync process status',
+  状态同步: 'Status synchronized as of {0}. To get the real-time status, please click "Synchronize Process Status".',
   同步CMDB进程配置: 'Sync CMDB process config',
   同步成功: 'Sync successfully',
   暂无其他实例: 'No other instances',
