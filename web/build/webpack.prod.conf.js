@@ -150,6 +150,10 @@ const prodConf = merge(baseConf, {
             // webpack4 这个属性暂时设置为 none，参见 https://github.com/jantimon/html-webpack-plugin/issues/870
             chunksSortMode: 'none'
         }),
+        new HtmlWebpackPlugin({
+            filename: 'login_success.html',
+            template: resolve(__dirname, '../login_success.html')
+        }),
 
         new MiniCssExtractPlugin({
             ignoreOrder: true,
