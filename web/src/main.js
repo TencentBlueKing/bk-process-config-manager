@@ -57,7 +57,6 @@ getUserInfo().then(() => {
 async function getUserInfo() {
   try {
     const res = await store.dispatch('meta/ajaxGetUserInfo');
-    console.log("🚀 ~ getUserInfo ~ res:", res)
     this.username = res.data.username;
     store.commit('updateUsername', res.data.username);
     store.commit('updateToggleStaticRouter', !!res.data.is_superuser);
@@ -67,7 +66,6 @@ async function getUserInfo() {
       });
     }
   } catch (e) {
-    console.log("🚀 ~ getUserInfo ~ e:", e)
     console.warn(e);
   }
 }
