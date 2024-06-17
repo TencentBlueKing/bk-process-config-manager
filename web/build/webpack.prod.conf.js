@@ -152,7 +152,8 @@ const prodConf = merge(baseConf, {
         }),
         new HtmlWebpackPlugin({
             filename: 'login_success.html',
-            template: resolve(__dirname, '../login_success.html')
+            template: resolve(__dirname, '../login_success.html'),
+            inject: false,
         }),
 
         new MiniCssExtractPlugin({
