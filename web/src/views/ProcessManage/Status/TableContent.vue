@@ -316,7 +316,7 @@ export default {
         sortable: true,
       }, {
         id: 'bk_cloud_name',
-        label: this.$t('云区域'),
+        label: this.$t('管控区域'),
         sortable: true,
         // }, {
         //     id: 'config_templates',

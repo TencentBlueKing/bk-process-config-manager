@@ -30,7 +30,7 @@
           <bk-search-select
             ref="searchSelect"
             v-test.common="'searchSelect'"
-            :placeholder="$t('内网IP、云区域')"
+            :placeholder="$t('内网IP、管控区域')"
             :show-condition="false"
             :data="searchSelectData"
             v-model="searchSelectValue"
@@ -338,7 +338,7 @@ export default {
             break;
           case 'bk_cloud_id_choices':
             params.multiable = true;
-            params.name = this.$t('云区域');
+            params.name = this.$t('管控区域');
         }
         filterData.push(params);
       }

@@ -189,10 +189,6 @@ function handleReject(error, config) {
       let siteLoginUrl  = window.PROJECT_CONFIG.LOGIN_URL;
       // 设置login_success.html文件路径
       let successBaseUrl = window.PROJECT_CONFIG.BK_STATIC_URL;
-      const index = successBaseUrl.indexOf('static');
-      if (index > -1) {
-        successBaseUrl = '/' + successBaseUrl.slice(index);
-      }
       // 登录成功之后的回调地址，用于执行关闭登录窗口或刷新父窗口页面等动作
       const successUrl =`${window.location.origin}${successBaseUrl}/login_success.html`;
       if (!siteLoginUrl) {
