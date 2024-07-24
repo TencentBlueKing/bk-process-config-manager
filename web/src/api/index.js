@@ -184,6 +184,7 @@ function handleReject(error, config) {
   if (config.globalError && error.response) {
     const { status, data } = error.response;
     const nextError = { message: error.message, response: error.response };
+    // 401时只唤起登录弹窗,不弹出nextError消息提示
     if (status === 401) {
       // 未登录, o.a 登录弹窗有问题先不做弹窗
       let siteLoginUrl  = window.PROJECT_CONFIG.LOGIN_URL;
@@ -207,10 +208,11 @@ function handleReject(error, config) {
       showLoginModal({ loginUrl });
     } else if (status === 500) {
       nextError.message = '系统出现异常';
+      messageError(nextError.message);
     } else if (data && data.message) {
       nextError.message = data.message;
+      messageError(nextError.message);
     }
-    messageError(nextError.message);
     console.error(nextError.message);
     return Promise.reject(nextError);
   }
