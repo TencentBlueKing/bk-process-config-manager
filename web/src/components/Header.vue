@@ -56,6 +56,7 @@
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex';
 import AuthSelect from '@/components/Auth/AuthSelect';
+import logoSrc from '@/assets/images/favicon.png';
 
 export default {
   components: {
@@ -77,7 +78,7 @@ export default {
       return this.$store.state.platform.i18n.name || this.appName
     },
     appLogo() {
-      return this.$store.state.platform.appLogo
+      return this.$store.state.platform.appLogo || logoSrc;
     }
   },
   watch: {
