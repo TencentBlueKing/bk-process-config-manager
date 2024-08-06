@@ -40,7 +40,7 @@ export default {
   静态文件加载失败请刷新页面重试: 'Static file loading failed, please refresh the page and try again',
   // 首页
   首页: 'Home',
-  注销: 'Logout',
+  退出登录: 'Sign out',
   // 进程管理
   进程状态: 'Process Status',
   进程管理: 'Process Manage',

@@ -41,7 +41,7 @@
                 <div class="bk-option-content-default">
                   <div class="bk-option-name">
                     <span class="gsekit-icon gsekit-icon-logout-fill"></span>
-                    <span class="text">{{ $t('注销') }}</span>
+                    <span class="text">{{ $t('退出登录') }}</span>
                   </div>
                 </div>
               </div>
@@ -70,7 +70,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['username', 'appName']),
+    ...mapState(['username', 'appName', 'language']),
     showStaticRouter() {
       return this.$store.state.showStaticRouter;
     },

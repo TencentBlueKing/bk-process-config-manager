@@ -42,18 +42,23 @@ export default {
   },
   actions: {
     async getConfig(context) {
-      const url = `${window.PROJECT_CONFIG?.BKPAAS_SHARED_RES_URL}/gsekit/base.js`
-      const config = await getPlatformConfig(url, {
+      const defaults = {
         name: 'GSEKit',
         nameEn: 'GSEKit',
         appLogo: logoSrc,
-        brandName: '腾讯蓝鲸智云',
+        brandName: '蓝鲸智云',
         brandNameEn: 'BlueKing',
         favicon: logoSrc,
         helperLink: window.PROJECT_CONFIG.BKAPP_NAV_HELPER_URL,
         helperText: window.i18n.t('联系BK助手'),
-      });
-  
+      }
+      let config;
+      if (window.PROJECT_CONFIG?.BKPAAS_SHARED_RES_URL) {
+        const url = `${window.PROJECT_CONFIG?.BKPAAS_SHARED_RES_URL}/gsekit/base.js`;
+        config = await getPlatformConfig(url, defaults);
+      } else {
+        config = await getPlatformConfig(defaults);
+      }
       context.commit('updatePlatformConfig', config);
     }
   }
