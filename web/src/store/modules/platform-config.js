@@ -47,7 +47,7 @@ export default {
         nameEn: 'GSEKit',
         appLogo: logoSrc,
         brandName: '蓝鲸智云',
-        brandNameEn: 'BlueKing',
+        brandNameEn: 'Tencent BlueKing',
         favicon: logoSrc,
         helperLink: window.PROJECT_CONFIG.BKAPP_NAV_HELPER_URL,
         helperText: window.i18n.t('联系BK助手'),
