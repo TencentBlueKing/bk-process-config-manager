@@ -26,8 +26,8 @@
         v-model="bizId"
         @selected="handleSelect">
       </AuthSelect>
-      <bk-dropdown-menu trigger="click" @show="dropdownShow" @hide="dropdownHide" ref="dropdown">
-        <div :class="['header-nav-btn', 'header-nav-icon-btn', { 'dropdown-active': isShow }]" slot="dropdown-trigger">
+      <bk-dropdown-menu align="right" :trigger="triggerType" @show="dropdownShow" @hide="dropdownHide" ref="dropdown">
+        <div @click="triggerType = 'click'" :class="['header-nav-btn', 'header-nav-icon-btn', { 'dropdown-active': isShow }]" slot="dropdown-trigger">
           <i :class="`gsekit-icon gsekit-icon-lang-${language}`"></i>
         </div>
         <ul class="bk-dropdown-list" slot="dropdown-content">
@@ -37,26 +37,23 @@
           </li>
         </ul>
       </bk-dropdown-menu>
-      <bk-popover v-if="username" trigger="click" theme="profile-popover light" :on-show="() => isPopoverActive = true"
-        :on-hide="() => isPopoverActive = false">
-        <div class="login-username" :class="isPopoverActive && 'active'">
+      <bk-dropdown-menu
+        align="center"
+        ext-cls="profile-popover"
+        v-if="username"
+        :trigger="popTriggerType"
+        @show="isPopoverActive = true"
+        @hide="popoverHide">
+        <div class="login-username" @click="handleClick" :class="isPopoverActive && 'active'" slot="dropdown-trigger">
           {{ username }}<span class="bk-icon icon-down-shape"></span>
         </div>
-        <div slot="content" class="profile-popover-content">
-          <ul class="bk-options">
-            <li class="bk-option" @click="handleLogout">
-              <div class="bk-option-content">
-                <div class="bk-option-content-default">
-                  <div class="bk-option-name">
-                    <span class="gsekit-icon gsekit-icon-logout-fill"></span>
-                    <span class="text">{{ $t('退出登录') }}</span>
-                  </div>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </bk-popover>
+        <ul class="bk-dropdown-list" slot="dropdown-content">
+          <li class="dropdown-list-item" @click="handleLogout">
+            <span class="gsekit-icon gsekit-icon-logout-fill"></span>
+            <span class="text">{{ $t('退出登录') }}</span>
+          </li>
+        </ul>
+      </bk-dropdown-menu>
     </div>
   </header>
 </template>
@@ -85,7 +82,9 @@ export default {
           id: 'en', // enUS
           name: 'English',
         },
-      ]
+      ],
+      triggerType: 'mouseover',
+      popTriggerType: 'mouseover',
     };
   },
   computed: {
@@ -101,7 +100,7 @@ export default {
     },
     language() {
       return window.language;
-    }
+    },
   },
   watch: {
     bizId(val) {
@@ -161,6 +160,14 @@ export default {
     },
     dropdownHide() {
       this.isShow = false;
+      this.triggerType = 'mouseover';
+    },
+    popoverHide() {
+      this.isPopoverActive = false;
+      this.popTriggerType = 'mouseover';
+    },
+    handleClick() {
+      this.popTriggerType = 'click';
     },
     toggleLang(item) {
       if (item.id !== this.language) {
@@ -199,6 +206,7 @@ export default {
       this.$router.push('/process-manage/status');
     },
     handleLogout() {
+      
       // 加上协议头
       let loginUrl = window.PROJECT_CONFIG.LOGIN_URL;
       if (!/http(s)?:\/\//.test(loginUrl)) {
@@ -281,10 +289,11 @@ export default {
     flex-shrink: 0;
     display: flex;
     align-items: center;
+    padding-right: 60px;
 
     .king-select {
       width: 240px;
-      margin-right: 40px;
+      margin-right: 20px;
       background: #252f43;
       border-color: #252f43;
 
@@ -297,7 +306,7 @@ export default {
       display: flex;
       align-items: center;
       line-height: 40px;
-      margin-right: 40px;
+      margin-left: 10px;
       cursor: pointer;
       transition: color .2s;
       user-select: none;
@@ -323,9 +332,15 @@ export default {
       }
     }
   }
+  .profile-popover {
+    /deep/.bk-dropdown-content {
+      top: 39px !important;
+    }
+  }
   .bk-dropdown-menu {
-    .bk-dropdown-content {
+    /deep/.bk-dropdown-content {
       margin: 14px 0 !important;
+      min-width: 100px;
     }
   
     .header-nav-btn {
@@ -351,7 +366,6 @@ export default {
     .bk-dropdown-list {
   
       min-width: 100px;
-      padding: 4px 0;
       margin: 0;
       z-index: 2500;
       border-radius: 2px;
@@ -389,10 +403,12 @@ export default {
 <style lang="postcss">
 .tippy-tooltip.profile-popover-theme[data-size=small] {
   padding: 0;
-
+  margin-top: 4px;
   .profile-popover-content {
     color: #63656e;
     line-height: 32px;
+    height: 42px;
+    padding: 4px 0;
 
     .bk-option {
       margin: 0;
