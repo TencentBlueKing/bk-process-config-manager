@@ -55,6 +55,8 @@ lxml==4.6.3
 ruamel.yaml==0.17.16
 packaging==20.9
 
+apigw-manager[cryptography]==3.0.5
+
 # prometheus
 django-prometheus==2.2.0
 

@@ -1,0 +1,219 @@
+swagger: '2.0'
+info:
+  title: GSEKit API
+  description: |-
+    GSEKit 是腾讯蓝鲸智云推出的一个专注于进程和配置文件管理的 SaaS 工具。
+    GitHub 开源，欢迎共建：https://github.com/TencentBlueKing/bk-process-config-manager
+  version: v1
+basePath: /
+paths:
+  /api/core/gray/build/:
+    post:
+      operationId: gray_build
+      summary: "GSE 2.0\u7070\u5EA6"
+      description: ''
+      tags:
+        - gray
+      x-bk-apigateway-resource:
+        isPublic: true
+        allowApplyPermission: true
+        matchSubpath: false
+        backend:
+          name: default
+          method: post
+          path: /{env.app_subpath}api/core/gray/build/
+          matchSubpath: false
+          timeout: 0
+        authConfig:
+          userVerifiedRequired: true
+          appVerifiedRequired: true
+          resourcePermissionRequired: true
+  /api/core/gray/info/:
+    get:
+      operationId: gray_info
+      summary: "\u83B7\u53D6GSE 2.0\u7070\u5EA6\u4FE1\u606F"
+      description: ''
+      tags:
+        - gray
+      x-bk-apigateway-resource:
+        isPublic: true
+        allowApplyPermission: true
+        matchSubpath: false
+        backend:
+          name: default
+          method: get
+          path: /{env.app_subpath}api/core/gray/info/
+          matchSubpath: false
+          timeout: 0
+        authConfig:
+          userVerifiedRequired: true
+          appVerifiedRequired: true
+          resourcePermissionRequired: true
+  /api/core/gray/rollback/:
+    post:
+      operationId: gray_rollback
+      summary: "GSE 2.0\u7070\u5EA6\u56DE\u6EDA"
+      description: ''
+      tags:
+        - gray
+      x-bk-apigateway-resource:
+        isPublic: true
+        allowApplyPermission: true
+        matchSubpath: false
+        backend:
+          name: default
+          method: post
+          path: /{env.app_subpath}api/core/gray/rollback/
+          matchSubpath: false
+          timeout: 0
+        authConfig:
+          userVerifiedRequired: true
+          appVerifiedRequired: true
+          resourcePermissionRequired: true
+  /api/{bk_biz_id}/config_template/:
+    get:
+      operationId: config_template_list
+      summary: "\u83B7\u53D6\u914D\u7F6E\u6A21\u677F\u5217\u8868"
+      description: "\u914D\u7F6E\u6A21\u677F\uFF08ConfigTemplate\uFF09"
+      tags:
+        - config_template
+      x-bk-apigateway-resource:
+        isPublic: true
+        allowApplyPermission: true
+        matchSubpath: false
+        backend:
+          name: default
+          method: get
+          path: /{env.app_subpath}api/{bk_biz_id}/config_template/
+          matchSubpath: false
+          timeout: 0
+        authConfig:
+          userVerifiedRequired: true
+          appVerifiedRequired: true
+          resourcePermissionRequired: true
+  /api/{bk_biz_id}/job/:
+    post:
+      operationId: create_job
+      summary: "\u521B\u5EFA\u4EFB\u52A1"
+      description: "\u4EFB\u52A1\uFF08Job\uFF09"
+      tags:
+        - job
+      x-bk-apigateway-resource:
+        isPublic: true
+        allowApplyPermission: true
+        matchSubpath: false
+        backend:
+          name: default
+          method: post
+          path: /{env.app_subpath}api/{bk_biz_id}/job/
+          matchSubpath: false
+          timeout: 0
+        authConfig:
+          userVerifiedRequired: true
+          appVerifiedRequired: true
+          resourcePermissionRequired: true
+  /api/{bk_biz_id}/job/{id}/job_status/:
+    post:
+      operationId: job_status
+      summary: "\u4EFB\u52A1\u72B6\u6001\u67E5\u8BE2"
+      description: "\u4EFB\u52A1\uFF08Job\uFF09"
+      tags:
+        - job
+      x-bk-apigateway-resource:
+        isPublic: true
+        allowApplyPermission: true
+        matchSubpath: false
+        backend:
+          name: default
+          method: post
+          path: /{env.app_subpath}api/{bk_biz_id}/job/{id}/job_status/
+          matchSubpath: false
+          timeout: 0
+        authConfig:
+          userVerifiedRequired: true
+          appVerifiedRequired: true
+          resourcePermissionRequired: true
+  /api/{bk_biz_id}/meta/access_overview/:
+    get:
+      operationId: access_overview
+      summary: "\u4E1A\u52A1\u63A5\u5165\u60C5\u51B5\u6982\u89C8"
+      description: ''
+      tags:
+        - meta
+      x-bk-apigateway-resource:
+        isPublic: true
+        allowApplyPermission: true
+        matchSubpath: false
+        backend:
+          name: default
+          method: get
+          path: /{env.app_subpath}api/{bk_biz_id}/meta/access_overview/
+          matchSubpath: false
+          timeout: 0
+        authConfig:
+          userVerifiedRequired: true
+          appVerifiedRequired: true
+          resourcePermissionRequired: true
+  /api/{bk_biz_id}/process/flush_process/:
+    post:
+      operationId: flush_process
+      summary: "\u5237\u65B0\u4E1A\u52A1\u8FDB\u7A0B\u7F13\u5B58"
+      description: ''
+      tags:
+        - process
+      x-bk-apigateway-resource:
+        isPublic: true
+        allowApplyPermission: true
+        matchSubpath: false
+        backend:
+          name: default
+          method: post
+          path: /{env.app_subpath}api/{bk_biz_id}/process/flush_process/
+          matchSubpath: false
+          timeout: 0
+        authConfig:
+          userVerifiedRequired: true
+          appVerifiedRequired: true
+          resourcePermissionRequired: true
+  /api/{bk_biz_id}/process/process_status/:
+    post:
+      operationId: process_status
+      summary: "\u8FDB\u7A0B\u72B6\u6001\u5217\u8868"
+      description: ''
+      tags:
+        - process
+      x-bk-apigateway-resource:
+        isPublic: true
+        allowApplyPermission: true
+        matchSubpath: false
+        backend:
+          name: default
+          method: post
+          path: /{env.app_subpath}api/{bk_biz_id}/process/process_status/
+          matchSubpath: false
+          timeout: 0
+        authConfig:
+          userVerifiedRequired: true
+          appVerifiedRequired: true
+          resourcePermissionRequired: true
+  /api/{bk_biz_id}/process/sync_process_status/:
+    post:
+      operationId: sync_process_status
+      summary: "\u540C\u6B65\u8FDB\u7A0B\u72B6\u6001"
+      description: ''
+      tags:
+        - process
+      x-bk-apigateway-resource:
+        isPublic: true
+        allowApplyPermission: true
+        matchSubpath: false
+        backend:
+          name: default
+          method: post
+          path: /{env.app_subpath}api/{bk_biz_id}/process/sync_process_status/
+          matchSubpath: false
+          timeout: 0
+        authConfig:
+          userVerifiedRequired: true
+          appVerifiedRequired: true
+          resourcePermissionRequired: true

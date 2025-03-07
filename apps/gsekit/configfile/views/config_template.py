@@ -76,10 +76,12 @@ class ConfigTemplateViews(ModelViewSet):
         return serializer_class
 
     @swagger_auto_schema(
+        operation_id="config_template_list",
         operation_summary="获取配置模板列表",
         tags=ConfigTemplateViewTags,
         query_serializer=config_template_serializer.ListConfigTemplateRequestSerializer(),
         responses={status.HTTP_200_OK: config_template_serializer.ListConfigTemplateResponseSerializer()},
+        extra_overrides={"is_register_apigw": True},
     )
     @insert_permission_field(
         id_field=lambda d: d["config_template_id"],

@@ -8,7 +8,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and limitations under the License.
 """
-
+import json
 from apps.utils.env import get_type_env
 from .paas_version_diff import *  # noqa
 
@@ -26,6 +26,8 @@ __all__ = [
     "BK_SAAS_HOST",
     "BKAPP_DOCS_URL",
     "BKAPP_STATIC_PROTOCOL_PREFIX",
+    "BKPAAS_DEFAULT_PREALLOCATED_URLS",
+    "SYNC_APIGATEWAY_ENABLED",
 ]
 
 # 文档地址
@@ -35,3 +37,7 @@ BKAPP_DOCS_URL = get_type_env(
 
 # 站点协议前缀，用于静态文件访问链接异常的场景
 BKAPP_STATIC_PROTOCOL_PREFIX = get_type_env("BKAPP_STATIC_PROTOCOL_PREFIX", default="", _type=str)
+
+BKPAAS_DEFAULT_PREALLOCATED_URLS = get_type_env(key="BKPAAS_DEFAULT_PREALLOCATED_URLS", default="{}", _type=json)
+
+SYNC_APIGATEWAY_ENABLED = get_type_env(key="SYNC_APIGATEWAY_ENABLED", default=True, _type=bool)
