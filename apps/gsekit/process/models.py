@@ -140,3 +140,19 @@ class ProcessInst(models.Model):
         ]
         verbose_name = _("进程实例（ProcessInst）")
         verbose_name_plural = _("进程实例（ProcessInst）")
+
+
+class Business(models.Model):
+    bk_biz_id = models.IntegerField(verbose_name="业务 ID")
+    bk_biz_name = models.CharField(max_length=255, verbose_name="业务名称")
+    # 记录对象的创建时间，在对象首次创建时自动设置
+    created_at = models.DateTimeField(auto_now_add=True)
+    # 记录对象的最后修改时间，每次对象保存时自动更新
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.bk_biz_name
+
+    class Meta:
+        verbose_name = "业务信息"
+        verbose_name_plural = verbose_name
