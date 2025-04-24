@@ -92,7 +92,7 @@ class GseDataErrorCode(object):
             return True
 
         # 对于已停止的进程执行【停止】命令，结果是执行成功，已停止的进程实例可以标记成忽略
-        if op_type == GseOpType.STOP and error_code == cls.PROC_NO_RUNNING:
+        if op_type in [GseOpType.STOP, GseOpType.FORCE_STOP] and error_code == cls.PROC_NO_RUNNING:
             # 停止进程，但进程本身未运行
             return True
 
@@ -392,7 +392,7 @@ class BulkGseOperateProcessService(GseCommonService):
                 continue
 
             data.outputs.proc_op_status_map[str(job_task.id)] = error_code
-            if error_code == GseDataErrorCode.SUCCESS:
+            if error_code in [GseDataErrorCode.SUCCESS, GseDataErrorCode.PROC_NO_RUNNING]:
                 process_inst = ProcessInst.objects.get(
                     bk_process_id=job_task.bk_process_id, local_inst_id=local_inst_id
                 )
