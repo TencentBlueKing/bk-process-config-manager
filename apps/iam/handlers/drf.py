@@ -17,7 +17,7 @@ from iam import Resource
 from . import Permission
 from .actions import ActionMeta, ActionEnum
 from .resources import ResourceEnum, ResourceMeta
-
+from common.log import logger
 
 class IAMPermission(permissions.BasePermission):
     def __init__(self, actions: List[ActionMeta], resources: List[Resource] = None):
@@ -34,6 +34,10 @@ class IAMPermission(permissions.BasePermission):
 
         if not self.actions:
             return True
+
+        logger.info("===========================0000")
+        logger.info(f"username={request.user.username}")
+        logger.info("===========================1111")
 
         client = Permission()
         for action in self.actions:

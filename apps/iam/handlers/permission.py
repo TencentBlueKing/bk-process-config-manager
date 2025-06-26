@@ -45,6 +45,10 @@ class Permission(object):
         else:
             try:
                 request = request or get_request()
+                logger.info("===========================2222")
+                logger.info(f"username={request.user.username}")
+                logger.info(f"username={request.user}")
+                logger.info("===========================3333")
             except Exception:
                 raise ValueError("must provide `username` or `request` param to init")
 
