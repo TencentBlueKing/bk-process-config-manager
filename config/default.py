@@ -9,6 +9,7 @@ an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express o
 See the License for the specific language governing permissions and limitations under the License.
 """
 
+from urllib.parse import urlparse
 from blueapps.conf.default_settings import *  # noqa
 from blueapps.conf.log import get_logging_config_dict
 from pipeline.celery.settings import *  # noqa
@@ -46,13 +47,18 @@ INSTALLED_APPS += (
     "django_dbconn_retry",
     # django_prometheus
     "django_prometheus",
+    # apigw
+    "apigw_manager.apigw",
 )
 
 # 自定义中间件
 MIDDLEWARE += (
-    "blueapps.account.middlewares.BkJwtLoginRequiredMiddleware",
+    # "blueapps.account.middlewares.BkJwtLoginRequiredMiddleware",
     "apps.middlewares.CommonMid",
     "apps.middlewares.UserLocalMiddleware",
+    "apigw_manager.apigw.authentication.ApiGatewayJWTGenericMiddleware",  # JWT 认证
+    "apigw_manager.apigw.authentication.ApiGatewayJWTAppMiddleware",  # JWT 透传的应用信息
+    "apigw_manager.apigw.authentication.ApiGatewayJWTUserMiddleware",  # JWT 透传的用户信息
 )
 
 # 添加django_prometheus中间件
@@ -71,7 +77,10 @@ OTLP_BK_DATA_ID = get_type_env("OTLP_BK_DATA_ID", _type=int, default=0)
 # ===============================================================================
 # Authentication
 # ===============================================================================
-AUTHENTICATION_BACKENDS += ("blueapps.account.backends.BkJwtBackend",)
+AUTHENTICATION_BACKENDS += (
+    # "blueapps.account.backends.BkJwtBackend",
+    "apigw_manager.apigw.authentication.UserModelBackend",
+)
 
 # 所有环境的日志级别可以在这里配置
 # LOG_LEVEL = 'INFO'
@@ -225,6 +234,10 @@ REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
 }
 
+SWAGGER_SETTINGS = {
+    "DEFAULT_INFO": "apps.gsekit.urls.openapi_info",
+}
+
 # 并发请求数
 CONCURRENT_NUMBER = int(os.getenv("BKAPP_CONCURRENT_NUMBER", 50))
 
@@ -254,6 +267,17 @@ TAM_AEGIS_URL = os.getenv("BKAPP_TAM_AEGIS_URL")
 
 # 平台公共信息
 BKPAAS_SHARED_RES_URL = os.getenv("BKPAAS_SHARED_RES_URL", "")
+
+# 网关相关配置
+SYNC_APIGATEWAY_ENABLED = env.SYNC_APIGATEWAY_ENABLED
+BK_APIGW_NAME = "bk-gsekit"
+BK_API_URL_TMPL = os.getenv("BK_API_URL_TMPL")
+
+BKPAAS_DEFAULT_PREALLOCATED_URLS = env.BKPAAS_DEFAULT_PREALLOCATED_URLS
+APP_ADDRESS = BKPAAS_DEFAULT_PREALLOCATED_URLS.get(ENVIRONMENT)
+PARSED_URL = urlparse(APP_ADDRESS)
+BK_APIGW_DEFAULT_STAGE_BACKEND_HOST = f"{PARSED_URL.scheme}://{PARSED_URL.netloc}"
+BK_APIGW_DEFAULT_STAGE_BACKEND_SUBPATH = PARSED_URL.path.lstrip("/")
 
 # ==============================================================================
 # Cache
