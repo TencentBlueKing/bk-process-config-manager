@@ -36,6 +36,7 @@ from django.utils.translation import ugettext as _
 from apps.exceptions import AppBaseException
 
 from apps.utils.local import activate_request
+from apigw_manager.apigw.authentication import ApiGatewayJWTUserMiddleware
 
 
 class AccessorSignal(Signal):
@@ -163,7 +164,10 @@ class CommonMid(MiddlewareMixin):
         # 处理 Data APP 自定义异常
         if isinstance(exception, AppBaseException):
             _msg = _("【APP 自定义异常】{message}, code={code}, args={args}").format(
-                message=exception.message, code=exception.code, args=exception.args, data=exception.data,
+                message=exception.message,
+                code=exception.code,
+                args=exception.args,
+                data=exception.data,
             )
             logger.exception(_msg)
             return JsonResponse(
@@ -174,7 +178,12 @@ class CommonMid(MiddlewareMixin):
         if isinstance(exception, BlueException):
             logger.exception(
                 ("""捕获主动抛出异常, 具体异常堆栈->[%s] status_code->[%s] & """ """client_message->[%s] & args->[%s] """)
-                % (traceback.format_exc(), exception.error_code, exception.message, exception.args,)
+                % (
+                    traceback.format_exc(),
+                    exception.error_code,
+                    exception.message,
+                    exception.args,
+                )
             )
 
             response = JsonResponse(
@@ -204,3 +213,21 @@ class CommonMid(MiddlewareMixin):
         response.status_code = 500
 
         return response
+
+
+class ApiGatewayJWTUserInjectAppMiddleware(ApiGatewayJWTUserMiddleware):
+    def __call__(self, request):
+        logger.info(f"requestapigw: {request.user.username}, {request.user}")
+        # jwt_app 依赖于 ApiGatewayJWTAppMiddleware 注入
+        jwt_app = getattr(request, "app", None)
+        if not jwt_app:
+            return super().__call__(request)
+
+        # 和开发框架保持一致行为，如果通过应用认证并且开启 ESB 白名单，此时认为用户认证也通过
+        use_esb_white_list = getattr(settings, "USE_ESB_WHITE_LIST", True)
+        if use_esb_white_list and jwt_app.verified:
+            # 如果 user 信息不存在，默认填充 bk_app_code 作为用户名
+            request.jwt.payload["user"] = request.jwt.payload.get("user") or {"bk_username": jwt_app.bk_app_code}
+            request.jwt.payload["user"]["verified"] = True
+
+        return super().__call__(request)
