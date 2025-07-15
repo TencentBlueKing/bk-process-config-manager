@@ -53,12 +53,31 @@ INSTALLED_APPS += (
 
 # 自定义中间件
 MIDDLEWARE += (
+    # request instance provider
+    "blueapps.middleware.request_provider.RequestProvider",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    # 跨域检测中间件， 默认关闭
+    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    # 蓝鲸静态资源服务
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+    # Auth middleware
+    "blueapps.account.middlewares.RioLoginRequiredMiddleware",
+    "blueapps.account.middlewares.WeixinLoginRequiredMiddleware",
+    "blueapps.account.middlewares.LoginRequiredMiddleware",
     # "blueapps.account.middlewares.BkJwtLoginRequiredMiddleware",
-    "apps.middlewares.CommonMid",
-    "apps.middlewares.UserLocalMiddleware",
     "apigw_manager.apigw.authentication.ApiGatewayJWTGenericMiddleware",  # JWT 认证
     "apigw_manager.apigw.authentication.ApiGatewayJWTAppMiddleware",  # JWT 透传的应用信息
-    "apigw_manager.apigw.authentication.ApiGatewayJWTUserMiddleware",  # JWT 透传的用户信息
+    "apps.middlewares.ApiGatewayJWTUserInjectAppMiddleware",  # JWT 透传的用户信息
+    # exception middleware
+    "blueapps.core.exceptions.middleware.AppExceptionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
+    "apps.middlewares.CommonMid",
+    "apps.middlewares.UserLocalMiddleware",
 )
 
 # 添加django_prometheus中间件
