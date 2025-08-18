@@ -19,6 +19,7 @@ from apps.gsekit.job.handlers import JobHandlers
 from apps.gsekit.job.models import Job
 from apps.gsekit.process.models import Process
 from apps.gsekit.process.handlers.process import ProcessHandler
+from apps.gsekit.process.handlers.check_process import ProcessCheckManager
 from apps.gsekit.process.serializers import process as process_serializer
 from apps.iam import ActionEnum, ResourceEnum
 from apps.iam.handlers.drf import InstanceActionPermission, ViewBusinessPermission
@@ -252,3 +253,7 @@ class ProcessViews(APIViewSet):
     @action(detail=False, methods=["GET"])
     def sync_process_status_time(self, request, bk_biz_id, *args, **kwargs):
         return Response(ProcessHandler(bk_biz_id=bk_biz_id).sync_process_status_time())
+
+    @action(detail=False, methods=["GET"])
+    def check(self, request, bk_biz_id, *args, **kwargs):
+        return Response(ProcessCheckManager(bk_biz_id).run())

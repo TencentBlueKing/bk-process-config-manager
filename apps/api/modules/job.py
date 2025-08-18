@@ -26,10 +26,16 @@ class _JobApi(BaseApi):
             description="快速执行脚本",
         )
         self.fast_transfer_file = DataAPI(
-            method="POST", url=JOB_APIGATEWAY_ROOT_V3 + "fast_transfer_file/", module=self.MODULE, description="快速分发文件",
+            method="POST",
+            url=JOB_APIGATEWAY_ROOT_V3 + "fast_transfer_file/",
+            module=self.MODULE,
+            description="快速分发文件",
         )
         self.push_config_file = DataAPI(
-            method="POST", url=JOB_APIGATEWAY_ROOT_V3 + "push_config_file/", module=self.MODULE, description="快速分发配置",
+            method="POST",
+            url=JOB_APIGATEWAY_ROOT_V3 + "push_config_file/",
+            module=self.MODULE,
+            description="快速分发配置",
         )
         self.get_job_instance_status = DataAPI(
             method="GET",
@@ -42,4 +48,10 @@ class _JobApi(BaseApi):
             url=JOB_APIGATEWAY_ROOT_V3 + "get_job_instance_ip_log/",
             module=self.MODULE,
             description="根据作业实例ID查询作业执行日志",
+        )
+        self.batch_get_job_instance_ip_log = DataAPI(
+            method="POST",
+            url=JOB_APIGATEWAY_ROOT_V3 + "batch_get_job_instance_ip_log/",
+            module=self.MODULE,
+            description="批量查询作业执行日志",
         )
