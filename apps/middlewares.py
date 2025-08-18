@@ -15,6 +15,7 @@ import json
 import os
 import traceback
 
+import requests
 from blueapps.core.exceptions.base import BlueException
 
 from common.log import logger
@@ -30,10 +31,12 @@ except ImportError:
 from django.utils.deprecation import MiddlewareMixin
 from django.dispatch import Signal
 from django.conf import settings
+from django.core.cache import cache
 from django.http import HttpResponse, JsonResponse
 from django.utils.translation import ugettext as _
 
 from apps.exceptions import AppBaseException
+from apps.gsekit.meta.models import GlobalSettings
 
 from apps.utils.local import activate_request
 from apigw_manager.apigw.authentication import ApiGatewayJWTUserMiddleware
@@ -213,6 +216,99 @@ class CommonMid(MiddlewareMixin):
         response.status_code = 500
 
         return response
+
+
+class BSCPSwitchCheckMiddleware(MiddlewareMixin):
+    """
+    Block business APIs that have been switched to BSCP.
+    """
+
+    MESSAGE = _("业务已切换至BSCP")
+    CACHE_KEY_TEMPLATE = "bscp_switch_check:{bk_biz_id}"
+
+    def process_view(self, request, view_func, view_args, view_kwargs):
+        try:
+            if not GlobalSettings.bscp_switch_check_enabled():
+                return None
+        except Exception as error:
+            logger.exception("Get BSCP switch check global flag failed, error=%s", error)
+            return None
+
+        bk_biz_id = view_kwargs.get("bk_biz_id")
+        if not bk_biz_id:
+            return None
+
+        if not self.is_bscp_switched(bk_biz_id):
+            return None
+
+        response = JsonResponse(
+            {"code": "410000403", "message": self.MESSAGE, "data": {"bk_biz_id": bk_biz_id}, "result": False}
+        )
+        response.status_code = 403
+        return response
+
+    @classmethod
+    def is_bscp_switched(cls, bk_biz_id):
+        """
+        Check whether the business has been switched to BSCP.
+        """
+        check_url = getattr(settings, "BSCP_SWITCH_CHECK_URL", "")
+        if not check_url:
+            return False
+
+        cache_key = cls.CACHE_KEY_TEMPLATE.format(bk_biz_id=bk_biz_id)
+        try:
+            cached_result = cache.get(cache_key)
+        except Exception as error:
+            logger.exception("Get BSCP switch status cache failed, bk_biz_id=%s, error=%s", bk_biz_id, error)
+            cached_result = None
+        if cached_result is not None:
+            return cached_result
+
+        try:
+            response = requests.get(
+                check_url.format(bk_biz_id=bk_biz_id),
+                headers=cls.get_bscp_check_headers(),
+                timeout=getattr(settings, "BSCP_SWITCH_CHECK_TIMEOUT", 3),
+                verify=False,
+            )
+            response.raise_for_status()
+            result = response.json()
+        except Exception as error:
+            logger.exception("Check BSCP switch status failed, bk_biz_id=%s, error=%s", bk_biz_id, error)
+            return False
+
+        switched = cls.parse_bscp_switch_result(result)
+        try:
+            cache.set(cache_key, switched, getattr(settings, "BSCP_SWITCH_CHECK_CACHE_TIMEOUT", 60))
+        except Exception as error:
+            logger.exception("Set BSCP switch status cache failed, bk_biz_id=%s, error=%s", bk_biz_id, error)
+        return switched
+
+    @staticmethod
+    def get_bscp_check_headers():
+        return {
+            "X-Bkapi-Authorization": json.dumps(
+                {
+                    "bk_app_code": settings.APP_CODE,
+                    "bk_app_secret": settings.SECRET_KEY,
+                    "bk_username": settings.BK_ADMIN_USERNAME,
+                }
+            ),
+            "X-Bkapi-App-Code": settings.APP_CODE,
+            "X-Bkapi-App-Secret": settings.SECRET_KEY,
+            "X-Bkapi-User-Name": settings.BK_ADMIN_USERNAME,
+        }
+
+    @staticmethod
+    def parse_bscp_switch_result(result):
+        data = result.get("data", {}) if isinstance(result, dict) else {}
+        if isinstance(data, dict):
+            for key in ("enabled", "is_switched", "switched", "is_bscp_switched", "process_config_view"):
+                if key in data:
+                    return bool(data[key])
+            return bool(data)
+        return bool(data)
 
 
 class ApiGatewayJWTUserInjectAppMiddleware(ApiGatewayJWTUserMiddleware):

@@ -365,7 +365,38 @@ class ProcessHandler(APIModel):
         :return:
         """
         process_template_list = batch_request(
-            CCApi.list_proc_template, {"bk_biz_id": self.bk_biz_id, "service_template_id": service_template_id}
+            CCApi.list_proc_template,
+            {"bk_biz_id": self.bk_biz_id, "service_template_id": service_template_id},
+        )
+        for process_template in process_template_list:
+            # 把进程模板属性数据结构转为与进程实例结构一致
+            process_template_property = process_template["property"]
+            for key, value in process_template_property.items():
+                process_template_property[key] = value.get("value")
+                if key == "bind_info":
+                    bind_info_list = []
+                    for __, bind_info_value in enumerate(value.get("value") or []):
+                        bind_info = {
+                            _key: _value.get("value") for _key, _value in bind_info_value.items() if _key != "row_id"
+                        }
+                        bind_info["row_id"] = bind_info_value["row_id"]
+                        bind_info_list.append(bind_info)
+                    process_template_property[key] = bind_info_list
+            process_template["bk_process_name"] = process_template_property["bk_process_name"]
+            # 冗余process_template_id字段，方便填充配置文件信息
+            process_template["process_template_id"] = process_template["id"]
+        # 填充配置文件信息，并返回进程模板信息列表
+        return self.fill_config_template_binding_info_to_process(process_template_list)
+
+    def bulk_process_template(self, service_template_ids: list) -> List:
+        """ProcessCheckManager
+        根据服务模板ID获取进程模板列表
+        :param service_template_id:
+        :return:
+        """
+        process_template_list = batch_request(
+            CCApi.list_proc_template,
+            {"bk_biz_id": self.bk_biz_id, "process_template_ids": service_template_ids, "no_request": True},
         )
         for process_template in process_template_list:
             # 把进程模板属性数据结构转为与进程实例结构一致

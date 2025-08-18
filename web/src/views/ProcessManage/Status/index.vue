@@ -120,7 +120,7 @@
         </div>
         <bk-table
           :data="currentTableData"
-          :max-height="400"
+          :max-height="600"
           :pagination="infoPagination"
           v-bkloading="{ isLoading: infoTableLoading, zIndex: 0 }"
           @page-change="handleInfoPageChange"
@@ -591,7 +591,7 @@ export default {
     // 检查托管信息
     async checkHostingInfo() {
       this.dialogHostInfo.visible = true;
-      this.dialogHostInfo.title = this.$t('托管信息');
+      this.dialogHostInfo.title = this.$t('托管异常信息(无数据即为全部正常)');
       this.infoTableLoading = true;
       const res = await this.$store.dispatch('process/ajaxCheckHostingInfo');
       if (res.result) {
