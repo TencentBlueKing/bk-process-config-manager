@@ -91,6 +91,27 @@ paths:
           userVerifiedRequired: true
           appVerifiedRequired: true
           resourcePermissionRequired: true
+  /api/{bk_biz_id}/config_template/{config_template_id}/list_version/:
+    get:
+      operationId: config_template_list_version
+      summary: "\u83B7\u53D6\u914D\u7F6E\u6A21\u677F\u7248\u672C\u5217\u8868"
+      description: "\u914D\u7F6E\u6A21\u677F\uFF08ConfigTemplate\uFF09"
+      tags:
+        - config_template
+      x-bk-apigateway-resource:
+        isPublic: true
+        allowApplyPermission: true
+        matchSubpath: false
+        backend:
+          name: default
+          method: get
+          path: /{env.app_subpath}api/{bk_biz_id}/config_template/{config_template_id}/list_version/
+          matchSubpath: false
+          timeout: 0
+        authConfig:
+          userVerifiedRequired: true
+          appVerifiedRequired: true
+          resourcePermissionRequired: true
   /api/{bk_biz_id}/job/:
     get:
       operationId: api_job_list
@@ -189,6 +210,27 @@ paths:
           name: default
           method: get
           path: /{env.app_subpath}api/{bk_biz_id}/meta/access_overview/
+          matchSubpath: false
+          timeout: 0
+        authConfig:
+          userVerifiedRequired: true
+          appVerifiedRequired: true
+          resourcePermissionRequired: true
+  /api/{bk_biz_id}/process/check/:
+    get:
+      operationId: process_check
+      summary: "\u68C0\u67E5\u8FDB\u7A0B\u914D\u7F6E\u6258\u7BA1\u4FE1\u606F"
+      description: ''
+      tags:
+        - process
+      x-bk-apigateway-resource:
+        isPublic: true
+        allowApplyPermission: true
+        matchSubpath: false
+        backend:
+          name: default
+          method: get
+          path: /{env.app_subpath}api/{bk_biz_id}/process/check/
           matchSubpath: false
           timeout: 0
         authConfig:

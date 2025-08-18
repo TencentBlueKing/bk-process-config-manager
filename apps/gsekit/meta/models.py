@@ -38,6 +38,7 @@ class GlobalSettings(models.Model):
         # 记录所有业务ID,用于同步新业务到灰度列表对比使用
         ALL_BIZ_IDS = "ALL_BIZ_IDS"
         SYNC_PROC_STATUS_TIME = "SYNC_PROC_STATUS_TIME"
+        CHECK_PROC_SCRIPT = "CHECK_PROC_SCRIPT"
 
     @classmethod
     def process_task_aggregate_info(cls, bk_biz_id: int) -> typing.Dict[str, str]:
