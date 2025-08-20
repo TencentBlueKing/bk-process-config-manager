@@ -75,6 +75,12 @@
         {{ $t('状态同步', [time] ) }}
       </p>
       <bk-button
+        style="margin-right: 10px;"
+        @click="checkHostingInfo"
+      >
+        {{ $t('检查托管信息') }}
+      </bk-button>
+      <bk-button
         v-test="'syncStatus'"
         icon="bk-icon icon-refresh"
         :loading="isSynchronousLoading"
@@ -171,6 +177,10 @@ export default {
     switchSynchronousText() {
       this.$emit('synchronousProcess', 'config');
       this.$refs.synchronousPopover.hideHandler();
+    },
+    // 检查托管信息
+    checkHostingInfo() {
+      this.$emit('checkHostingInfo');
     },
     // 同步状态时间
     async SyncProcessStateTime() {
