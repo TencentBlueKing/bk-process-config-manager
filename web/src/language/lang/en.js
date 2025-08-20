@@ -44,6 +44,15 @@ export default {
   // 进程管理
   进程状态: 'Process Status',
   进程管理: 'Process Manage',
+  导出为excel: 'ExportToExcel',
+  主机ID: 'Host id',
+  管控区域: 'Cloud Area',
+  管控区域ID: 'Cloud Area ID',
+  错误类型: 'Error type',
+  错误信息: 'Error Message',
+  处理建议: 'Handling suggestion',
+  托管信息: 'Hosting Info',
+  检查托管信息: 'Check Hosting Info',
   // 配置文件
   '配置文件模板，新建成功。': 'Successfully created config-file template',
   配置文件: 'Config File',
