@@ -59,6 +59,8 @@ apigw-manager[cryptography]==3.0.5
 
 # prometheus
 django-prometheus==2.2.0
+mysqlclient==2.1.1
+setuptools==59.6.0
 
 # opentelemetry
 grpcio==1.46.3
