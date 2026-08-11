@@ -21,6 +21,10 @@ const axiosInstance = axios.create({
   baseURL: window.PROJECT_CONFIG.AJAX_URL_PREFIX,
 });
 
+const BSCP_SWITCHED_ERROR_CODE = '410000403';
+const BSCP_SWITCHED_ERROR_MESSAGE = '业务已切换至BSCP';
+let bscpSwitchedInfoInstance = null;
+
 /**
  * request interceptor
  */
@@ -153,6 +157,12 @@ async function getPromise(method, url, data, userConfig = {}) {
  */
 function handleResponse({ config, response, resolve, reject }) {
   if (!response.result && config.globalError) {
+    if (isBscpSwitchedError(response)) {
+      showBscpSwitchedInfo(response);
+      reject({ message: response.message, isBscpSwitched: true });
+      http.queue.delete(config.requestId);
+      return;
+    }
     if (`${response.code}` === '9900403') {
       window.bus.$emit('show-permission-modal', {
         trigger: 'request',
@@ -181,6 +191,10 @@ function handleReject(error, config) {
 
   http.queue.delete(config.requestId);
 
+  if (error.isBscpSwitched) {
+    return Promise.reject(error);
+  }
+
   if (config.globalError && error.response) {
     const { status, data } = error.response;
     const nextError = { message: error.message, response: error.response };
@@ -189,12 +203,12 @@ function handleReject(error, config) {
       // 未登录, o.a 登录弹窗有问题先不做弹窗
       let siteLoginUrl  = window.PROJECT_CONFIG.LOGIN_URL;
       // 设置login_success.html文件路径
-      let successBaseUrl = window.PROJECT_CONFIG.BK_STATIC_URL;
+      const successBaseUrl = window.PROJECT_CONFIG.BK_STATIC_URL;
       // 登录成功之后的回调地址，用于执行关闭登录窗口或刷新父窗口页面等动作
-      const successUrl =`${window.location.origin}${successBaseUrl}/login_success.html`;
+      const successUrl = `${window.location.origin}${successBaseUrl}/login_success.html`;
       if (!siteLoginUrl) {
-        console.error('Login URL not configured!')
-        return
+        console.error('Login URL not configured!');
+        return;
       }
       // 加上协议头
       if (!/http(s)?:\/\//.test(siteLoginUrl)) {
@@ -206,6 +220,11 @@ function handleReject(error, config) {
       const loginUrl = `${loginURL.origin}${pathname}plain/${loginURL.search}`;
       // 使用登录弹框登录
       showLoginModal({ loginUrl });
+    } else if (isBscpSwitchedError(data)) {
+      nextError.message = data.message || BSCP_SWITCHED_ERROR_MESSAGE;
+      showBscpSwitchedInfo(data);
+      console.error(nextError.message);
+      return Promise.reject(nextError);
     } else if (status === 500) {
       nextError.message = '系统出现异常';
       messageError(nextError.message);
@@ -219,6 +238,55 @@ function handleReject(error, config) {
   messageError(error.message);
   // console.error(error.message) 手动 catch console.warn(e)
   return Promise.reject(error);
+}
+
+function isBscpSwitchedError(data = {}) {
+  return `${data.code}` === BSCP_SWITCHED_ERROR_CODE || data.message === BSCP_SWITCHED_ERROR_MESSAGE;
+}
+
+function showBscpSwitchedInfo(data = {}) {
+  if (bscpSwitchedInfoInstance) {
+    return;
+  }
+  const message = data.message || BSCP_SWITCHED_ERROR_MESSAGE;
+  const bscpUrl = getBscpUrl(data);
+  const infoConfig = {
+    title: message,
+    confirmFn: () => {
+      bscpSwitchedInfoInstance = null;
+    },
+    cancelFn: () => {
+      bscpSwitchedInfoInstance = null;
+    },
+  };
+  if (bscpUrl) {
+    Object.assign(infoConfig, {
+      subTitle: '请点击下方按钮前往 BSCP 查看和管理相关配置',
+      confirmText: '前往 BSCP',
+      okText: '前往 BSCP',
+      confirmButtonText: '前往 BSCP',
+      confirmFn: () => {
+        window.open(bscpUrl, '_blank');
+        bscpSwitchedInfoInstance = null;
+      },
+    });
+  }
+  bscpSwitchedInfoInstance = Vue.prototype.$bkInfo(infoConfig);
+}
+
+function getBscpUrl(data = {}) {
+  const bscpUrl = window.PROJECT_CONFIG.BKAPP_BSCP_URL;
+  const bkBizId = data.data && data.data.bk_biz_id;
+  if (!bscpUrl) {
+    return '';
+  }
+  if (!bscpUrl.includes('{bk_biz_id}')) {
+    return bscpUrl;
+  }
+  if (!bkBizId) {
+    return '';
+  }
+  return bscpUrl.replace('{bk_biz_id}', bkBizId);
 }
 
 /**

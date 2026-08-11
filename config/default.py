@@ -77,6 +77,7 @@ MIDDLEWARE = (
     "blueapps.core.exceptions.middleware.AppExceptionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "apps.middlewares.CommonMid",
+    "apps.middlewares.BSCPSwitchCheckMiddleware",
     "apps.middlewares.UserLocalMiddleware",
 )
 
@@ -265,6 +266,17 @@ CONCURRENT_NUMBER = int(os.getenv("BKAPP_CONCURRENT_NUMBER", 50))
 
 # 适配类型
 ADAPTER_TYPE = os.getenv("BKAPP_ADAPTER_TYPE", "base")
+
+# BSCP switched-business check API.
+BSCP_SWITCH_CHECK_URL = os.getenv(
+    "BKAPP_BSCP_SWITCH_CHECK_URL",
+    "https://bk-bscp.apigw.o.woa.com/prod/api/v1/inner/config/biz_id/{bk_biz_id}/process_config_view",
+)
+BSCP_SWITCH_CHECK_TIMEOUT = int(os.getenv("BKAPP_BSCP_SWITCH_CHECK_TIMEOUT", 3))
+BSCP_SWITCH_CHECK_CACHE_TIMEOUT = int(os.getenv("BKAPP_BSCP_SWITCH_CHECK_CACHE_TIMEOUT", 15 * 60))
+
+# BSCP entry URL used by the frontend switched-business prompt.
+BKAPP_BSCP_URL = os.getenv("BKAPP_BSCP_URL", "")
 
 BKAPP_STATIC_PROTOCOL_PREFIX = env.BKAPP_STATIC_PROTOCOL_PREFIX
 
