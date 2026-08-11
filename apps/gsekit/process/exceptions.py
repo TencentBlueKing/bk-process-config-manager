@@ -56,3 +56,9 @@ class ProcessNotMatchException(ProcessBaseException):
     ERROR_CODE = "006"
     MESSAGE = _("查询进程不匹配")
     MESSAGE_TPL = _("查询进程不匹配: {user_bk_process_id} vs {cc_bk_process_id}")
+
+
+class ProcessNoAgentIDException(ProcessBaseException):
+    ERROR_CODE = "007"
+    MESSAGE = _("找不到带有agent_id的进程进行状态同步，请联系管理员")
+    MESSAGE_TPL = _("找不到带有agent_id的进程进行状态同步，请联系管理员")

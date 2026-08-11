@@ -16,7 +16,8 @@
         :is-selected-all-pages="isSelectedAllPages"
         @operateProcess="operateProcess"
         @operateConfigDistribute="operateConfigDistribute"
-        @synchronousProcess="synchronousProcess">
+        @synchronousProcess="synchronousProcess"
+        @checkHostingInfo="checkHostingInfo">
       </ButtonGrounp>
       <!-- 下拉筛选 -->
       <div class="search-content">
@@ -30,7 +31,7 @@
           <bk-search-select
             ref="searchSelect"
             v-test.common="'searchSelect'"
-            :placeholder="$t('内网IP、云区域')"
+            :placeholder="$t('内网IP、管控区域')"
             :show-condition="false"
             :data="searchSelectData"
             v-model="searchSelectValue"
@@ -98,6 +99,65 @@
           {{ $t('所选进程？') }}
         </div>
       </bk-dialog>
+      <!-- 托管信息弹窗 -->
+      <bk-dialog
+        ext-cls="host-info-dialog"
+        v-model="dialogHostInfo.visible"
+        :render-directive="'if'"
+        width="1450"
+        :mask-close="false"
+        :show-footer="false"
+        header-position="left">
+        <template #header>
+          <div class="header">
+            {{ dialogHostInfo.title }}
+          </div>
+        </template>
+        <div class="downLoad">
+          <bk-button @click="handleExport">
+            {{ $t('导出为excel') }}
+          </bk-button>
+        </div>
+        <bk-table
+          :data="currentTableData"
+          :max-height="600"
+          :pagination="infoPagination"
+          v-bkloading="{ isLoading: infoTableLoading, zIndex: 0 }"
+          @page-change="handleInfoPageChange"
+          @page-limit-change="handleInfoPageLimitChange"
+        >
+          <bk-table-column :label="$t('主机ID')" min-width="140" prop="host_id" key="host_id">
+            <div v-bk-overflow-tips slot-scope="{ row }">
+              <span>{{ row.host_id }}</span>
+            </div>
+          </bk-table-column>
+          <bk-table-column :label="$t('内网IP')" min-width="140" prop="inner_ip" key="inner_ip">
+            <div v-bk-overflow-tips slot-scope="{ row }">
+              <span>{{ row.inner_ip }}</span>
+            </div>
+          </bk-table-column>
+          <bk-table-column :label="$t('管控区域')" min-width="140" prop="bk_cloud_name" key="bk_cloud_name">
+            <div v-bk-overflow-tips slot-scope="{ row }">
+              <span>{{ row.bk_cloud_name }}</span>
+            </div>
+          </bk-table-column>
+          <bk-table-column :label="$t('错误类型')" min-width="140" prop="error_type" key="error_type">
+            <div v-bk-overflow-tips slot-scope="{ row }">
+              <span>{{ row.error_type }}</span>
+            </div>
+          </bk-table-column>
+          <bk-table-column :label="$t('错误信息')" min-width="240" prop="error_msg" key="error_msg">
+            <div v-bk-overflow-tips slot-scope="{ row }">
+              <span>{{ row.error_msg }}</span>
+            </div>
+          </bk-table-column>
+          <bk-table-column :label="$t('处理建议')" min-width="180" prop="handling_suggestion" key="handling_suggestion">
+            <div v-bk-overflow-tips slot-scope="{ row }">
+              <span>{{ row.handling_suggestion }}</span>
+            </div>
+          </bk-table-column>
+        </bk-table>
+      </bk-dialog>
     </section>
   </div>
 </template>
@@ -110,6 +170,7 @@ import ButtonGrounp from './ButtonGrounp';
 import EmptyProcess from '@/components/Empty/EmptyProcess';
 import { bus } from '@/common/bus';
 import { debounce } from 'lodash';
+import * as XLSX from 'xlsx';
 
 export default {
   name: 'ProcessStatus',
@@ -188,6 +249,18 @@ export default {
         rowId: null, // 当前点击行的id
         operateType: '', // 操作类型
         title: '', // dialog标题
+      },
+      originInfoData: [],
+      currentTableData: [],
+      infoTableLoading: false,
+      dialogHostInfo: {
+        visible: false, // 弹框是否可见
+        title: '', // dialog标题
+      },
+      infoPagination: {
+        current: 1,
+        count: 0,
+        limit: 50,
       },
       prevListLength: 0,
       isMatch: true,
@@ -338,7 +411,7 @@ export default {
             break;
           case 'bk_cloud_id_choices':
             params.multiable = true;
-            params.name = this.$t('云区域');
+            params.name = this.$t('管控区域');
         }
         filterData.push(params);
       }
@@ -501,6 +574,64 @@ export default {
     // 配置下发
     onConfigDistribute() {
       this.isShow = false;
+    },
+    getPaginatedData(data, page, pageSize) {
+      const startIndex = (page - 1) * pageSize;
+      const endIndex = startIndex + pageSize;
+      return data.slice(startIndex, endIndex);
+    },
+    handleInfoPageLimitChange(limit) {
+      this.infoPagination.limit = limit;
+      this.currentTableData = this.getPaginatedData(this.originInfoData, this.infoPagination.current, limit);
+    },
+    handleInfoPageChange(page) {
+      this.infoPagination.current = page;
+      this.currentTableData = this.getPaginatedData(this.originInfoData, page, this.infoPagination.limit)
+    },
+    // 检查托管信息
+    async checkHostingInfo() {
+      this.dialogHostInfo.visible = true;
+      this.dialogHostInfo.title = this.$t('托管异常信息(无数据即为全部正常)');
+      this.infoTableLoading = true;
+      const res = await this.$store.dispatch('process/ajaxCheckHostingInfo');
+      if (res.result) {
+        const cloudList = this.filterData.find(item => item.id === 'bk_cloud_id')?.children || [];
+        this.originInfoData = res.data.map(item => ({
+          ...item,
+          bk_cloud_name: cloudList.find(el => el.id === item.bk_cloud_id)?.name
+        }));
+        this.currentTableData = [...this.originInfoData];
+        this.infoPagination.count = res.data.length;
+      }   
+      this.infoTableLoading = false;
+    },
+    handleExport() {
+      const data = this.originInfoData.map(item => ({
+        ...item,
+        host_id: String(item.host_id)
+      }));
+      const customHeaders = {
+        "host_id": this.$t("主机ID"),
+        "inner_ip": this.$t("内网IP"),
+        "bk_cloud_id": this.$t("管控区域ID"),
+        "bk_cloud_name": this.$t("管控区域"),
+        "error_type": this.$t("错误类型"),
+        "error_msg": this.$t("错误信息"),
+        "handling_suggestion": this.$t("处理建议")
+      };
+
+      // 将 JSON 数据转换为工作表
+      const worksheet = XLSX.utils.json_to_sheet(data, { header: Object.keys(customHeaders) });
+      // 插入自定义表头，假设表头位于第一行
+      XLSX.utils.sheet_add_aoa(worksheet, [Object.values(customHeaders)], { origin: 'A1' });
+      // 创建一个新的工作簿
+      const workbook = XLSX.utils.book_new();
+
+      // 将工作表添加到工作簿
+      XLSX.utils.book_append_sheet(workbook, worksheet, this.$t('托管信息'));
+
+      // 将工作簿导出为 Excel 文件
+      XLSX.writeFile(workbook, '托管信息.xlsx');
     },
     // 同步进程
     async synchronousProcess(type) {
@@ -863,5 +994,16 @@ export default {
         font-weight: 700;
       }
     }
+  }
+  .header {
+    width: 100%;
+    font-size: 20px;
+    color: #313238;
+    line-height: 25px;
+  }
+  .downLoad {
+    width: 100%;
+    text-align: right;
+    margin: 0 16px 16px 0;
   }
 </style>

@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>GSEKit(DEV)</title>
+        <title>GSEKit | 蓝鲸智云</title>
     </head>
     <body>
         <div id="app"></div>
@@ -20,7 +20,10 @@
                 const LOGIN_URL = ''
                 const APP_NAME = '进程配置管理'
                 const BKAPP_DOCS_URL = 'https://bk.tencent.com/docs/document/7.0/232/30348'
-
+                const BKAPP_BSCP_URL = ''
+                const BKPAAS_SHARED_RES_URL = ''
+                const BK_COMPONENT_API_URL = ''
+                const BK_DOMAIN = ''
                 // BK_STATIC_URL 不能以 / 结尾
                 if (BK_STATIC_URL.endsWith('/')) {
                     BK_STATIC_URL = BK_STATIC_URL.slice(0, -1)
@@ -41,7 +44,11 @@
                     CMDB_URL: CMDB_URL,
                     LOGIN_URL: LOGIN_URL,
                     APP_NAME: APP_NAME,
-                    BKAPP_DOCS_URL: BKAPP_DOCS_URL
+                    BKAPP_DOCS_URL: BKAPP_DOCS_URL,
+                    BKAPP_BSCP_URL: BKAPP_BSCP_URL,
+                    BKPAAS_SHARED_RES_URL: BKPAAS_SHARED_RES_URL,
+                    BK_COMPONENT_API_URL: BK_COMPONENT_API_URL,
+                    BK_DOMAIN: BK_DOMAIN,
                 }
             })()
         </script>

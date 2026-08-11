@@ -316,7 +316,7 @@ export default {
         sortable: true,
       }, {
         id: 'bk_cloud_name',
-        label: this.$t('云区域'),
+        label: this.$t('管控区域'),
         sortable: true,
         // }, {
         //     id: 'config_templates',
@@ -329,7 +329,7 @@ export default {
       fields,
       setting: {
         fields,
-        selectedFields: fields.slice(0, 7),
+        selectedFields: fields.slice(0, 8),
         size: 'small',
       },
       // 是否全选

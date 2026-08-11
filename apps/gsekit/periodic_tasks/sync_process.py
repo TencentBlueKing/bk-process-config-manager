@@ -25,7 +25,10 @@ from common.log import logger
 
 @task(ignore_result=True)
 def sync_biz_process_task(bk_biz_id):
-    ProcessHandler(bk_biz_id=bk_biz_id).sync_biz_process()
+    logger.info(f"[sync_biz_process_task] start, bk_biz_id={bk_biz_id}")
+    process_related_infos = ProcessHandler(bk_biz_id=bk_biz_id).sync_biz_process()
+    ProcessHandler(bk_biz_id=bk_biz_id).sync_biz_process_status(process_related_infos=process_related_infos)
+    logger.info(f"[sync_biz_process_task] finished, bk_biz_id={bk_biz_id}")
 
 
 @periodic_task(run_every=django_celery_beat.tzcrontab.TzAwareCrontab(minute="*/10", tz=timezone.get_current_timezone()))
@@ -38,10 +41,8 @@ def sync_process(bk_biz_id=None):
     count = len(bk_biz_id_list)
     for index, biz_id in enumerate(bk_biz_id_list):
         logger.info(f"[sync_process] start, bk_biz_id={biz_id}")
-        countdown = calculate_countdown(count, index)
+        countdown = calculate_countdown(count, index) if count > 1 else 0
         sync_biz_process_task.apply_async((biz_id,), countdown=countdown)
-        # TODO 由于GSE接口存在延迟，此处暂停同步状态的周期任务，待GSE优化后再开启
-        # ProcessHandler(bk_biz_id=biz_id).sync_proc_status_to_db()
         logger.info(f"[sync_process] bk_biz_id={biz_id} will be run after {countdown} seconds.")
 
 
@@ -54,9 +55,9 @@ def sync_new_biz_to_gray_scope_list():
     logger.info(f"sync_new_biz_to_gray_scope_list: {task_id} Start adding new biz to GSE2_GRAY_SCOPE_LIST.")
 
     all_biz_ids = GlobalSettings.get_config(key=GlobalSettings.KEYS.ALL_BIZ_IDS, default=[])
-    if not all_biz_ids:
-        logger.info(f"sync_new_biz_to_gray_scope_list: {task_id} No need to add new biz to GSE2_GRAY_SCOPE_LIST.")
-        return None
+    # if not all_biz_ids:
+    #     logger.info(f"sync_new_biz_to_gray_scope_list: {task_id} No need to add new biz to GSE2_GRAY_SCOPE_LIST.")
+    #     return None
 
     cc_all_biz_ids: List[int] = list(CMDBHandler.biz_id_name_without_permission().keys())
     new_biz_ids: List[int] = list(set(cc_all_biz_ids) - set(all_biz_ids))
@@ -65,7 +66,10 @@ def sync_new_biz_to_gray_scope_list():
     if new_biz_ids:
         with transaction.atomic():
             # 更新全部业务列表
-            GlobalSettings.update_config(key=GlobalSettings.KEYS.ALL_BIZ_IDS, value=cc_all_biz_ids)
+            if GlobalSettings.objects.filter(key=GlobalSettings.KEYS.ALL_BIZ_IDS):
+                GlobalSettings.update_config(key=GlobalSettings.KEYS.ALL_BIZ_IDS, value=cc_all_biz_ids)
+            else:
+                GlobalSettings.set_config(key=GlobalSettings.KEYS.ALL_BIZ_IDS, value=cc_all_biz_ids)
 
             # 对新业务执行灰度操作
             result = GrayHandler.build({"bk_biz_ids": new_biz_ids})

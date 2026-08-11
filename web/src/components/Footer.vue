@@ -1,6 +1,6 @@
 <template>
   <div v-if="footerContent" class="footer-content">
-    <div class="link-container">
+    <!-- <div class="link-container">
       <template v-for="(item, index) in footerContent.footer">
         <a class="footer-link" :key="index" :href="item.link" :target="item.is_blank ? '_blank' : '_self'">
           {{ item.text }}
@@ -8,7 +8,12 @@
         <span v-if="index !== footerContent.footer.length - 1" :key="index + 'gap'" class="gap"> | </span>
       </template>
     </div>
-    <div>{{ footerContent.copyright }}</div>
+    <div>{{ footerContent.copyright }}</div> -->
+    <p
+      class="link-container"
+      v-html="contact"
+    ></p>
+    <p class="copyright">{{copyright}}</p>
   </div>
 </template>
 
@@ -18,11 +23,17 @@ export default {
     footerContent() {
       return this.$store.state.meta.footerContent;
     },
+    contact() {
+      return this.$store.state.platform.i18n.footerInfoHTML
+    },
+    copyright() {
+      return this.$store.state.platform.footerCopyrightContent
+    }
   },
 };
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
   .footer-content {
     position: absolute;
     bottom: 0;

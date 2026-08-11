@@ -9,13 +9,14 @@ an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express o
 See the License for the specific language governing permissions and limitations under the License.
 """
 import copy
+from datetime import datetime
 import json
 import operator
 import time
 from collections import defaultdict
 from functools import reduce
 from itertools import groupby
-from typing import List, Dict, Union
+from typing import Any, List, Dict, Union
 
 from django.db import transaction
 from django.db.models import Q, QuerySet
@@ -43,6 +44,7 @@ from apps.utils.mako_utils.render import mako_render
 from common.log import logger
 from apps.adapters.api.gse import get_gse_api_helper
 from apps.core.gray.tools import GrayTools
+from env.constants import GseVersion
 
 
 class ProcessHandler(APIModel):
@@ -363,7 +365,38 @@ class ProcessHandler(APIModel):
         :return:
         """
         process_template_list = batch_request(
-            CCApi.list_proc_template, {"bk_biz_id": self.bk_biz_id, "service_template_id": service_template_id}
+            CCApi.list_proc_template,
+            {"bk_biz_id": self.bk_biz_id, "service_template_id": service_template_id},
+        )
+        for process_template in process_template_list:
+            # 把进程模板属性数据结构转为与进程实例结构一致
+            process_template_property = process_template["property"]
+            for key, value in process_template_property.items():
+                process_template_property[key] = value.get("value")
+                if key == "bind_info":
+                    bind_info_list = []
+                    for __, bind_info_value in enumerate(value.get("value") or []):
+                        bind_info = {
+                            _key: _value.get("value") for _key, _value in bind_info_value.items() if _key != "row_id"
+                        }
+                        bind_info["row_id"] = bind_info_value["row_id"]
+                        bind_info_list.append(bind_info)
+                    process_template_property[key] = bind_info_list
+            process_template["bk_process_name"] = process_template_property["bk_process_name"]
+            # 冗余process_template_id字段，方便填充配置文件信息
+            process_template["process_template_id"] = process_template["id"]
+        # 填充配置文件信息，并返回进程模板信息列表
+        return self.fill_config_template_binding_info_to_process(process_template_list)
+
+    def bulk_process_template(self, service_template_ids: list) -> List:
+        """ProcessCheckManager
+        根据服务模板ID获取进程模板列表
+        :param service_template_id:
+        :return:
+        """
+        process_template_list = batch_request(
+            CCApi.list_proc_template,
+            {"bk_biz_id": self.bk_biz_id, "process_template_ids": service_template_ids, "no_request": True},
         )
         for process_template in process_template_list:
             # 把进程模板属性数据结构转为与进程实例结构一致
@@ -511,6 +544,8 @@ class ProcessHandler(APIModel):
         )
 
         self.create_process_inst(process_list)
+
+        return process_list
 
     def generate_process_inst_migrate_data(self, process_list: List) -> Dict:
         """计算准备好变更实例所需的数据"""
@@ -947,8 +982,8 @@ class ProcessHandler(APIModel):
     def get_proc_inst_status_infos(
         proc_inst_infos, _request=None, gse_api_helper: GseApiBaseHelper = None
     ) -> List[Dict]:
-        proc_operate_req_slice = []
         meta_key_uniq_key_map = {}
+        proc_operate_req: Dict[str, Dict[str, Any]] = {}
         for proc_inst_info in proc_inst_infos:
             host_info = proc_inst_info["host_info"]
             process_info = proc_inst_info["process_info"]
@@ -983,26 +1018,34 @@ class ProcessHandler(APIModel):
             meta_key: str = gse_api_helper.get_gse_proc_key(
                 host_info, namespace=namespace, proc_name=f"{process_info['bk_process_name']}_{local_inst_id}"
             )
+            bk_agent_id: str = host_info.get("bk_agent_id", "")
+            if gse_api_helper.version == GseVersion.V2.value and not bk_agent_id:
+                # 对于V2来说必须使用agentid进行查询
+                logger.info(
+                    f"get_proc_inst_status failed-> namespace: {namespace}, meta_key:{meta_key}, uniq_key: {uniq_key}"
+                )
+                continue
 
             meta_key_uniq_key_map[meta_key] = uniq_key
-            proc_operate_req_slice.append(
-                {
+
+            local_inst_name: str = f"{process_info['bk_process_name']}_{local_inst_id}"
+
+            host_identity: Dict[str, Any] = {
+                "bk_host_innerip": host_info["bk_host_innerip"],
+                "bk_cloud_id": host_info["bk_cloud_id"],
+                "bk_agent_id": host_info.get("bk_agent_id", ""),
+            }
+
+            if local_inst_name in proc_operate_req:
+                proc_operate_req[local_inst_name]["hosts"].append(host_identity)
+            else:
+                proc_operate_req[local_inst_name] = {
                     "meta": {
                         "namespace": namespace,
-                        "name": f"{process_info['bk_process_name']}_{local_inst_id}",
-                        "labels": {
-                            "bk_process_name": process_info["bk_process_name"],
-                            "bk_process_id": process_info["bk_process_id"],
-                        },
+                        "name": local_inst_name,
                     },
                     "op_type": GseOpType.CHECK,
-                    "hosts": [
-                        {
-                            "bk_host_innerip": host_info["bk_host_innerip"],
-                            "bk_cloud_id": host_info["bk_cloud_id"],
-                            "bk_agent_id": host_info.get("bk_agent_id", ""),
-                        }
-                    ],
+                    "hosts": [host_identity],
                     "spec": {
                         "identity": {
                             "index_key": "",
@@ -1026,9 +1069,9 @@ class ProcessHandler(APIModel):
                         },
                     },
                 }
-            )
-
-        gse_task_id: str = gse_api_helper.operate_proc_multi(proc_operate_req=proc_operate_req_slice)
+        if not proc_operate_req.values():
+            raise exceptions.ProcessNoAgentIDException()
+        gse_task_id: str = gse_api_helper.operate_proc_multi(proc_operate_req=list(proc_operate_req.values()))
 
         proc_inst_status_infos = []
         uniq_keys_recorded = set()
@@ -1109,11 +1152,11 @@ class ProcessHandler(APIModel):
             )
         return proc_inst_status_infos
 
-    def sync_biz_process_status(self):
+    def sync_biz_process_status(self, process_related_infos=None):
 
         begin_time = time.time()
-
-        process_related_infos = batch_request(CCApi.list_process_related_info, {"bk_biz_id": self.bk_biz_id})
+        if not process_related_infos:
+            process_related_infos = batch_request(CCApi.list_process_related_info, {"bk_biz_id": self.bk_biz_id})
         bk_process_ids = [process_info["process"]["bk_process_id"] for process_info in process_related_infos]
         proc_inst_map = defaultdict(list)
         for proc_inst in ProcessInst.objects.filter(bk_process_id__in=bk_process_ids).values(
@@ -1164,6 +1207,14 @@ class ProcessHandler(APIModel):
 
         cost_time = time.time() - begin_time
         logger.info("[sync_proc_status] cost: {cost_time}s".format(cost_time=cost_time))
+        # 记录同步时间
+        with transaction.atomic():
+            sync_proc_status_time, _ = GlobalSettings.objects.select_for_update().get_or_create(
+                key=GlobalSettings.KEYS.SYNC_PROC_STATUS_TIME, defaults={"v_json": {}}
+            )
+            sync_proc_status_time.v_json[str(self.bk_biz_id)] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            sync_proc_status_time.save()
+
         return {"cost_time": cost_time}
 
     def process_instance_simple(
@@ -1207,3 +1258,9 @@ class ProcessHandler(APIModel):
             # 若有疑问请联系 CMDB 排查
             raise ProcessNotMatchException(user_bk_process_id=bk_process_id, cc_bk_process_id=cc_process_id)
         return process_list[0]
+
+    def sync_process_status_time(self):
+        sync_process_status_time: Dict[str:str] = GlobalSettings.get_config(
+            key=GlobalSettings.KEYS.SYNC_PROC_STATUS_TIME, default={}
+        )
+        return {"time": sync_process_status_time.get(str(self.bk_biz_id), "")}

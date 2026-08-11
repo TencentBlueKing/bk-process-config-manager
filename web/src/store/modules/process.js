@@ -70,5 +70,15 @@ export default {
       const url = `api/${rootState.bizId}/process/delete_process_template/`;
       return http.post(url, params.data);
     },
+    // 轮询刷新同步状态时间
+    ajaxFlushSyncProcessStateTime({ rootState }) {
+      const url = `/api/${rootState.bizId}/process/sync_process_status_time/`;
+      return http.get(url);
+    },
+    // 检查托管信息
+    ajaxCheckHostingInfo({ rootState }) {
+      const url = `/api/${rootState.bizId}/process/check/`;
+      return http.get(url);
+    },
   },
 };

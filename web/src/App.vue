@@ -16,6 +16,7 @@ import { mapState } from 'vuex';
 import Header from './components/Header';
 import AuthModal from '@/components/Auth/AuthModal';
 import AuthPage from '@/components/Auth/AuthPage';
+import { setShortcutIcon, setDocumentTitle } from '@blueking/platform-config';
 
 export default {
   name: 'App',
@@ -32,8 +33,11 @@ export default {
   computed: {
     ...mapState(['mainContentLoading', 'authPage']),
   },
-  created() {
+  async created() {
     this.$store.commit('updateAppName', window.PROJECT_CONFIG.APP_NAME);
+    await this.$store.dispatch('platform/getConfig');
+    setDocumentTitle(this.$store.state.platform.i18n);
+    setShortcutIcon(this.$store.state.platform.favicon);
     const platform = window.navigator.platform.toLowerCase();
     if (platform.indexOf('win') === 0) {
       document.body.style['font-family'] = 'Microsoft Yahei, PingFang SC, Helvetica, Aria';

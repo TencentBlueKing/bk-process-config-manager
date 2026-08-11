@@ -76,10 +76,12 @@ class ConfigTemplateViews(ModelViewSet):
         return serializer_class
 
     @swagger_auto_schema(
+        operation_id="config_template_list",
         operation_summary="获取配置模板列表",
         tags=ConfigTemplateViewTags,
         query_serializer=config_template_serializer.ListConfigTemplateRequestSerializer(),
         responses={status.HTTP_200_OK: config_template_serializer.ListConfigTemplateResponseSerializer()},
+        extra_overrides={"is_register_apigw": True},
     )
     @insert_permission_field(
         id_field=lambda d: d["config_template_id"],
@@ -152,10 +154,12 @@ class ConfigTemplateViews(ModelViewSet):
         return super().destroy(self, request, config_template_id, *args, **kwargs)
 
     @swagger_auto_schema(
+        operation_id="config_template_list_version",
         operation_summary="获取配置模板版本列表",
         tags=ConfigTemplateViewTags,
         query_serializer=config_template_serializer.ListConfigTemplateVersionRequestSerializer(),
         responses={status.HTTP_200_OK: config_template_serializer.ListConfigTemplateVersionResponseSerializer()},
+        extra_overrides={"is_register_apigw": True},
     )
     @action(methods=["GET"], detail=True)
     def list_version(self, request, bk_biz_id, config_template_id, *args, **kwargs):

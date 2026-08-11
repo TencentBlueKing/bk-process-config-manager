@@ -15,6 +15,7 @@ import job from './modules/job';
 import meta from './modules/meta';
 import process from './modules/process';
 import home from './modules/home';
+import platform from './modules/platform-config';
 import { unifyObjectStyle } from '@/common/util';
 import router from '@/router';
 
@@ -32,6 +33,7 @@ const store = new Vuex.Store({
     meta,
     process,
     home,
+    platform,
   },
   // 公共 store
   state: {
