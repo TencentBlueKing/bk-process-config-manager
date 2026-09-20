@@ -130,9 +130,11 @@ class MetaViewSet(APIViewSet):
         return Response(MetaHandler().expression_match(expression, candidates))
 
     @swagger_auto_schema(
+        operation_id="access_overview",
         operation_summary="业务接入情况概览",
         tags=MetaViewTags,
         responses={status.HTTP_200_OK: meta_serializer.AccessOverviewResponseSerializer()},
+        extra_overrides={"is_register_apigw": True},
     )
     @action(methods=["GET"], detail=False)
     def access_overview(self, request, bk_biz_id, *args, **kwargs):

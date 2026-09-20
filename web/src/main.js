@@ -9,12 +9,14 @@ import { bus } from '@/common/bus';
 import '@/common/bkmagic';
 import '@/common/directives';
 import '@icon-cool/bk-icon-gsekit';
+import '@/bk_icon_font/style.css';
 import '@/common/svg';
 import '@/common/text-tool';
 import { injectCSRFTokenToHeaders } from '@/api';
 import '@/mixins/emptyMixin.js';
 import StatusView from '@/components/StatusView';
 import TableException from '@/components/Empty/TableException';
+import VueCompositionAPI from '@vue/composition-api';
 
 try {
   const id = window.PROJECT_CONFIG.TAM_AEGIS_KEY;
@@ -37,6 +39,7 @@ try {
 Vue.config.devtools = true;
 Vue.component('StatusView', StatusView);
 Vue.component('TableException', TableException);
+Vue.use(VueCompositionAPI);
 
 injectCSRFTokenToHeaders();
 getUserInfo().then(() => {

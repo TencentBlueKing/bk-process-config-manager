@@ -1156,7 +1156,7 @@ export async function response (getArgs, postArgs, req) {
                 },
                 {
                     id: "bk_cloud_name",
-                    name: '云区域',
+                    name: '管控区域',
                     children: [
                         {
                            name: 'cloud1',

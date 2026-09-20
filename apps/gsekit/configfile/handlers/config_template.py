@@ -407,17 +407,19 @@ class ConfigTemplateHandler(APIModel):
             config_version_count["config_template_id"]: config_version_count["config_version_count"]
             for config_version_count in config_version_counts
         }
-
-        has_release_config_tmpl_ids = set(
-            ConfigInstance.objects.filter(config_template_id__in=config_template_ids, is_released=True).values_list(
-                "config_template_id", flat=True
-            )
-        )
+        # 返回数量太多出现慢查询
+        # has_release_config_tmpl_ids = set(
+        #     ConfigInstance.objects.filter(config_template_id__in=config_template_ids, is_released=True).values_list(
+        #         "config_template_id", flat=True
+        #     )
+        # )
         for config_template in config_templates:
             config_template_id = config_template["config_template_id"]
             relation_count = config_template_binding_count_map[config_template_id]
             config_template["relation_count"] = relation_count
             config_template["is_bound"] = bool(sum(relation_count.values()))
-            config_template["has_release"] = config_template_id in has_release_config_tmpl_ids
+            config_template["has_release"] = ConfigInstance.objects.filter(
+                config_template_id=config_template_id, is_released=True
+            ).exists()
             config_template["has_version"] = bool(config_template_version_map.get(config_template_id, 0))
         return config_templates

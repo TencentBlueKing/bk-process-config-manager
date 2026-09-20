@@ -37,6 +37,18 @@ class GlobalSettings(models.Model):
         SYNC_BIZ_PROCESS_STATUS_TIMEOUT = "SYNC_BIZ_PROCESS_STATUS_TIMEOUT"
         # 记录所有业务ID,用于同步新业务到灰度列表对比使用
         ALL_BIZ_IDS = "ALL_BIZ_IDS"
+        SYNC_PROC_STATUS_TIME = "SYNC_PROC_STATUS_TIME"
+        CHECK_PROC_SCRIPT = "CHECK_PROC_SCRIPT"
+        BSCP_SWITCH_CHECK_ENABLED = "BSCP_SWITCH_CHECK_ENABLED"
+
+    @classmethod
+    def bscp_switch_check_enabled(cls):
+        value = cls.get_config(key=cls.KEYS.BSCP_SWITCH_CHECK_ENABLED, default=False)
+        if isinstance(value, bool):
+            return value
+        if isinstance(value, str):
+            return value.lower() in ["true", "1", "yes", "on"]
+        return bool(value)
 
     @classmethod
     def process_task_aggregate_info(cls, bk_biz_id: int) -> typing.Dict[str, str]:

@@ -10,7 +10,7 @@ See the License for the specific language governing permissions and limitations 
 """
 import json
 import logging
-from typing import Dict
+from typing import Any, Dict, List
 
 from django.db.models import F
 from django.utils.translation import ugettext as _
@@ -27,6 +27,8 @@ from apps.gsekit.process.exceptions import ProcessAttrIsNotConfiguredException
 from apps.gsekit.process.models import Process, ProcessInst
 from apps.utils.mako_utils.render import mako_render
 from dataclasses import dataclass
+
+from env.constants import GseVersion
 from .base import CommonData
 from apps.adapters.api.gse import get_gse_api_helper
 from apps.adapters.api.gse.base import GseApiBaseHelper
@@ -90,7 +92,7 @@ class GseDataErrorCode(object):
             return True
 
         # 对于已停止的进程执行【停止】命令，结果是执行成功，已停止的进程实例可以标记成忽略
-        if op_type == GseOpType.STOP and error_code == cls.PROC_NO_RUNNING:
+        if op_type in [GseOpType.STOP, GseOpType.FORCE_STOP] and error_code == cls.PROC_NO_RUNNING:
             # 停止进程，但进程本身未运行
             return True
 
@@ -269,10 +271,24 @@ class BulkGseOperateProcessService(GseCommonService):
         op_type = data.get_one_of_inputs("op_type")
         data.outputs.proc_op_status_map = {}
 
-        proc_operate_req = []
+        proc_operate_req: Dict[str, Dict[str, Any]] = {}
+        no_agent_id_job_task_ids: List[int] = []
         for job_task in job_tasks:
 
             host_info = job_task.extra_data["process_info"]["host"]
+            if all([common_data.gse_api_helper.version == GseVersion.V2.value, not host_info.get("bk_agent_id", "")]):
+                # 对于GseV2来说必须使用agentid进行操作，如果没有agentid可能会导致任务整个handling
+                no_agent_id_job_task_ids.append(job_task.id)
+                error_msg = _("该主机无bk_agent_id无法进行相关操作, 请检查主机Agent是否正常")
+                job_task.set_status(
+                    JobStatus.FAILED,
+                    extra_data={
+                        "failed_reason": self.generate_proc_op_error_msg(GseDataErrorCode.OP_FAILED, error_msg),
+                        "err_code": GseDataErrorCode.OP_FAILED,
+                    },
+                )
+                continue
+
             process_info = job_task.extra_data["process_info"]["process"]
             set_info = job_task.extra_data["process_info"]["set"]
             module_info = job_task.extra_data["process_info"]["module"]
@@ -298,24 +314,24 @@ class BulkGseOperateProcessService(GseCommonService):
             }
             self.is_op_cmd_configured(op_type, process_info, raise_exception=True)
 
-            proc_operate_req.append(
-                {
+            local_inst_name: str = f"{process_info['bk_process_name']}_{local_inst_id}"
+
+            host_identity: Dict[str, Any] = {
+                "bk_host_innerip": host_info["bk_host_innerip"],
+                "bk_cloud_id": host_info["bk_cloud_id"],
+                "bk_agent_id": host_info.get("bk_agent_id", ""),
+            }
+
+            if local_inst_name in proc_operate_req:
+                proc_operate_req[local_inst_name]["hosts"].append(host_identity)
+            else:
+                proc_operate_req[local_inst_name] = {
                     "meta": {
                         "namespace": NAMESPACE.format(bk_biz_id=process_info["bk_biz_id"]),
-                        "name": f"{process_info['bk_process_name']}_{local_inst_id}",
-                        "labels": {
-                            "bk_process_name": process_info["bk_process_name"],
-                            "bk_process_id": process_info["bk_process_id"],
-                        },
+                        "name": local_inst_name,
                     },
                     "op_type": op_type,
-                    "hosts": [
-                        {
-                            "bk_host_innerip": host_info["bk_host_innerip"],
-                            "bk_cloud_id": host_info["bk_cloud_id"],
-                            "bk_agent_id": host_info.get("bk_agent_id", ""),
-                        }
-                    ],
+                    "hosts": [host_identity],
                     "spec": {
                         "identity": {
                             "index_key": "",
@@ -339,24 +355,34 @@ class BulkGseOperateProcessService(GseCommonService):
                         },
                     },
                 }
-            )
+
             # pipeline-engine会把data转为json，不能用int作为key
             data.outputs.proc_op_status_map[str(job_task.id)] = GseDataErrorCode.RUNNING
-        task_id = common_data.gse_api_helper.operate_proc_multi(proc_operate_req=proc_operate_req)
+
+        if not proc_operate_req.values():
+            self.finish_schedule()
+            return True
+
+        task_id = common_data.gse_api_helper.operate_proc_multi(proc_operate_req=list(proc_operate_req.values()))
 
         data.outputs.task_id = task_id
+        data.outputs.no_agent_id_job_task_ids = no_agent_id_job_task_ids
         return self.return_data(result=True)
 
     def _schedule(self, data, parent_data, common_data, callback_data=None):
         job_tasks = data.get_one_of_inputs("job_tasks")
         op_type = data.get_one_of_inputs("op_type")
         task_id = data.get_one_of_outputs("task_id")
+        no_agent_id_job_task_ids = data.get_one_of_outputs("no_agent_id_job_task_ids", [])
+
         gse_api_result = common_data.gse_api_helper.get_proc_operate_result(task_id)
         if gse_api_result["code"] == GSE_RUNNING_TASK_CODE:
             # 查询的任务等待执行中，还未入到redis，继续下一次查询
             return self.return_data(result=True)
 
         for job_task in job_tasks:
+            if job_task.id in no_agent_id_job_task_ids:
+                continue
             local_inst_id = job_task.extra_data["local_inst_id"]
             task_result = self.get_job_task_gse_result(gse_api_result, job_task, common_data)
             error_code = task_result.get("error_code")
@@ -366,8 +392,7 @@ class BulkGseOperateProcessService(GseCommonService):
                 continue
 
             data.outputs.proc_op_status_map[str(job_task.id)] = error_code
-
-            if error_code == GseDataErrorCode.SUCCESS:
+            if error_code in [GseDataErrorCode.SUCCESS, GseDataErrorCode.PROC_NO_RUNNING]:
                 process_inst = ProcessInst.objects.get(
                     bk_process_id=job_task.bk_process_id, local_inst_id=local_inst_id
                 )

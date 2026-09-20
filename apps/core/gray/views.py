@@ -25,25 +25,31 @@ class GrayViewSet(APIViewSet):
     permission_classes = (permission.GrayPermission,)
 
     @swagger_auto_schema(
+        operation_id="gray_build",
         operation_summary="GSE 2.0灰度",
         tags=GRAY_VIEW_TAGS,
+        extra_overrides={"is_register_apigw": True},
     )
     @action(detail=False, methods=["POST"], serializer_class=serializers.GraySerializer)
     def build(self, request):
         return Response(handlers.GrayHandler.build(self.validated_data))
 
     @swagger_auto_schema(
+        operation_id="gray_rollback",
         operation_summary="GSE 2.0灰度回滚",
         tags=GRAY_VIEW_TAGS,
+        extra_overrides={"is_register_apigw": True},
     )
     @action(detail=False, methods=["POST"], serializer_class=serializers.GraySerializer)
     def rollback(self, request):
         return Response(handlers.GrayHandler.rollback(self.validated_data))
 
     @swagger_auto_schema(
+        operation_id="gray_info",
         operation_summary="获取GSE 2.0灰度信息",
         tags=GRAY_VIEW_TAGS,
         responses={status.HTTP_200_OK: serializers.GraySerializer},
+        extra_overrides={"is_register_apigw": True},
     )
     @action(detail=False, methods=["GET"])
     def info(self, request):

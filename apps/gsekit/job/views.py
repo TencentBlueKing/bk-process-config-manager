@@ -71,7 +71,7 @@ class JobViews(ModelViewSet):
                     return [InstanceActionPermission([ActionEnum.OPERATE_CONFIG], ResourceEnum.BUSINESS)]
         return [ViewBusinessPermission()]
 
-    @swagger_auto_schema(operation_summary="任务列表", tags=JobViewTags)
+    @swagger_auto_schema(operation_summary="任务列表", tags=JobViewTags, extra_overrides={"is_register_apigw": True})
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
@@ -80,7 +80,11 @@ class JobViews(ModelViewSet):
         return super().retrieve(request, *args, **kwargs)
 
     @swagger_auto_schema(
-        operation_summary="创建任务", tags=JobViewTags, request_body=job_serializers.CreateJobRequestSerializer()
+        operation_id="create_job",
+        operation_summary="创建任务",
+        tags=JobViewTags,
+        request_body=job_serializers.CreateJobRequestSerializer(),
+        extra_overrides={"is_register_apigw": True},
     )
     def create(self, request, bk_biz_id, *args, **kwargs):
         self.serializer_class = job_serializers.CreateJobRequestSerializer
@@ -100,6 +104,7 @@ class JobViews(ModelViewSet):
         tags=JobViewTags,
         request_body=job_serializers.JobTaskRequestSerializer(),
         responses={status.HTTP_200_OK: job_serializers.JobTaskResponseSerializer()},
+        extra_overrides={"is_register_apigw": True},
     )
     @action(methods=["POST"], detail=True, serializer_class=job_serializers.JobTaskRequestSerializer)
     def job_task(self, request, *args, **kwargs):
@@ -120,9 +125,11 @@ class JobViews(ModelViewSet):
         return Response(JobHandlers(bk_biz_id=kwargs.get("bk_biz_id"), job_id=kwargs["pk"]).job_task_statistics())
 
     @swagger_auto_schema(
+        operation_id="job_status",
         operation_summary="任务状态查询",
         tags=JobViewTags,
         responses={status.HTTP_200_OK: job_serializers.JobTaskResponseSerializer()},
+        extra_overrides={"is_register_apigw": True},
     )
     @action(methods=["POST"], detail=True, serializer_class=job_serializers.RetryRequestSerializer)
     def job_status(self, request, *args, **kwargs):

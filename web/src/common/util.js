@@ -556,3 +556,28 @@ export const copyText = (text) => {
   document.body.removeChild(textarea);
   return result;
 };
+
+/**
+ * 格式化日期为： 6月23号 12:00，
+ * @param {Number | String} val
+ * @return {String}
+ */
+export function specifiedFormatDate(val) {
+  const date = new Date(timeReplace(val));
+
+  if (isNaN(date.getTime())) {
+    console.warn('无效的时间');
+    return '';
+  }
+  const months = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
+  
+  const month = months[date.getMonth()];
+  const day = date.getDate() + "号";
+  
+  // 获取小时和分钟，并确保他们都是两位数
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+
+  // 返回格式化后的字符串
+  return `${month}${day} ${hours}:${minutes}`;
+}

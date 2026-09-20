@@ -20,8 +20,8 @@ context_processor for common(setting)
 除setting外的其他context_processor内容，均采用组件的方式(string)
 """
 WEB_TITLE_MAP = {
-    "ieod": _("{app_name} | 腾讯蓝鲸智云").format(app_name=settings.APP_NAME),
-    "open": _("{app_name} | 腾讯蓝鲸智云").format(app_name=settings.APP_NAME),
+    "ieod": _("{app_name} | 蓝鲸智云").format(app_name=settings.APP_NAME),
+    "open": _("{app_name} | 蓝鲸智云").format(app_name=settings.APP_NAME),
 }
 
 
@@ -37,6 +37,7 @@ def mysetting(request):
         "APP_NAME": settings.APP_NAME,
         "SITE_URL": settings.SITE_URL,
         "BKAPP_DOCS_URL": settings.BKAPP_DOCS_URL,
+        "BKAPP_BSCP_URL": settings.BKAPP_BSCP_URL,
         "AJAX_URL_PREFIX": settings.SITE_URL,
         # 远程静态资源url
         "REMOTE_STATIC_URL": settings.REMOTE_STATIC_URL,
@@ -58,4 +59,7 @@ def mysetting(request):
         "CMDB_URL": settings.BK_CC_HOST,
         "TAM_AEGIS_KEY": settings.TAM_AEGIS_KEY,
         "TAM_AEGIS_URL": settings.TAM_AEGIS_URL,
+        "BKPAAS_SHARED_RES_URL": settings.BKPAAS_SHARED_RES_URL,
+        "BK_COMPONENT_API_URL": settings.BK_COMPONENT_API_OVERWRITE_URL,
+        "BK_DOMAIN": settings.BK_DOMAIN,
     }

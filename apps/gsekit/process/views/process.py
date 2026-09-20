@@ -19,11 +19,13 @@ from apps.gsekit.job.handlers import JobHandlers
 from apps.gsekit.job.models import Job
 from apps.gsekit.process.models import Process
 from apps.gsekit.process.handlers.process import ProcessHandler
+from apps.gsekit.process.handlers.check_process import ProcessCheckManager
 from apps.gsekit.process.serializers import process as process_serializer
 from apps.iam import ActionEnum, ResourceEnum
 from apps.iam.handlers.drf import InstanceActionPermission, ViewBusinessPermission
 from apps.utils.models import queryset_to_dict_list
 from apps.utils.drf import GeneralOrderingFilter
+
 
 ProcessViewTags = ["process"]
 
@@ -43,10 +45,12 @@ class ProcessViews(APIViewSet):
         return [ViewBusinessPermission()]
 
     @swagger_auto_schema(
+        operation_id="process_status",
         operation_summary="进程状态列表",
         tags=ProcessViewTags,
         request_body=process_serializer.ProcessStatusRequestSerializer(),
         responses={status.HTTP_200_OK: process_serializer.ProcessStatusResponseSerializer()},
+        extra_overrides={"is_register_apigw": True},
     )
     @action(methods=["POST"], detail=False, serializer_class=process_serializer.ProcessStatusRequestSerializer)
     def process_status(self, request, bk_biz_id, *args, **kwargs):
@@ -209,16 +213,20 @@ class ProcessViews(APIViewSet):
         )
 
     @swagger_auto_schema(
+        operation_id="flush_process",
         operation_summary="刷新业务进程缓存",
         tags=ProcessViewTags,
+        extra_overrides={"is_register_apigw": True},
     )
     @action(detail=False, methods=["POST"])
     def flush_process(self, request, bk_biz_id, *args, **kwargs):
         return Response(ProcessHandler(bk_biz_id=bk_biz_id).sync_biz_process())
 
     @swagger_auto_schema(
+        operation_id="sync_process_status",
         operation_summary="同步进程状态",
         tags=ProcessViewTags,
+        extra_overrides={"is_register_apigw": True},
     )
     @action(detail=False, methods=["POST"])
     def sync_process_status(self, request, bk_biz_id, *args, **kwargs):
@@ -240,3 +248,18 @@ class ProcessViews(APIViewSet):
                 expression=self.validated_data.get("expression"),
             )
         )
+
+    @swagger_auto_schema(operation_summary="获取业务进程同步时间", tags=ProcessViewTags)
+    @action(detail=False, methods=["GET"])
+    def sync_process_status_time(self, request, bk_biz_id, *args, **kwargs):
+        return Response(ProcessHandler(bk_biz_id=bk_biz_id).sync_process_status_time())
+
+    @swagger_auto_schema(
+        operation_id="process_check",
+        operation_summary="检查进程配置托管信息",
+        tags=ProcessViewTags,
+        extra_overrides={"is_register_apigw": True},
+    )
+    @action(detail=False, methods=["GET"])
+    def check(self, request, bk_biz_id, *args, **kwargs):
+        return Response(ProcessCheckManager(bk_biz_id).run())

@@ -68,16 +68,28 @@ class _CCApi(BaseApi):
 
     def __init__(self):
         self.search_business = DataAPI(
-            method="POST", url=CC_APIGATEWAY_ROOT + "search_business/", module=self.MODULE, description="查询业务列表",
+            method="POST",
+            url=CC_APIGATEWAY_ROOT + "search_business/",
+            module=self.MODULE,
+            description="查询业务列表",
         )
         self.search_cloud_area = DataAPI(
-            method="POST", url=CC_APIGATEWAY_ROOT + "search_cloud_area/", module=self.MODULE, description="查询云区域",
+            method="POST",
+            url=CC_APIGATEWAY_ROOT + "search_cloud_area/",
+            module=self.MODULE,
+            description="查询云区域",
         )
         self.search_biz_inst_topo = DataAPI(
-            method="POST", url=CC_APIGATEWAY_ROOT + "search_biz_inst_topo/", module=self.MODULE, description="查询业务实例拓扑",
+            method="POST",
+            url=CC_APIGATEWAY_ROOT + "search_biz_inst_topo/",
+            module=self.MODULE,
+            description="查询业务实例拓扑",
         )
         self.find_module_batch = DataAPI(
-            method="POST", url=CC_APIGATEWAY_ROOT + "find_module_batch/", module=self.MODULE, description="批量获取模块详情",
+            method="POST",
+            url=CC_APIGATEWAY_ROOT + "find_module_batch/",
+            module=self.MODULE,
+            description="批量获取模块详情",
         )
         self.list_service_template = DataAPI(
             method="POST",
@@ -98,7 +110,10 @@ class _CCApi(BaseApi):
             description="查询进程实例列表",
         )
         self.list_proc_template = DataAPI(
-            method="POST", url=CC_APIGATEWAY_ROOT + "list_proc_template/", module=self.MODULE, description="查询进程模板信息",
+            method="POST",
+            url=CC_APIGATEWAY_ROOT + "list_proc_template/",
+            module=self.MODULE,
+            description="查询进程模板信息",
         )
         self.batch_create_proc_template = DataAPI(
             method="POST",
@@ -113,7 +128,10 @@ class _CCApi(BaseApi):
             description="批量更新进程信息",
         )
         self.update_proc_template = DataAPI(
-            method="POST", url=CC_APIGATEWAY_ROOT + "update_proc_template/", module=self.MODULE, description="更新进程模板信息",
+            method="POST",
+            url=CC_APIGATEWAY_ROOT + "update_proc_template/",
+            module=self.MODULE,
+            description="更新进程模板信息",
         )
         self.list_process_related_info = DataAPI(
             method="POST",
@@ -123,13 +141,22 @@ class _CCApi(BaseApi):
             description="根据规则批量查询进程实例信息",
         )
         self.find_set_batch = DataAPI(
-            method="POST", url=CC_APIGATEWAY_ROOT + "find_set_batch/", module=self.MODULE, description="批量获取指定业务下集群",
+            method="POST",
+            url=CC_APIGATEWAY_ROOT + "find_set_batch/",
+            module=self.MODULE,
+            description="批量获取指定业务下集群",
         )
         self.search_set = DataAPI(
-            method="POST", url=CC_APIGATEWAY_ROOT + "search_set/", module=self.MODULE, description="查询集群",
+            method="POST",
+            url=CC_APIGATEWAY_ROOT + "search_set/",
+            module=self.MODULE,
+            description="查询集群",
         )
         self.search_module = DataAPI(
-            method="POST", url=CC_APIGATEWAY_ROOT + "search_module/", module=self.MODULE, description="查询模块",
+            method="POST",
+            url=CC_APIGATEWAY_ROOT + "search_module/",
+            module=self.MODULE,
+            description="查询模块",
         )
         self.search_object_attribute = DataAPI(
             method="POST",
@@ -168,7 +195,10 @@ class _CCApi(BaseApi):
             description="删除进程实例",
         )
         self.delete_proc_template = DataAPI(
-            method="POST", url=CC_APIGATEWAY_ROOT + "delete_proc_template/", module=self.MODULE, description="删除进程模板",
+            method="POST",
+            url=CC_APIGATEWAY_ROOT + "delete_proc_template/",
+            module=self.MODULE,
+            description="删除进程模板",
         )
         self.list_service_template_difference = DataAPI(
             method="POST",
@@ -177,5 +207,14 @@ class _CCApi(BaseApi):
             description="列出服务模版和服务实例之间的差异",
         )
         self.resource_watch = DataAPI(
-            method="POST", url=CC_APIGATEWAY_ROOT + "resource_watch/", module=self.MODULE, description="监听资源变化事件",
+            method="POST",
+            url=CC_APIGATEWAY_ROOT + "resource_watch/",
+            module=self.MODULE,
+            description="监听资源变化事件",
+        )
+        self.list_biz_hosts = DataAPI(
+            method="POST",
+            url=CC_APIGATEWAY_ROOT + "list_biz_hosts/",
+            module=self.MODULE,
+            description="查询业务主机列表",
         )

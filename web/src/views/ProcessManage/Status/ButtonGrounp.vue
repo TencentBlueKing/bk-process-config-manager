@@ -71,6 +71,15 @@
       </ul>
     </bk-popover>
     <div class="synchronous-btn">
+      <p class="syncProcessStateTime" style="color: #FF9C01;">
+        {{ $t('状态同步', [time] ) }}
+      </p>
+      <bk-button
+        style="margin-right: 10px;"
+        @click="checkHostingInfo"
+      >
+        {{ $t('检查托管信息') }}
+      </bk-button>
       <bk-button
         v-test="'syncStatus'"
         icon="bk-icon icon-refresh"
@@ -102,8 +111,16 @@
 
 <script>
 import { mapState } from 'vuex';
+import useIntervalFn from '@/common/use-interval';
+import { ref } from '@vue/composition-api';
+import { specifiedFormatDate } from '@/common/util';
 
 export default {
+  data() {
+    return {
+      time: ref(''),
+    }
+  },
   props: {
     isSelected: {
       type: Boolean,
@@ -161,6 +178,46 @@ export default {
       this.$emit('synchronousProcess', 'config');
       this.$refs.synchronousPopover.hideHandler();
     },
+    // 检查托管信息
+    checkHostingInfo() {
+      this.$emit('checkHostingInfo');
+    },
+    // 同步状态时间
+    async SyncProcessStateTime() {
+      const res = await this.$store.dispatch('process/ajaxFlushSyncProcessStateTime');
+      if (res.result) {
+        this.time = specifiedFormatDate(res.data.time);
+      }
+    },
+    async initPolling() {
+      const { start, stop } = useIntervalFn(this.SyncProcessStateTime, 10000, true);
+
+      this.stop = stop;
+
+      // 启动轮询
+      start();
+    },
+    stopPolling() {
+      if (this.stop) {
+        this.stop();
+      }
+    }
+  },
+  created() {
+    // 在组件创建时启动轮询
+    this.initPolling();
+  },
+  beforeDestroy() {
+    // 在组件销毁前停止轮询
+    this.stopPolling();
+  },
+  deactivated() {
+    // 在组件停用时停止轮询
+    this.stopPolling();
+  },
+  destroyed() {
+    // 在组件销毁时停止轮询
+    this.stopPolling();
   },
 };
 </script>
@@ -177,7 +234,9 @@ export default {
     .king-btn {
       min-width: 86px;
     }
-
+    .syncProcessStateTime {
+      margin-right: 30px;
+    }
     .synchronous-btn {
       position: absolute;
       right: 0;

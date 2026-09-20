@@ -2,10 +2,10 @@
   <div class="empty-process-container">
     <div class="flex-top"></div>
     <div class="empty-process-content" v-if="isEmptyPage">
-      <p class="empty-title">{{ $t('接入GSEKit进程管理', [appName]) }}</p>
+      <p class="empty-title">{{ $t('接入GSEKit进程管理', [app_name]) }}</p>
       <p class="empty-sub-title">
         <i18n tag="p" path="欢迎使用GSEKit">
-          <span>{{ appName }}</span>
+          <span>{{ app_name }}</span>
           <bk-button text theme="primary" class="reset-icon-btn" @click="handleClick('document')">
             <span class="flex-content">
               {{ $t('帮助文档') }}<i class="gsekit-icon gsekit-icon-jump-fill"></i>
@@ -76,6 +76,9 @@ export default {
     ...mapState(['appName']),
     isEmptyPage() {
       return this.emptyType === 'page';
+    },
+    app_name() {
+      return this.$store.state.platform.i18n.name || this.appName
     },
   },
   methods: {

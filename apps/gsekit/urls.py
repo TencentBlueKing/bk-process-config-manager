@@ -48,15 +48,16 @@ urlpatterns = [
 ]
 
 if settings.ENVIRONMENT not in ["production", "prod"]:
+    openapi_info = openapi.Info(
+        title=_("{app_name} API").format(app_name=settings.APP_NAME),
+        default_version="v1",
+        description=_(
+            "{app_name} 是腾讯蓝鲸智云推出的一个专注于进程和配置文件管理的 SaaS 工具。\n"
+            "GitHub 开源，欢迎共建：https://github.com/TencentBlueKing/bk-process-config-manager"
+        ).format(app_name=settings.APP_NAME),
+    )
     schema_view = get_schema_view(
-        openapi.Info(
-            title=_("{app_name} API").format(app_name=settings.APP_NAME),
-            default_version="v1",
-            description=_(
-                "{app_name} 是腾讯蓝鲸智云推出的一个专注于进程和配置文件管理的 SaaS 工具。\n"
-                "GitHub 开源，欢迎共建：https://github.com/TencentBlueKing/bk-process-config-manager"
-            ).format(app_name=settings.APP_NAME),
-        ),
+        openapi_info,
         public=True,
         permission_classes=(permissions.IsAdminUser,),
     )

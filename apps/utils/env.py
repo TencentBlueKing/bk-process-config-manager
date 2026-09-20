@@ -10,6 +10,7 @@ See the License for the specific language governing permissions and limitations 
 """
 
 import os
+import json
 from typing import Any
 
 from apps.utils.string import str2bool
@@ -34,6 +35,9 @@ def get_type_env(key: str, default: Any = None, _type: type = str, exempt_empty_
 
     if _type == bool:
         return str2bool(value)
+
+    if _type == json:
+        return json.loads(value)
 
     try:
         value = _type(value)
