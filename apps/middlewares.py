@@ -234,8 +234,13 @@ class BSCPSwitchCheckMiddleware(MiddlewareMixin):
             logger.exception("Get BSCP switch check global flag failed, error=%s", error)
             return None
 
-        bk_biz_id = view_kwargs.get("bk_biz_id")
-        if not bk_biz_id:
+        raw_bk_biz_id = view_kwargs.get("bk_biz_id")
+        # 统一转成整数，排除 0 / 空 / 非数字等非法业务 ID，直接跳过不发起校验请求
+        try:
+            bk_biz_id = int(raw_bk_biz_id)
+        except (TypeError, ValueError):
+            return None
+        if bk_biz_id <= 0:
             return None
 
         if not self.is_bscp_switched(bk_biz_id):
